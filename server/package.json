@@ -1,0 +1,25 @@
+{
+  "name": "post_blog",
+  "version": "1.0.0",
+  "description": "user can post blog",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IshwariRauniyar/Post_Blog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IshwariRauniyar/Post_Blog/issues"
+  },
+  "homepage": "https://github.com/IshwariRauniyar/Post_Blog#readme",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.7"
+  }
+}
