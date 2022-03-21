@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const db = require("./db");
 const routes = require("./routes");
@@ -8,6 +7,12 @@ const cors = require("cors");
 
 app.use(cors());
 app.use(express.json());
+
+app.get("/", (req, res, next) => {
+  res.send("Hello World!");
+  console.log("Welcome to homepage");
+  next();
+});
 
 app.use(
   "/api",
