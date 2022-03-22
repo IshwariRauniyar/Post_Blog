@@ -43,7 +43,9 @@ const PostSchema = new Schema(
 );
 
 PostSchema.pre("save", function (next) {
-  this.Slug = this.Title.split(" ").join("-").replace("[^a-zA-Z0-9]", " ");
+  this.Slug = this.Title.split(" ")
+    .join("-")
+    .replace(/[^a-zA-Z0-9]+/g, "");
   next();
 });
 
