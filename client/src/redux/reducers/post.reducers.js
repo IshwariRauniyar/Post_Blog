@@ -1,6 +1,6 @@
 import Types from "../actions/types";
 
-const authReducer = (state = { post: [], errors: {} }, action) => {
+export default (state = { post: [], errors: {} }, action) => {
   switch (action.type) {
     case Types.POST_GET_ALL:
       return { ...state, post: [...action.payload], errors: {} };
@@ -38,4 +38,3 @@ const authReducer = (state = { post: [], errors: {} }, action) => {
       return state;
   }
 };
-export default authReducer;

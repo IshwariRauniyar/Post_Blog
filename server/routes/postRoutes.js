@@ -38,6 +38,7 @@ router.post("/", async (req, res) => {
       Summary: req.body.Summary,
     });
     PostData.save();
+    console.log("success", PostData);
     return res.status(HttpStatus.OK).json({
       success: true,
       message: "Post Created Successfully.",
@@ -45,6 +46,7 @@ router.post("/", async (req, res) => {
       result: PostData,
     });
   } catch (err) {
+    console.log(err);
     return res.status(HttpStatus.BAD_REQUEST).json({
       success: false,
       message: "Something went wrong while creating.",
