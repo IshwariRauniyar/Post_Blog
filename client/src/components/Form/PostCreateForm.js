@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createPost } from "../../redux/actions/post.actions";
+import WYSIWYGEditor from "../WYSIWYGEditor";
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState } from "draft-js";
+import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const PostCreateForm = () => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [seoTitle, setSeoTitle] = useState("");
+  // const [seoDescription, setSeoDescription] = useState(() =>
+  //   EditorState.createEmpty()
+  // );
   const [seoDescription, setSeoDescription] = useState("");
   const [postType, setPostType] = useState("post");
   const [description, setDescription] = useState("");
   const [summary, setSummary] = useState("");
   const [order, setOrder] = useState("");
   const [image, setImage] = useState("");
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,6 +28,7 @@ const PostCreateForm = () => {
       SeoTitle: seoTitle,
       SeoDescription: seoDescription,
       PostType: postType,
+      // editorState,
       Description: description,
       Summary: summary,
       Order: order,
@@ -28,15 +37,15 @@ const PostCreateForm = () => {
 
     dispatch(createPost(newPost));
   };
+  // const onEditorStateChange = (seoDescription) => {
+  //   setEditorState(seoDescription);
+  // };
 
   return (
     <>
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium" htmlFor>
-            {" "}
-            Title
-          </label>
+          <label className="block mb-2 text-sm font-medium"> Title</label>
           <input
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             type="text"
@@ -46,10 +55,7 @@ const PostCreateForm = () => {
           />
         </div>
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium" htmlFor>
-            {" "}
-            Seo Title
-          </label>
+          <label className="block mb-2 text-sm font-medium"> Seo Title</label>
           <input
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             type="text"
@@ -58,82 +64,68 @@ const PostCreateForm = () => {
             placeholder="Enter seo title.."
           />
         </div>
+        {/* <div className="mb-6">
+          <label className="block mb-2 text-sm font-medium" >
+            Seo Description
+          </label>
+          <Editor
+            toolbarClassName="toolbarClassName"
+            wrapperClassName="wrapperClassName"
+            editorClassName="editorClassName"
+            value={seoDescription}
+            // onChange={setSeoDescription}
+            onChange={(e) => setSeoDescription(e.target.value)}
+            // onChange={(e) => setEditorState(e.target.value)}
+            // onEditorStateChange={onEditorStateChange}
+          />
+        </div> */}
+
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium" htmlFor>
+          <label className="block mb-2 text-sm font-medium">
             Seo Description
           </label>
           <textarea
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-            name="field-name"
             rows={5}
             placeholder="Write something..."
-            defaultValue={""}
             value={seoDescription}
             onChange={(e) => setSeoDescription(e.target.value)}
           />
         </div>
-        {/* <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium" htmlFor>
-            {" "}
-            Post Type
-          </label>
-          <select
-            className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-            name
-            placeholder="Choose Post Type"
-            defaultValue={""}
-            value={postType}
-            onChange={(e) => setPostType(e.target.value)}
-          >
-            <option value="actual value 1">Display Text 1</option>
-          </select>
-        </div> */}
+
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium" htmlFor>
-            Description
-          </label>
+          <label className="block mb-2 text-sm font-medium">Description</label>
+          {/* <WYSIWYGEditor */}
           <textarea
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-            name="field-name"
             rows={5}
             placeholder="Write something..."
-            defaultValue={""}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium" htmlFor>
-            {" "}
-            Order
-          </label>
+          <label className="block mb-2 text-sm font-medium"> Order</label>
           <input
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             type="number"
-            name
             placeholder="At what order should this post be displayed?"
             value={order}
             onChange={(e) => setOrder(e.target.value)}
           />
         </div>
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium" htmlFor>
-            Summary
-          </label>
+          <label className="block mb-2 text-sm font-medium">Summary</label>
           <textarea
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-            name="field-name"
             rows={5}
             placeholder="Write short brief..."
-            defaultValue={""}
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
           />
         </div>
         <div className="mb-6 ">
-          <label className="block mb-2 text-sm font-medium" htmlFor>
-            Image
-          </label>
+          <label className="block mb-2 text-sm font-medium">Image</label>
           <div className="py-2 shrink-0">
             <img
               className="object-cover w-16 h-16 "
@@ -151,7 +143,6 @@ const PostCreateForm = () => {
             />
           </label>
         </div>
-
         <div className="mt-7">
           <div className="flex justify-start space-x-2">
             <button

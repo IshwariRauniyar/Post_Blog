@@ -1,8 +1,10 @@
 var express = require("express");
 var router = express.Router();
 const Post = require("../models/post");
-const Setting = require("../models/setting");
 const HttpStatus = require("http-status-codes");
+var fs = require("fs");
+var path = require("path");
+const upload = require("../middlewares/uploads");
 
 router.get("/", (req, res) => {
   Post.find({}, (err, posts) => {
@@ -22,7 +24,7 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.post("/", async (req, res) => {
+router.post("/", upload.single("Image"), async (req, res) => {
   console.log(req.body);
   try {
     const PostData = await Post.create({
@@ -31,7 +33,7 @@ router.post("/", async (req, res) => {
       SeoTitle: req.body.SeoTitle,
       SeoDescription: req.body.SeoDescription,
       PostType: req.body.PostType,
-      Image: req.body.Image,
+      Image: req.file.path,
       Description: req.body.descripton,
       Order: req.body.Order,
       IsActive: req.body.IsActive,
