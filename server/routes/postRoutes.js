@@ -25,7 +25,9 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", upload.single("Image"), async (req, res) => {
-  console.log(req.body);
+  const obj = JSON.parse(JSON.stringify(req.body));
+  console.log("bodydata", obj);
+  console.log("img", req.file);
   try {
     const PostData = await Post.create({
       Title: req.body.Title,
@@ -34,7 +36,7 @@ router.post("/", upload.single("Image"), async (req, res) => {
       SeoDescription: req.body.SeoDescription,
       PostType: req.body.PostType,
       Image: req.file.path,
-      Description: req.body.descripton,
+      Description: req.body.Description,
       Order: req.body.Order,
       IsActive: req.body.IsActive,
       Summary: req.body.Summary,

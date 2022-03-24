@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createPost } from "../../redux/actions/post.actions";
-import WYSIWYGEditor from "../WYSIWYGEditor";
-import { Editor } from "react-draft-wysiwyg";
-import { EditorState } from "draft-js";
-import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+// import WYSIWYGEditor from "../WYSIWYGEditor";
+// import { Editor } from "react-draft-wysiwyg";
+// import { EditorState } from "draft-js";
+// import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const PostCreateForm = () => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [seoTitle, setSeoTitle] = useState("");
   // const [seoDescription, setSeoDescription] = useState(() =>
-  //   EditorState.createEmpty()
+  //   JSON.stringify(EditorState.createEmpty())
   // );
   const [seoDescription, setSeoDescription] = useState("");
   const [postType, setPostType] = useState("post");
   const [description, setDescription] = useState("");
   const [summary, setSummary] = useState("");
   const [order, setOrder] = useState("");
-  const [image, setImage] = useState("");
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [Image, setImage] = useState(null);
+  const [IsActive, setIsActive] = useState(Boolean);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,14 +34,20 @@ const PostCreateForm = () => {
       Description: description,
       Summary: summary,
       Order: order,
-      Image: image,
+      IsActive: IsActive,
     };
 
-    dispatch(createPost(newPost));
+    dispatch(createPost(newPost, Image));
   };
-  // const onEditorStateChange = (seoDescription) => {
-  //   setEditorState(seoDescription);
-  // };
+  const onEditorChange = (description) => {
+    setDescription(description);
+  };
+  const handleChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+  const handleChangeSwitch = (IsActive) => {
+    setIsActive(!IsActive);
+  };
 
   return (
     <>
@@ -65,7 +73,7 @@ const PostCreateForm = () => {
           />
         </div>
         {/* <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium" >
+          <label className="block mb-2 text-sm font-medium">
             Seo Description
           </label>
           <Editor
@@ -73,8 +81,8 @@ const PostCreateForm = () => {
             wrapperClassName="wrapperClassName"
             editorClassName="editorClassName"
             value={seoDescription}
-            // onChange={setSeoDescription}
-            onChange={(e) => setSeoDescription(e.target.value)}
+            onChange={setSeoDescription}
+            // onChange={(e) => setSeoDescription(e.target.value)}
             // onChange={(e) => setEditorState(e.target.value)}
             // onEditorStateChange={onEditorStateChange}
           />
@@ -86,24 +94,36 @@ const PostCreateForm = () => {
           </label>
           <textarea
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-            rows={5}
+            rows={3}
             placeholder="Write something..."
             value={seoDescription}
             onChange={(e) => setSeoDescription(e.target.value)}
           />
         </div>
 
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <label className="block mb-2 text-sm font-medium">Description</label>
-          {/* <WYSIWYGEditor */}
-          <textarea
+          <WYSIWYGEditor
+            // <textarea
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             rows={5}
             placeholder="Write something..."
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            // onChange={setDescription}
+            // onChange={(e) => setDescription(e.target.value)}
+          />
+        </div> */}
+
+        <div className="mb-6">
+          <label className="block mb-2 text-sm font-medium">Description</label>
+          <ReactQuill
+            theme="snow"
+            placeholder="Write something..."
+            value={description}
+            onChange={onEditorChange}
           />
         </div>
+
         <div className="mb-6">
           <label className="block mb-2 text-sm font-medium"> Order</label>
           <input
@@ -137,12 +157,25 @@ const PostCreateForm = () => {
             <span className="sr-only">Browse photo </span>
             <input
               type="file"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
+              onChange={handleChange}
               className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 "
             />
           </label>
         </div>
+
+        <label className="block mb-2 text-sm font-medium">IsActive</label>
+        <div className="inline-block relative w-full">
+          <label className="block absolute inset-y-0 left-0 flex items-center pl-3">
+            <input
+              type="checkbox"
+              value={IsActive}
+              onChange={() => handleChangeSwitch(IsActive)}
+              className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+            />
+            <span className="ml-2 text-sm text-gray-900">Is Active</span>
+          </label>
+        </div>
+
         <div className="mt-7">
           <div className="flex justify-start space-x-2">
             <button

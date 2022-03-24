@@ -9,7 +9,9 @@ const PostSchema = new Schema(
     Title: { type: String, required: true },
     Slug: { type: String, slug: "title", lowercase: true, unique: true },
     SeoTitle: { type: String, required: true },
-    SeoDescription: { type: String },
+    SeoDescription: {
+      type: String,
+    },
     PostType: {
       type: String,
       required: true,
@@ -29,13 +31,9 @@ const PostSchema = new Schema(
       default: "post",
     },
     Image: { type: String },
-    // Image: {
-    //   data: Buffer,
-    //   contentType: String,
-    // },
     Description: { type: String },
     Order: { type: Number, default: 0 },
-    IsActive: { type: Boolean, default: true },
+    IsActive: { type: Boolean, default: false },
     Summary: { type: String },
     PublishedAfter: { type: Date },
     CreatedOn: { type: Date, default: Date.now },
