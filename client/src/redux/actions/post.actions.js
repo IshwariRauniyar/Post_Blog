@@ -2,13 +2,13 @@ import Constants from "./types";
 import axiosInstance from "../../axios";
 import Toast from "../../components/Toast";
 
-export const createPost = (newPost, Image) => async (dispatch) => {
+export const createPost = (newPost) => async (dispatch) => {
   console.log("newPost", newPost);
-  console.log("Image", Image);
+  console.log("Image", newPost.Image);
   try {
-    if (Image) {
+    if (newPost) {
       const formData = new FormData();
-      formData.append("Image", Image);
+      formData.append("Image", newPost.Image);
       formData.append("Title", newPost.Title);
       formData.append("SeoTitle", newPost.SeoTitle);
       formData.append("SeoDescription", newPost.SeoDescription);

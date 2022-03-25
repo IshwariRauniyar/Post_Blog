@@ -7,7 +7,7 @@ mongoose.plugin(URLSlug);
 const PostSchema = new Schema(
   {
     Title: { type: String, required: true },
-    Slug: { type: String, slug: "title", lowercase: true, unique: true },
+    Slug: { type: String, slug: "Title", lowercase: true, unique: true },
     SeoTitle: { type: String, required: true },
     SeoDescription: {
       type: String,

@@ -10,7 +10,7 @@ export default function Post() {
       <div>
         <div className="mx-auto lg:ml-80">
           <div className="max-w-6xl mx-auto lg:ml-90 lg:mt-9">
-            <h1 className="py-3 text-2xl font-bold px-7 lg:px-0">Post</h1>
+            <h1 className="py-3 text-2xl font-bold px-7 lg:px-8">Post</h1>
             <div className="p-10 bg-white">
               <PostCreateForm />
             </div>

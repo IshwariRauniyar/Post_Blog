@@ -7,6 +7,9 @@ import { createPost } from "../../redux/actions/post.actions";
 // import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+// import ImagesUploader from "react-images-uploader";
+// import "../../../node_modules/react-images-uploader/styles.css";
+// import "../../../node_modules/react-images-uploader/font.css";
 
 const PostCreateForm = () => {
   const dispatch = useDispatch();
@@ -16,7 +19,6 @@ const PostCreateForm = () => {
   //   JSON.stringify(EditorState.createEmpty())
   // );
   const [seoDescription, setSeoDescription] = useState("");
-  const [postType, setPostType] = useState("post");
   const [description, setDescription] = useState("");
   const [summary, setSummary] = useState("");
   const [order, setOrder] = useState("");
@@ -29,15 +31,14 @@ const PostCreateForm = () => {
       Title: title,
       SeoTitle: seoTitle,
       SeoDescription: seoDescription,
-      PostType: postType,
-      // editorState,
       Description: description,
       Summary: summary,
       Order: order,
       IsActive: IsActive,
+      Image,
     };
 
-    dispatch(createPost(newPost, Image));
+    dispatch(createPost(newPost));
   };
   const onEditorChange = (description) => {
     setDescription(description);
@@ -53,7 +54,7 @@ const PostCreateForm = () => {
     <>
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium"> Title</label>
+          <label className="block mb-2 text-md font-medium"> Title</label>
           <input
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             type="text"
@@ -63,7 +64,7 @@ const PostCreateForm = () => {
           />
         </div>
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium"> Seo Title</label>
+          <label className="block mb-2 text-md font-medium"> Seo Title</label>
           <input
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             type="text"
@@ -89,7 +90,7 @@ const PostCreateForm = () => {
         </div> */}
 
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium">
+          <label className="block mb-2 text-md font-medium">
             Seo Description
           </label>
           <textarea
@@ -115,7 +116,7 @@ const PostCreateForm = () => {
         </div> */}
 
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium">Description</label>
+          <label className="block mb-2 text-md font-medium">Description</label>
           <ReactQuill
             theme="snow"
             placeholder="Write something..."
@@ -125,7 +126,7 @@ const PostCreateForm = () => {
         </div>
 
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium"> Order</label>
+          <label className="block mb-2 text-md font-medium"> Order</label>
           <input
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             type="number"
@@ -135,7 +136,7 @@ const PostCreateForm = () => {
           />
         </div>
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium">Summary</label>
+          <label className="block mb-2 text-md font-medium">Summary</label>
           <textarea
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             rows={5}
@@ -145,14 +146,14 @@ const PostCreateForm = () => {
           />
         </div>
         <div className="mb-6 ">
-          <label className="block mb-2 text-sm font-medium">Image</label>
-          <div className="py-2 shrink-0">
+          <label className="block mb-2 text-md font-medium">Image</label>
+          {/* <div className="py-2 shrink-0">
             <img
               className="object-cover w-16 h-16 "
               src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80"
               alt="Current profile photo"
             />
-          </div>
+          </div> */}
           <label className="block pt-2">
             <span className="sr-only">Browse photo </span>
             <input
@@ -163,7 +164,23 @@ const PostCreateForm = () => {
           </label>
         </div>
 
-        <label className="block mb-2 text-sm font-medium">IsActive</label>
+        {/* <div className="mb-6">
+          <ImagesUploader
+            // withIcon={true}
+            buttonText="Choose images"
+            optimisticPreviews
+            onLoadEnd={(err) => {
+              if (err) {
+                console.error(err);
+              }
+            }}
+            onChange={handleChange}
+            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+            maxFileSize={5242880}
+          />
+        </div> */}
+
+        <label className="block mb-2 text-md font-medium">IsActive</label>
         <div className="inline-block relative w-full">
           <label className="block absolute inset-y-0 left-0 flex items-center pl-3">
             <input
