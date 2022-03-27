@@ -3,7 +3,7 @@ import Types from "../actions/types";
 export default (state = { post: [], errors: {} }, action) => {
   switch (action.type) {
     case Types.POST_GET_ALL:
-      return { ...state, post: [{ ...action.payload }], errors: {} };
+      return { ...state, post: [...action.payload], errors: {} };
     case Types.POST_DELETE:
       return {
         ...state,
