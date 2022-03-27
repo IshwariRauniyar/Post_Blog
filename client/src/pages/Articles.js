@@ -58,6 +58,18 @@ function Article() {
 
   return (
     <>
+      {/* <Card>
+        <Card.Header as="h5">Featured</Card.Header>
+        <Card.Body>
+          <Card.Title>Special title treatment</Card.Title>
+          <Card.Text>
+            With supporting text below as a natural lead-in to additional
+            content.
+          </Card.Text>
+          <Button variant="primary">Go somewhere</Button>
+        </Card.Body>
+      </Card> */}
+
       <Container fluid="md">
         <Row className="justify-content-md-center">
           <Col xs lg="2">
@@ -103,7 +115,7 @@ function Article() {
                   <Modal.Title>Create Post</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  {/* Create Form */}
+                  Create Form
                   <PostCreateForm close={handleCreateClose} />
                 </Modal.Body>
                 <Modal.Footer>
