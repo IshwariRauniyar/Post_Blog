@@ -13,6 +13,7 @@ export default function Post() {
   dispatch(getPost());
   const { post: all_data } = useSelector((state) => state.post);
   console.log("pooooost", all_data);
+
   //   const [post, setPost] = useState([]);
   //   useEffect(() => {
   //     setPost(all_data);

@@ -1,10 +1,8 @@
 import React from "react";
-import Layout from "../components/Layout";
 
 export default function Login() {
   return (
     <>
-      <Layout> </Layout>
       <section className="bg-gray-100">
         <div className="max-w-6xl px-6 mx-auto">
           <div className="flex flex-col items-center h-full md:flex-row">

@@ -1,12 +1,10 @@
 import React from "react";
-import Layout from "../components/Layout";
 import Footer from "../components/Footer";
 import PostCreateForm from "../components/Form/PostCreateForm";
 
 export default function Post() {
   return (
     <>
-      <Layout />
       <div>
         <div className="mx-auto lg:ml-80">
           <div className="max-w-6xl mx-auto lg:ml-90 lg:mt-9">

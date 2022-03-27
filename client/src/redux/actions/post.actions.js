@@ -4,7 +4,7 @@ import Toast from "../../components/Toast";
 
 export const getPost = () => async (dispatch) => {
   try {
-    const { data } = await axiosInstance.get(`/post/`);
+    const { data } = await axiosInstance.get(`/post`);
     console.log(data);
     dispatch({ type: Constants.POST_GET_ALL, payload: data.results });
     Toast.success("Post fetched successfully");
