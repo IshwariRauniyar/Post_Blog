@@ -1,4 +1,9 @@
 import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./assets/css/animate.min.css";
+// import "./assets/scss/light-bootstrap-dashboard-react.scss?v=2.0.0";
+import "./assets/css/demo.css";
+import "./assets/css/style.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Post from "./pages/Post";

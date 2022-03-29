@@ -7,11 +7,18 @@ var path = require("path");
 const upload = require("../middlewares/uploads");
 
 router.get("/", (req, res) => {
-  Post.find({}, (err, posts) => {
+  Post.find((err, posts) => {
     if (err) {
       res.send(err);
     }
-    res.json(posts);
+    // res.json(posts);
+    return res.status(HttpStatus.OK).json({
+      success: true,
+      message: "All posts are fetched.",
+      code: HttpStatus.OK,
+      posts,
+      // ...(posts && { ...posts }),
+    });
   });
 });
 
@@ -20,7 +27,14 @@ router.get("/:id", (req, res) => {
     if (err) {
       res.send(err);
     }
-    res.json(post);
+    // res.json(post);
+    return res.status(HttpStatus.OK).json({
+      success: true,
+      message: "Post is fetched.",
+      code: HttpStatus.OK,
+      post,
+      // ...(post && { ...post }),
+    });
   });
 });
 
@@ -41,7 +55,7 @@ router.post("/", upload.single("Image"), async (req, res) => {
       IsActive: req.body.IsActive,
       Summary: req.body.Summary,
     });
-    PostData.save();
+    // PostData.save();
     console.log("success", PostData);
     return res.status(HttpStatus.OK).json({
       success: true,
@@ -62,19 +76,23 @@ router.post("/", upload.single("Image"), async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-    const PostData = await Post.findByIdAndUpdate(req.params.id, {
-      Title: req.body.Title,
-      Slug: req.body.Slug,
-      SeoTitle: req.body.SeoTitle,
-      SeoDescription: req.body.SeoDescription,
-      PostType: req.body.PostType,
-      Image: req.body.Image,
-      Description: req.body.descripton,
-      Order: req.body.Order,
-      IsActive: req.body.IsActive,
-      Summary: req.body.Summary,
-    });
-    PostData.save();
+    const PostData = await Post.findByIdAndUpdate(
+      req.params.id,
+      {
+        Title: req.body.Title,
+        Slug: req.body.Slug,
+        SeoTitle: req.body.SeoTitle,
+        SeoDescription: req.body.SeoDescription,
+        PostType: req.body.PostType,
+        Image: req.body.Image,
+        Description: req.body.descripton,
+        Order: req.body.Order,
+        IsActive: req.body.IsActive,
+        Summary: req.body.Summary,
+      },
+      { new: true }
+    );
+    console.log("editsuccess", PostData);
     return res.status(HttpStatus.OK).json({
       success: true,
       message: "Post Updated Successfully.",

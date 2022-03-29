@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+.form__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f1f1f1; }
+  .form__container label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0;
+    color: #fff; }
+  .form__container input {
+    width: 100%;
+    border-radius: 4px;
+    border: none;
+    padding: 6px 4px; }
+
+.form {
+  width: 300px;
+  margin: 10px auto;
+  text-align: center;
+  background-color: #60cfff;
+  padding: 2em 1em;
+  border-radius: 10px;
+  box-shadow: 2px 2px 6px #aaa; }
+
+.form__heading {
+  text-align: center;
+  color: #002368;
+  font-size: 2em;
+  margin-bottom: 1.5em; }
+  .form__heading h1 {
+    margin-bottom: 0; }
+  .form__heading h2 {
+    font-size: 0.6em;
+    letter-spacing: 0.2em;
+    margin-top: 0; }
+
+.form__group {
+  margin: 1em 0; }
+
+.form__btn {
+  text-align: center;
+  margin: 1.5em auto 0;
+  width: 50%;
+  outline: none;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #000;
+  color: #fff;
+  text-transform: uppercase; }
+  .form__btn:hover {
+    background-color: #333333; }
+
+@media (max-width: 1250px) {
+  .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td  {
+      white-space: pre-wrap;
+      white-space: -moz-pre-wrap;
+      white-space: -pre-wrap;
+      white-space: -o-pre-wrap;
+      word-break: break-word;
+  }
+}
+
+.modal.show .modal-dialog {
+  transform: none !important;
+}
+.card-user .avatar{
+  min-width: 126px;
+  min-height: 128px;
+  background-color:#2beaff ;
+
+}
+
+/* Custom styles starts*/
+
+.w-fit-content {
+  width: fit-content !important;
+}
+
+/* Custom styles ends*/

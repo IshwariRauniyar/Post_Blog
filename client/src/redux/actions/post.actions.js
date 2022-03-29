@@ -5,8 +5,7 @@ import Toast from "../../components/Toast";
 export const getPost = () => async (dispatch) => {
   try {
     const { data } = await axiosInstance.get(`/post`);
-    console.log(data);
-    dispatch({ type: Constants.POST_GET_ALL, payload: data.results });
+    dispatch({ type: Constants.POST_GET_ALL, payload: data.posts });
     Toast.success("Post fetched successfully");
   } catch (error) {
     Toast.error("Error fetching Post");
@@ -17,8 +16,7 @@ export const getPost = () => async (dispatch) => {
 export const getSinglePost = (id) => async (dispatch) => {
   try {
     const { data } = await axiosInstance.get(`/post/${id}`);
-    console.log("single", data);
-    dispatch({ type: Constants.POST_GET_SINGLE, payload: data.results });
+    dispatch({ type: Constants.POST_GET_SINGLE, payload: data.post });
   } catch (error) {
     Toast.error("Error fetching Post");
     console.log(error);
@@ -54,7 +52,7 @@ export const createPost = (newPost) => async (dispatch) => {
 
       const { data } = await axiosInstance.post("/post", formData);
       console.log("data", data);
-      dispatch({ type: Constants.POST_CREATE, payload: data.results });
+      dispatch({ type: Constants.POST_CREATE, payload: data.result });
     }
     Toast.success("Post created successfully");
   } catch (error) {
@@ -66,7 +64,8 @@ export const createPost = (newPost) => async (dispatch) => {
 export const updatePost = (id, updatePost) => async (dispatch) => {
   try {
     const { data } = await axiosInstance.put(`/post/${id}`, updatePost);
-    dispatch({ type: Constants.POST_EDIT, payload: data.results });
+    console.log("EDITdata", data);
+    dispatch({ type: Constants.POST_EDIT, payload: data.result });
     Toast.success("Post updated successfully");
   } catch (error) {
     Toast.error("Error updating Post");

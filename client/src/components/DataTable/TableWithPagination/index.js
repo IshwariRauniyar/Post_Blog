@@ -32,11 +32,11 @@ export default function TableWithPagination({
   const dispatch = useDispatch();
 
   function nestedObj(array, object) {
-    if (object && array.length) {
+    if (object && array?.length) {
       let data = object;
-      for (let x = 0; array.length > x; x++) {
+      for (let x = 0; array?.length > x; x++) {
         data = data?.[array[x]];
-        if (array.length === x + 1) {
+        if (array?.length === x + 1) {
           return data;
         }
       }
@@ -54,7 +54,7 @@ export default function TableWithPagination({
   const handleEditShow = (id) => {
     setShowEditModal(true);
     setShowViewModal(false);
-    const viewData = tableData.filter((data) => data._id === id);
+    const viewData = tableData.filter((data) => data?._id === id);
     setEditData(viewData[0]);
   };
   const handleViewClose = () => setShowViewModal(false);
@@ -68,11 +68,13 @@ export default function TableWithPagination({
   }
 
   useEffect(() => {
-    getAction && dispatch(getAction({ offset: skip, limit, search }));
-  }, [limit, skip, search, ...deps]);
+    getAction && dispatch(getAction());
+  }, []);
+  //   getAction && dispatch(getAction({ offset: skip, limit, search }));
+  // }, [limit, skip, search, ...deps]);
 
   useEffect(() => {
-    if (tableData.length > 10) {
+    if (tableData?.length > 10) {
       setSkip(currentPage - 2);
     }
     if (currentPage) {
@@ -87,7 +89,7 @@ export default function TableWithPagination({
   };
 
   const allData = useMemo(() => {
-    let computedData = tableData.length ? tableData : [];
+    let computedData = tableData?.length ? tableData : [];
 
     if (sorting.field) {
       const reversed = sorting.order === "asc" ? 1 : -1;
@@ -100,9 +102,7 @@ export default function TableWithPagination({
   }, [tableData, sorting, currentPage]);
   return (
     <>
-      <div
-      // className="d-flex align-items-center justify-content-between mx-3"
-      >
+      <div className="d-flex align-items-center justify-content-between mx-3">
         <div>
           <Pagination
             total={total}
@@ -113,10 +113,8 @@ export default function TableWithPagination({
           />
         </div>
 
-        {!hideSearch ? (
-          <div
-          // className="d-flex flex-row-rever"
-          >
+        {/* {!hideSearch ? (
+          <div className="d-flex flex-row-rever">
             <Search
               onSearch={(value) => {
                 setSearch(value);
@@ -126,14 +124,14 @@ export default function TableWithPagination({
           </div>
         ) : (
           ""
-        )}
+        )} */}
       </div>
       <Table
         striped
         bordered
         hover
-
-        // id="example" className="table-hover table-striped"
+        id="example"
+        className="table-hover table-striped"
       >
         <TableHeader
           headers={headers}
@@ -144,10 +142,10 @@ export default function TableWithPagination({
           {allData &&
             allData?.map((data) => {
               return (
-                <tr key={data._id}>
+                <tr key={data?._id}>
                   {headers &&
                     headers.map((val, i) => {
-                      return val?.property.length ? (
+                      return val?.property?.length ? (
                         <td key={i}>{nestedObj(val?.property, data)}</td>
                       ) : null;
                     })}
@@ -159,7 +157,6 @@ export default function TableWithPagination({
                             return (
                               <Button
                                 className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-                                // className="btn-simple btn-link p-1"
                                 type="button"
                                 variant="primary"
                                 onClick={() => handleViewShow(data._id)}
@@ -171,7 +168,7 @@ export default function TableWithPagination({
                           case "edit":
                             return (
                               <Button
-                                // className="btn-simple btn-link p-1"
+                                className="btn-simple btn-link p-1"
                                 type="button"
                                 variant="info"
                                 onClick={() => handleEditShow(data._id)}
@@ -183,7 +180,7 @@ export default function TableWithPagination({
                           case "delete":
                             return (
                               <Button
-                                // className="btn-simple btn-link p-1"
+                                className="btn-simple btn-link p-1"
                                 type="button"
                                 variant="danger"
                                 onClick={() => handleDeleteShow(data._id)}
@@ -195,7 +192,7 @@ export default function TableWithPagination({
                           case "buy":
                             return (
                               <Button
-                                // className="btn-secondary px-4 py-1 mx-2"
+                                className="btn-secondary px-4 py-1 mx-2"
                                 type="button"
                                 variant="success"
                                 onClick={() => handleBuy && handleBuy(data._id)}

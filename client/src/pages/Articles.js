@@ -9,18 +9,20 @@ import { useNavigate } from "react-router-dom";
 import { Card, Container, Row, Col, Button, Modal } from "react-bootstrap";
 import TableWithPagination from "../components/DataTable/TableWithPagination/index";
 import PostCreateForm from "../components/Form/PostCreateForm";
+import PostEditForm from "../components/Form/PostEditForm";
 // import ArticleEditForm from "components/form/Articles/ArticleEditForm";
 import moment from "moment";
 
-function dateToString(x) {
-  return moment(x).format("YYYY-MM-DD");
+function dateToString(CreatedOn) {
+  return moment(CreatedOn).format("YYYY-MM-DD");
 }
 
 function Article() {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const { post: all_data } = useSelector((state) => state.post);
+  const { posts: all_data } = useSelector((state) => state.post);
   console.log("all_data", all_data);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -39,9 +41,9 @@ function Article() {
       sortable: false,
     },
     {
-      name: "Status",
-      field: "status",
-      property: ["IsActive"],
+      name: "Order No.",
+      field: "  Order",
+      property: ["Order"],
       sortable: false,
     },
     {
@@ -58,26 +60,14 @@ function Article() {
 
   return (
     <>
-      {/* <Card>
-        <Card.Header as="h5">Featured</Card.Header>
-        <Card.Body>
-          <Card.Title>Special title treatment</Card.Title>
-          <Card.Text>
-            With supporting text below as a natural lead-in to additional
-            content.
-          </Card.Text>
-          <Button variant="primary">Go somewhere</Button>
-        </Card.Body>
-      </Card> */}
-
-      <Container fluid="md">
-        <Row className="justify-content-md-center">
-          <Col xs lg="2">
-            <Card className="mt-3">
-              <Card.Header>
-                <Card.Title>Post List</Card.Title>
+      <Container fluid>
+        <Row>
+          <Col md="12">
+            <Card className="strpied-tabled-with-hover">
+              <Card.Header className="d-flex align-items-center justify-content-between">
+                <Card.Title as="h4">Post List</Card.Title>
                 <Button
-                  // className="btn-fill pull-right"
+                  className="btn-fill pull-right"
                   type="submit"
                   variant="info"
                   style={{ float: "right" }}
@@ -87,7 +77,7 @@ function Article() {
                   Add New Post
                 </Button>
               </Card.Header>
-              <Card.Body>
+              <Card.Body className="table-full-width table-responsive px-0">
                 <TableWithPagination
                   title="Post"
                   tableData={all_data}
@@ -95,9 +85,9 @@ function Article() {
                   headers={headers}
                   getAction={(custom_props) => getPost({ ...custom_props })}
                   deleteAction={deletePost}
-                  // EditForm={(custom_props) => (
-                  //   <PostEditForm {...custom_props} />
-                  // )}
+                  EditForm={(custom_props) => (
+                    <PostEditForm {...custom_props} />
+                  )}
                   actionButtons={["edit", "delete"]}
                   // onView={(id) => {
                   //   history.push(`/admin/Profile/${id}`);
@@ -115,7 +105,7 @@ function Article() {
                   <Modal.Title>Create Post</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  Create Form
+                  {/* Create Form */}
                   <PostCreateForm close={handleCreateClose} />
                 </Modal.Body>
                 <Modal.Footer>

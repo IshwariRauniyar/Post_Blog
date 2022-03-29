@@ -1,31 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost } from "../../redux/actions/post.actions";
+import { updatePost } from "../../redux/actions/post.actions";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Form, Row, Col, Image } from "react-bootstrap";
 
-const PostCreateForm = ({ close }) => {
+const PostEditForm = ({ editState, close }) => {
   const dispatch = useDispatch();
-  const [title, setTitle] = useState("");
-  const [Slug, setSlug] = useState("");
-  // const [Slug, setSlug] = useState(slugify(title));
-  const [seoTitle, setSeoTitle] = useState("");
-  // const [seoDescription, setSeoDescription] = useState(() =>
-  //   JSON.stringify(EditorState.createEmpty())
-  // );
-  const [seoDescription, setSeoDescription] = useState("");
-  const [description, setDescription] = useState("");
-  const [summary, setSummary] = useState("");
-  const [order, setOrder] = useState("");
-  const [Image, setImage] = useState(null);
-  const [IsActive, setIsActive] = useState(Boolean);
+  const [paramid, setID] = useState(editState._id);
+  const [title, setTitle] = useState(editState?.Title || "");
+  const [seoTitle, setSeoTitle] = useState(editState?.SeoTitle || "");
+  const [seoDescription, setSeoDescription] = useState(
+    editState?.SeoDescription || ""
+  );
+  const [description, setDescription] = useState(editState?.Description || "");
+  const [summary, setSummary] = useState(editState?.Summary || "");
+  const [order, setOrder] = useState(editState?.Order || "");
+  const [Image, setImage] = useState(editState?.Image || null);
+  const [IsActive, setIsActive] = useState(editState?.IsActive || Boolean);
+
   const onclose = close;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newPost = {
       Title: title,
-      Slug,
       SeoTitle: seoTitle,
       SeoDescription: seoDescription,
       Description: description,
@@ -35,7 +34,7 @@ const PostCreateForm = ({ close }) => {
       Image,
     };
 
-    dispatch(createPost(newPost));
+    dispatch(updatePost(paramid, newPost));
     onclose();
   };
   const onEditorChange = (description) => {
@@ -46,17 +45,6 @@ const PostCreateForm = ({ close }) => {
   };
   const handleChangeSwitch = (IsActive) => {
     setIsActive(!IsActive);
-  };
-
-  const slugify = (title) => {
-    setSlug(title)
-      .toString()
-      .toLowerCase()
-      .replace(/\s+/g, "-") // Replace spaces with -
-      .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-      .replace(/\-\-+/g, "-") // Replace multiple - with single -
-      .replace(/^-+/, "") // Trim - from start of text
-      .replace(/-+$/, ""); // Trim - from end of text
   };
 
   return (
@@ -70,15 +58,6 @@ const PostCreateForm = ({ close }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter title"
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block mb-2 text-md font-medium"> Slug</label>
-          <input
-            className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-            type="text"
-            value={title}
-            onChange={(e) => slugify(e.target.value)}
           />
         </div>
         <div className="mb-6">
@@ -120,19 +99,6 @@ const PostCreateForm = ({ close }) => {
           />
         </div>
 
-        {/* <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium">Description</label>
-          <WYSIWYGEditor
-            // <textarea
-            className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-            rows={5}
-            placeholder="Write something..."
-            value={description}
-            // onChange={setDescription}
-            // onChange={(e) => setDescription(e.target.value)}
-          />
-        </div> */}
-
         <div className="mb-6">
           <label className="block mb-2 text-md font-medium">Description</label>
           <ReactQuill
@@ -165,13 +131,7 @@ const PostCreateForm = ({ close }) => {
         </div>
         <div className="mb-6 ">
           <label className="block mb-2 text-md font-medium">Image</label>
-          {/* <div className="py-2 shrink-0">
-            <img
-              className="object-cover w-16 h-16 "
-              src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80"
-              alt="Current profile photo"
-            />
-          </div> */}
+
           <label className="block pt-2">
             <span className="sr-only">Browse photo </span>
             <input
@@ -181,22 +141,6 @@ const PostCreateForm = ({ close }) => {
             />
           </label>
         </div>
-
-        {/* <div className="mb-6">
-          <ImagesUploader
-            // withIcon={true}
-            buttonText="Choose images"
-            optimisticPreviews
-            onLoadEnd={(err) => {
-              if (err) {
-                console.error(err);
-              }
-            }}
-            onChange={handleChange}
-            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-            maxFileSize={5242880}
-          />
-        </div> */}
 
         <label className="block mb-2 text-md font-medium">IsActive</label>
         <div className="inline-block relative w-full">
@@ -226,4 +170,4 @@ const PostCreateForm = ({ close }) => {
   );
 };
 
-export default PostCreateForm;
+export default PostEditForm;
