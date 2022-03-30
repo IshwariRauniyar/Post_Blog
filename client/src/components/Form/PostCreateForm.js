@@ -8,7 +8,7 @@ import { Form, Row, Col, Image } from "react-bootstrap";
 const PostCreateForm = ({ close }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
-  const [Slug, setSlug] = useState("");
+  const [slug, setSlug] = useState("");
   // const [Slug, setSlug] = useState(slugify(title));
   const [seoTitle, setSeoTitle] = useState("");
   // const [seoDescription, setSeoDescription] = useState(() =>
@@ -25,7 +25,7 @@ const PostCreateForm = ({ close }) => {
     e.preventDefault();
     const newPost = {
       Title: title,
-      Slug,
+      Slug: slug,
       SeoTitle: seoTitle,
       SeoDescription: seoDescription,
       Description: description,
@@ -34,7 +34,7 @@ const PostCreateForm = ({ close }) => {
       IsActive: IsActive,
       Image,
     };
-
+    console.log("formdata", newPost);
     dispatch(createPost(newPost));
     onclose();
   };
@@ -48,16 +48,19 @@ const PostCreateForm = ({ close }) => {
     setIsActive(!IsActive);
   };
 
-  const slugify = (title) => {
-    setSlug(title)
-      .toString()
-      .toLowerCase()
-      .replace(/\s+/g, "-") // Replace spaces with -
-      .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-      .replace(/\-\-+/g, "-") // Replace multiple - with single -
-      .replace(/^-+/, "") // Trim - from start of text
-      .replace(/-+$/, ""); // Trim - from end of text
-  };
+  // const slugify = (title) => {
+  //   const slug = title;
+  //   setSlug(
+  //     slug
+  //       .toString()
+  //       .toLowerCase()
+  //       .replace(/\s+/g, "-") // Replace spaces with -
+  //       .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+  //       .replace(/\-\-+/g, "-") // Replace multiple - with single -
+  //       .replace(/^-+/, "") // Trim - from start of text
+  //       .replace(/-+$/, "") // Trim - from end of text
+  //   );
+  // };
 
   return (
     <>
@@ -77,8 +80,16 @@ const PostCreateForm = ({ close }) => {
           <input
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             type="text"
-            value={title}
-            onChange={(e) => slugify(e.target.value)}
+            name="slug"
+            readOnly
+            value={title
+              .toLowerCase()
+              .replace(/\s+/g, "-")
+              .replace(/[^\w\-]+/g, "")
+              .replace(/\-\-+/g, "-")
+              .replace(/^-+/, "")
+              .replace(/-+$/, "")}
+            onChange={(e) => setSlug({ slug: e.target.value })}
           />
         </div>
         <div className="mb-6">

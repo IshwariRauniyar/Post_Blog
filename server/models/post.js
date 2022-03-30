@@ -7,7 +7,8 @@ mongoose.plugin(URLSlug);
 const PostSchema = new Schema(
   {
     Title: { type: String, required: true },
-    Slug: { type: String, slug: "Title", lowercase: true, unique: true },
+    Slug: { type: String, unique: true },
+    // Slug: { type: String, slug: "Title", lowercase: true, unique: true },
     SeoTitle: { type: String, required: true },
     SeoDescription: {
       type: String,
@@ -44,12 +45,12 @@ const PostSchema = new Schema(
   { collection: "Post" }
 );
 
-PostSchema.pre("save", function (next) {
-  this.Slug = this.Title.split(" ")
-    .join("-")
-    .replace(/[^a-zA-Z0-9]+/g, "");
-  next();
-});
+// PostSchema.pre("save", function (next) {
+//   this.Slug = this.Title.split(" ")
+//     .join("-")
+//     .replace(/[^a-zA-Z0-9]+/g, "");
+//   next();
+// });
 
 const Post = mongoose.model("Post", PostSchema);
 

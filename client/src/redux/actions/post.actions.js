@@ -43,6 +43,7 @@ export const createPost = (newPost) => async (dispatch) => {
       const formData = new FormData();
       formData.append("Image", newPost.Image);
       formData.append("Title", newPost.Title);
+      formData.append("Slug", newPost.Slug);
       formData.append("SeoTitle", newPost.SeoTitle);
       formData.append("SeoDescription", newPost.SeoDescription);
       formData.append("Description", newPost.Description);
