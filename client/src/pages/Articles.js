@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getPost,
-  getSinglePost,
-  deletePost,
-} from "../redux/actions/post.actions";
+import { getPost, deletePost } from "../redux/actions/post.actions";
 import { useNavigate } from "react-router-dom";
 import { Card, Container, Row, Col, Button, Modal } from "react-bootstrap";
 import TableWithPagination from "../components/DataTable/TableWithPagination/index";
@@ -19,14 +15,14 @@ function dateToString(CreatedOn) {
 function Article() {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const { posts: all_data } = useSelector((state) => state.post);
+  const { posts: all_data, total } = useSelector((state) => state.post);
   console.log("all_data", all_data);
+  console.log("total", total);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const headers = [
-    { name: "Id", field: "_id", property: ["_id"], sortable: false },
     {
       name: "Title",
       field: "Title",
@@ -46,9 +42,16 @@ function Article() {
       sortable: false,
     },
     {
+      name: "Status",
+      field: "IsActive",
+      property: ["IsActive"],
+      value: (IsActive) => (IsActive ? "Active" : "Inactive"),
+    },
+    {
       name: "CreatedOn",
       field: "CreatedOn",
       property: ["CreatedOn"],
+      value: (CreatedOn) => dateToString(CreatedOn),
       sortable: false,
     },
     { name: "Actions", field: "actions", property: [], sortable: false },
@@ -80,7 +83,7 @@ function Article() {
                 <TableWithPagination
                   title="Post"
                   tableData={all_data}
-                  apiUrl="post"
+                  total={total}
                   headers={headers}
                   getAction={(custom_props) => getPost({ ...custom_props })}
                   deleteAction={deletePost}
@@ -88,10 +91,6 @@ function Article() {
                     <PostEditForm {...custom_props} />
                   )}
                   actionButtons={["edit", "delete"]}
-                  // onView={(id) => {
-                  //   history.push(`/admin/Profile/${id}`);
-                  // navigate('/home');
-                  // }}
                 />
               </Card.Body>
               {/* Create Modal */}

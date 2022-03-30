@@ -2,70 +2,36 @@ var express = require("express");
 var router = express.Router();
 const Post = require("../models/post");
 const HttpStatus = require("http-status-codes");
-var fs = require("fs");
-var path = require("path");
 const upload = require("../middlewares/uploads");
 
-// router.get("/", async (req, res) => {
-//   const {
-//     page = 1,
-//     limit = 10,
-//     sort = "createdAt",
-//     order = "desc",
-//     search = "",
-//     offset = 0,
-//   } = req.query;
-//   const query = {};
-//   try {
-//     if (search) {
-//       query.title = { $regex: search, $options: "i" };
-//     }
-
-//     const posts = await Post.find((err, posts) => {
-//       if (err) {
-//         res.send(err);
-//       }
-//       return res.status(HttpStatus.OK).json({
-//         success: true,
-//         message: "All posts are fetched.",
-//         code: HttpStatus.OK,
-//         posts,
-//       });
-//     })
-//       .skip(offset)
-//       .limit(limit * 1)
-//       .sort({ [sort]: order })
-//       .exec();
-//   } catch (error) {
-//     res.send(error);
-//   }
-// });
-
 router.get("/", async (req, res) => {
-  const {
-    offset = 0,
-    limit = 0,
-    sort = "createdAt",
-    order = "desc",
-    search = "",
-  } = req.query;
+  const { limit = 5, offset = 0 } = req.query;
   const query = {};
   try {
-    if (search) {
-      query.title = { $regex: search, $options: "i" };
+    if (req.query.search) {
+      query.$or = [
+        { Title: { $regex: req.query.search, $options: "i" } },
+        { SeoTitle: { $regex: req.query.search, $options: "i" } },
+        { Slug: { $regex: req.query.search, $options: "i" } },
+      ];
     }
     const posts = await Post.find(query)
       .skip(offset * limit)
       .limit(limit * 1)
-      // .sort({ [sort]: order })
+      .sort({ CreatedOn: -1 })
       .exec();
     const total = await Post.find(query).countDocuments();
+    const totalPages = Math.ceil(total / limit);
+    // const currentPage = Math.ceil(total % offset);
+    // Math.ceil(total % offset) > 0 ? Math.ceil(total % offset) : 1;
     res.status(HttpStatus.OK).json({
       success: true,
       message: "All posts are fetched.",
       code: HttpStatus.OK,
       posts,
       total,
+      totalPages,
+      // currentPage,
     });
   } catch (error) {
     res.send(error);
@@ -162,13 +128,19 @@ router.put("/:id", upload.single("Image"), async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     await Post.findByIdAndDelete(req.params.id);
-    res.json({
-      status: "ok",
-      message: "Post deleted successfully",
+    return res.status(HttpStatus.OK).json({
+      success: true,
+      message: "Post Deleted Successfully.",
+      code: HttpStatus.OK,
     });
   } catch (err) {
     console.log(err);
-    res.json({ status: "error", error: "something went wrong while deleting" });
+    return res.status(HttpStatus.BAD_REQUEST).json({
+      success: false,
+      message: "Something went wrong while deleting.",
+      code: HttpStatus.BAD_REQUEST,
+      error: err,
+    });
   }
 });
 

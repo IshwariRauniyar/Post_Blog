@@ -1,10 +1,14 @@
 import Types from "../actions/types";
 
-export default (state = { posts: [], errors: {} }, action) => {
+export default (state = { posts: [], errors: {}, total: 0 }, action) => {
   switch (action.type) {
     case Types.POST_GET_ALL:
-      console.log("statee", state);
-      return { ...state, posts: [...action.payload], errors: {} };
+      return {
+        ...state,
+        posts: [...action.payload.posts],
+        errors: {},
+        total: action.payload.total,
+      };
     case Types.POST_DELETE:
       return {
         ...state,

@@ -3,14 +3,15 @@ import axiosInstance from "../../axios";
 import Toast from "../../components/Toast";
 
 export const getPost =
-  ({ offset = 0, limit = 10, search = "" }) =>
+  ({ offset = 0, limit = 0, search = "" }) =>
   async (dispatch) => {
     try {
       const { data } = await axiosInstance.get(
         `/post/?offset=${offset}&limit=${limit}&search=${search}`
       );
-      dispatch({ type: Constants.POST_GET_ALL, payload: data.posts });
-      Toast.success("Post fetched successfully");
+      console.log("actionData", data);
+      dispatch({ type: Constants.POST_GET_ALL, payload: data });
+      // Toast.success("Post fetched successfully");
     } catch (error) {
       Toast.error("Error fetching Post");
       console.log(error);
