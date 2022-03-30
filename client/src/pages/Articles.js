@@ -10,7 +10,6 @@ import { Card, Container, Row, Col, Button, Modal } from "react-bootstrap";
 import TableWithPagination from "../components/DataTable/TableWithPagination/index";
 import PostCreateForm from "../components/Form/PostCreateForm";
 import PostEditForm from "../components/Form/PostEditForm";
-// import ArticleEditForm from "components/form/Articles/ArticleEditForm";
 import moment from "moment";
 
 function dateToString(CreatedOn) {
@@ -65,7 +64,7 @@ function Article() {
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
               <Card.Header className="d-flex align-items-center justify-content-between">
-                <Card.Title as="h4">Post List</Card.Title>
+                <Card.Title>Post List</Card.Title>
                 <Button
                   className="btn-fill pull-right"
                   type="submit"
@@ -99,6 +98,8 @@ function Article() {
               <Modal
                 show={showCreateModal}
                 onHide={handleCreateClose}
+                backdrop="static"
+                keyboard={false}
                 dialogClassName="modal-lg"
               >
                 <Modal.Header closeButton>

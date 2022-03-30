@@ -6,20 +6,70 @@ var fs = require("fs");
 var path = require("path");
 const upload = require("../middlewares/uploads");
 
-router.get("/", (req, res) => {
-  Post.find((err, posts) => {
-    if (err) {
-      res.send(err);
+// router.get("/", async (req, res) => {
+//   const {
+//     page = 1,
+//     limit = 10,
+//     sort = "createdAt",
+//     order = "desc",
+//     search = "",
+//     offset = 0,
+//   } = req.query;
+//   const query = {};
+//   try {
+//     if (search) {
+//       query.title = { $regex: search, $options: "i" };
+//     }
+
+//     const posts = await Post.find((err, posts) => {
+//       if (err) {
+//         res.send(err);
+//       }
+//       return res.status(HttpStatus.OK).json({
+//         success: true,
+//         message: "All posts are fetched.",
+//         code: HttpStatus.OK,
+//         posts,
+//       });
+//     })
+//       .skip(offset)
+//       .limit(limit * 1)
+//       .sort({ [sort]: order })
+//       .exec();
+//   } catch (error) {
+//     res.send(error);
+//   }
+// });
+
+router.get("/", async (req, res) => {
+  const {
+    offset = 0,
+    limit = 0,
+    sort = "createdAt",
+    order = "desc",
+    search = "",
+  } = req.query;
+  const query = {};
+  try {
+    if (search) {
+      query.title = { $regex: search, $options: "i" };
     }
-    // res.json(posts);
-    return res.status(HttpStatus.OK).json({
+    const posts = await Post.find(query)
+      .skip(offset * limit)
+      .limit(limit * 1)
+      // .sort({ [sort]: order })
+      .exec();
+    const total = await Post.find(query).countDocuments();
+    res.status(HttpStatus.OK).json({
       success: true,
       message: "All posts are fetched.",
       code: HttpStatus.OK,
       posts,
-      // ...(posts && { ...posts }),
+      total,
     });
-  });
+  } catch (error) {
+    res.send(error);
+  }
 });
 
 router.get("/:id", (req, res) => {
@@ -49,7 +99,7 @@ router.post("/", upload.single("Image"), async (req, res) => {
       SeoTitle: req.body.SeoTitle,
       SeoDescription: req.body.SeoDescription,
       PostType: req.body.PostType,
-      Image: req.file.path,
+      Image: req.file?.path,
       Description: req.body.Description,
       Order: req.body.Order,
       IsActive: req.body.IsActive,
@@ -74,7 +124,7 @@ router.post("/", upload.single("Image"), async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", upload.single("Image"), async (req, res) => {
   try {
     const PostData = await Post.findByIdAndUpdate(
       req.params.id,
@@ -84,7 +134,7 @@ router.put("/:id", async (req, res) => {
         SeoTitle: req.body.SeoTitle,
         SeoDescription: req.body.SeoDescription,
         PostType: req.body.PostType,
-        Image: req.body.Image,
+        Image: req.file?.path,
         Description: req.body.descripton,
         Order: req.body.Order,
         IsActive: req.body.IsActive,

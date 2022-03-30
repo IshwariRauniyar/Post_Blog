@@ -4,16 +4,16 @@ import { createPost } from "../../redux/actions/post.actions";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Form, Row, Col, Image } from "react-bootstrap";
+import ImageUploader from "react-images-upload";
+import "react-images-uploader/styles.css";
+import "react-images-uploader/font.css";
+import { cdn } from "../../urlConfig";
 
 const PostCreateForm = ({ close }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
-  // const [Slug, setSlug] = useState(slugify(title));
   const [seoTitle, setSeoTitle] = useState("");
-  // const [seoDescription, setSeoDescription] = useState(() =>
-  //   JSON.stringify(EditorState.createEmpty())
-  // );
   const [seoDescription, setSeoDescription] = useState("");
   const [description, setDescription] = useState("");
   const [summary, setSummary] = useState("");
@@ -34,7 +34,6 @@ const PostCreateForm = ({ close }) => {
       IsActive: IsActive,
       Image,
     };
-    console.log("formdata", newPost);
     dispatch(createPost(newPost));
     onclose();
   };
@@ -43,24 +42,27 @@ const PostCreateForm = ({ close }) => {
   };
   const handleChange = (e) => {
     setImage(e.target.files[0]);
+    // const blob = e.target.files[0];
+    // const url = URL.createObjectURL(blob);
+    // const img = new Image();
+    // img.src = url;
+    // console.log(url);
+    // return url;
   };
   const handleChangeSwitch = (IsActive) => {
     setIsActive(!IsActive);
   };
 
-  // const slugify = (title) => {
-  //   const slug = title;
-  //   setSlug(
-  //     slug
-  //       .toString()
-  //       .toLowerCase()
-  //       .replace(/\s+/g, "-") // Replace spaces with -
-  //       .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-  //       .replace(/\-\-+/g, "-") // Replace multiple - with single -
-  //       .replace(/^-+/, "") // Trim - from start of text
-  //       .replace(/-+$/, "") // Trim - from end of text
-  //   );
-  // };
+  const slugify = (text) => {
+    const sl = text
+      .toLowerCase()
+      .replace(/\s+/g, "-") // Replace spaces with -
+      .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+      .replace(/\-\-+/g, "-") // Replace multiple - with single -
+      .replace(/^-+/, "") // Trim - from start of text
+      .replace(/-+$/, ""); // Trim - from end of text
+    setSlug(sl);
+  };
 
   return (
     <>
@@ -70,8 +72,12 @@ const PostCreateForm = ({ close }) => {
           <input
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             type="text"
+            required
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              slugify(e.target.value);
+            }}
             placeholder="Enter title"
           />
         </div>
@@ -82,14 +88,7 @@ const PostCreateForm = ({ close }) => {
             type="text"
             name="slug"
             readOnly
-            value={title
-              .toLowerCase()
-              .replace(/\s+/g, "-")
-              .replace(/[^\w\-]+/g, "")
-              .replace(/\-\-+/g, "-")
-              .replace(/^-+/, "")
-              .replace(/-+$/, "")}
-            onChange={(e) => setSlug({ slug: e.target.value })}
+            value={slug}
           />
         </div>
         <div className="mb-6">
@@ -97,27 +96,12 @@ const PostCreateForm = ({ close }) => {
           <input
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             type="text"
+            required
             value={seoTitle}
             onChange={(e) => setSeoTitle(e.target.value)}
             placeholder="Enter seo title.."
           />
         </div>
-        {/* <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium">
-            Seo Description
-          </label>
-          <Editor
-            toolbarClassName="toolbarClassName"
-            wrapperClassName="wrapperClassName"
-            editorClassName="editorClassName"
-            value={seoDescription}
-            onChange={setSeoDescription}
-            // onChange={(e) => setSeoDescription(e.target.value)}
-            // onChange={(e) => setEditorState(e.target.value)}
-            // onEditorStateChange={onEditorStateChange}
-          />
-        </div> */}
-
         <div className="mb-6">
           <label className="block mb-2 text-md font-medium">
             Seo Description
@@ -130,19 +114,6 @@ const PostCreateForm = ({ close }) => {
             onChange={(e) => setSeoDescription(e.target.value)}
           />
         </div>
-
-        {/* <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium">Description</label>
-          <WYSIWYGEditor
-            // <textarea
-            className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-            rows={5}
-            placeholder="Write something..."
-            value={description}
-            // onChange={setDescription}
-            // onChange={(e) => setDescription(e.target.value)}
-          />
-        </div> */}
 
         <div className="mb-6">
           <label className="block mb-2 text-md font-medium">Description</label>
@@ -176,13 +147,15 @@ const PostCreateForm = ({ close }) => {
         </div>
         <div className="mb-6 ">
           <label className="block mb-2 text-md font-medium">Image</label>
-          {/* <div className="py-2 shrink-0">
+          <div className="py-2 shrink-0">
             <img
               className="object-cover w-16 h-16 "
-              src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80"
-              alt="Current profile photo"
+              // src={"" + window.URL?.createObjectURL(Image)}
+              // src={Image ? `${cdn}/middlewares/${Image.name}` : ""}
+              src={Image}
+              // alt="Current profile photo"
             />
-          </div> */}
+          </div>
           <label className="block pt-2">
             <span className="sr-only">Browse photo </span>
             <input
@@ -194,15 +167,11 @@ const PostCreateForm = ({ close }) => {
         </div>
 
         {/* <div className="mb-6">
-          <ImagesUploader
-            // withIcon={true}
+          <ImageUploader
+            type="file"
+            withIcon={false}
+            withPreview={true}
             buttonText="Choose images"
-            optimisticPreviews
-            onLoadEnd={(err) => {
-              if (err) {
-                console.error(err);
-              }
-            }}
             onChange={handleChange}
             imgExtension={[".jpg", ".gif", ".png", ".gif"]}
             maxFileSize={5242880}

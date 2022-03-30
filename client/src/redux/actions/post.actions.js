@@ -2,16 +2,20 @@ import Constants from "./types";
 import axiosInstance from "../../axios";
 import Toast from "../../components/Toast";
 
-export const getPost = () => async (dispatch) => {
-  try {
-    const { data } = await axiosInstance.get(`/post`);
-    dispatch({ type: Constants.POST_GET_ALL, payload: data.posts });
-    Toast.success("Post fetched successfully");
-  } catch (error) {
-    Toast.error("Error fetching Post");
-    console.log(error);
-  }
-};
+export const getPost =
+  ({ offset = 0, limit = 10, search = "" }) =>
+  async (dispatch) => {
+    try {
+      const { data } = await axiosInstance.get(
+        `/post/?offset=${offset}&limit=${limit}&search=${search}`
+      );
+      dispatch({ type: Constants.POST_GET_ALL, payload: data.posts });
+      Toast.success("Post fetched successfully");
+    } catch (error) {
+      Toast.error("Error fetching Post");
+      console.log(error);
+    }
+  };
 
 export const getSinglePost = (id) => async (dispatch) => {
   try {
@@ -64,9 +68,21 @@ export const createPost = (newPost) => async (dispatch) => {
 
 export const updatePost = (id, updatePost) => async (dispatch) => {
   try {
-    const { data } = await axiosInstance.put(`/post/${id}`, updatePost);
-    console.log("EDITdata", data);
-    dispatch({ type: Constants.POST_EDIT, payload: data.result });
+    if (updatePost) {
+      const formData = new FormData();
+      formData.append("Image", updatePost.Image);
+      formData.append("Title", updatePost.Title);
+      formData.append("Slug", updatePost.Slug);
+      formData.append("SeoTitle", updatePost.SeoTitle);
+      formData.append("SeoDescription", updatePost.SeoDescription);
+      formData.append("Description", updatePost.Description);
+      formData.append("Order", updatePost.Order);
+      formData.append("Summary", updatePost.Summary);
+      formData.append("IsActive", updatePost.IsActive);
+      const { data } = await axiosInstance.put(`/post/${id}`, formData);
+      console.log("EDITdata", data);
+      dispatch({ type: Constants.POST_EDIT, payload: data.result });
+    }
     Toast.success("Post updated successfully");
   } catch (error) {
     Toast.error("Error updating Post");

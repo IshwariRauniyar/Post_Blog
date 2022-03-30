@@ -9,6 +9,7 @@ const PostEditForm = ({ editState, close }) => {
   const dispatch = useDispatch();
   const [paramid, setID] = useState(editState._id);
   const [title, setTitle] = useState(editState?.Title || "");
+  const [slug, setSlug] = useState(editState?.Slug || "");
   const [seoTitle, setSeoTitle] = useState(editState?.SeoTitle || "");
   const [seoDescription, setSeoDescription] = useState(
     editState?.SeoDescription || ""
@@ -25,6 +26,7 @@ const PostEditForm = ({ editState, close }) => {
     e.preventDefault();
     const newPost = {
       Title: title,
+      Slug: slug,
       SeoTitle: seoTitle,
       SeoDescription: seoDescription,
       Description: description,
@@ -47,6 +49,17 @@ const PostEditForm = ({ editState, close }) => {
     setIsActive(!IsActive);
   };
 
+  const slugify = (text) => {
+    const sl = text
+      .toLowerCase()
+      .replace(/\s+/g, "-") // Replace spaces with -
+      .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+      .replace(/\-\-+/g, "-") // Replace multiple - with single -
+      .replace(/^-+/, "") // Trim - from start of text
+      .replace(/-+$/, ""); // Trim - from end of text
+    setSlug(sl);
+  };
+
   return (
     <>
       <Form onSubmit={handleSubmit}>
@@ -56,8 +69,21 @@ const PostEditForm = ({ editState, close }) => {
             className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
             type="text"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              slugify(e.target.value);
+            }}
             placeholder="Enter title"
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block mb-2 text-md font-medium"> Slug</label>
+          <input
+            className="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+            type="text"
+            name="slug"
+            readOnly
+            value={slug}
           />
         </div>
         <div className="mb-6">
@@ -70,21 +96,6 @@ const PostEditForm = ({ editState, close }) => {
             placeholder="Enter seo title.."
           />
         </div>
-        {/* <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium">
-            Seo Description
-          </label>
-          <Editor
-            toolbarClassName="toolbarClassName"
-            wrapperClassName="wrapperClassName"
-            editorClassName="editorClassName"
-            value={seoDescription}
-            onChange={setSeoDescription}
-            // onChange={(e) => setSeoDescription(e.target.value)}
-            // onChange={(e) => setEditorState(e.target.value)}
-            // onEditorStateChange={onEditorStateChange}
-          />
-        </div> */}
 
         <div className="mb-6">
           <label className="block mb-2 text-md font-medium">

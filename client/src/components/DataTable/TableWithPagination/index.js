@@ -68,13 +68,13 @@ export default function TableWithPagination({
   }
 
   useEffect(() => {
-    getAction && dispatch(getAction());
-  }, []);
-  //   getAction && dispatch(getAction({ offset: skip, limit, search }));
-  // }, [limit, skip, search, ...deps]);
+    //   getAction && dispatch(getAction());
+    // }, []);
+    getAction && dispatch(getAction({ offset: skip, limit, search }));
+  }, [limit, skip, search]);
 
   useEffect(() => {
-    if (tableData?.length > 10) {
+    if (tableData.length > 10) {
       setSkip(currentPage - 2);
     }
     if (currentPage) {
@@ -216,14 +216,16 @@ export default function TableWithPagination({
       <Modal
         show={showModal}
         onHide={handleClose}
-        // dialogClassName="modal-lg"
+        dialogClassName="modal-lg"
+        backdrop="static"
+        keyboard={false}
       >
         <Modal.Header closeButton>
           <Modal.Title>Delete {title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Do you want to permanently delete "
-          {deleteTableUser && deleteTableUser[0]?.name}" ?
+          {deleteTableUser && deleteTableUser[0]?.Title}" ?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -242,6 +244,8 @@ export default function TableWithPagination({
       <Modal
         show={showEditModal}
         onHide={handleEditClose}
+        backdrop="static"
+        keyboard={false}
         dialogClassName="modal-lg"
       >
         <Modal.Header closeButton>
