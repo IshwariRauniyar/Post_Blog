@@ -5,7 +5,7 @@ const HttpStatus = require("http-status-codes");
 const upload = require("../middlewares/uploads");
 
 router.get("/", async (req, res) => {
-  const { limit = 5, offset = 0 } = req.query;
+  const { limit = 10, offset = 0 } = req.query;
   const query = {};
   try {
     if (req.query.search) {
@@ -18,11 +18,11 @@ router.get("/", async (req, res) => {
     const posts = await Post.find(query)
       .skip(offset * limit)
       .limit(limit * 1)
-      .sort({ CreatedOn: -1 })
+      // .sort({ CreatedOn: -1 })
       .exec();
     const total = await Post.find(query).countDocuments();
     const totalPages = Math.ceil(total / limit);
-    // const currentPage = Math.ceil(total % offset);
+    const currentPage = parseInt(offset) + 1;
     // Math.ceil(total % offset) > 0 ? Math.ceil(total % offset) : 1;
     res.status(HttpStatus.OK).json({
       success: true,
@@ -31,7 +31,7 @@ router.get("/", async (req, res) => {
       posts,
       total,
       totalPages,
-      // currentPage,
+      currentPage,
     });
   } catch (error) {
     res.send(error);
