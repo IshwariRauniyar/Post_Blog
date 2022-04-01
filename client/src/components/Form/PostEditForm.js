@@ -6,6 +6,10 @@ import "react-quill/dist/quill.snow.css";
 import { Form, Row, Col, Image } from "react-bootstrap";
 
 const PostEditForm = ({ editState, close }) => {
+  console.log("editState", editState);
+  const ImagePath = editState.Image;
+  const path = ImagePath.replace("\\", "/");
+  console.log("path", path);
   const dispatch = useDispatch();
   const [paramid, setID] = useState(editState._id);
   const [title, setTitle] = useState(editState?.Title || "");
@@ -17,7 +21,7 @@ const PostEditForm = ({ editState, close }) => {
   const [description, setDescription] = useState(editState?.Description || "");
   const [summary, setSummary] = useState(editState?.Summary || "");
   const [order, setOrder] = useState(editState?.Order || "");
-  const [Image, setImage] = useState(null);
+  const [Image, setImage] = useState(path || "");
   const [IsActive, setIsActive] = useState(editState?.IsActive || Boolean);
 
   const onclose = close;
@@ -146,7 +150,8 @@ const PostEditForm = ({ editState, close }) => {
             <img
               id="output"
               className="object-cover w-25 h-25 "
-              src={Image ? URL.createObjectURL(Image) : ""}
+              src={Image}
+              // src={Image ? URL.createObjectURL(Image) : ""}
             />
           </div>
           <label className="block pt-2">

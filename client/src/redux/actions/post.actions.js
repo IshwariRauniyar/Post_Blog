@@ -3,7 +3,7 @@ import axiosInstance from "../../axios";
 import Toast from "../../components/Toast";
 
 export const getPost =
-  ({ offset = 0, limit = 0, search = "" }) =>
+  ({ offset = 0, limit = 10, search = "" }) =>
   async (dispatch) => {
     try {
       const { data } = await axiosInstance.get(

@@ -1,6 +1,9 @@
 import Types from "../actions/types";
 
-export default (state = { posts: [], errors: {}, total: 0 }, action) => {
+export default (
+  state = { posts: [], errors: {}, total: 0, totalPages: 0, currentPage: 0 },
+  action
+) => {
   switch (action.type) {
     case Types.POST_GET_ALL:
       return {
@@ -8,6 +11,8 @@ export default (state = { posts: [], errors: {}, total: 0 }, action) => {
         posts: [...action.payload.posts],
         errors: {},
         total: action.payload.total,
+        totalPages: action.payload.totalPages,
+        currentPage: action.payload.currentPage,
       };
     case Types.POST_DELETE:
       return {
