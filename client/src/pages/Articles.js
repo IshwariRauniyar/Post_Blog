@@ -7,6 +7,7 @@ import TableWithPagination from "../components/DataTable/TableWithPagination/ind
 import PostCreateForm from "../components/Form/PostCreateForm";
 import PostEditForm from "../components/Form/PostEditForm";
 import moment from "moment";
+import Pagination from "../components/DataTable/Pagination/index";
 
 function dateToString(CreatedOn) {
   return moment(CreatedOn).format("YYYY-MM-DD");
@@ -14,10 +15,16 @@ function dateToString(CreatedOn) {
 
 function Article() {
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [currentPag, setCurrentPage] = useState(1);
+  const [skip, setSkip] = useState(0);
 
-  const { posts: all_data, total } = useSelector((state) => state.post);
+  const {
+    posts: all_data,
+    total,
+    totalPages,
+    currentPage,
+  } = useSelector((state) => state.post);
   console.log("all_data", all_data);
-  console.log("total", total);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -41,12 +48,12 @@ function Article() {
       property: ["Order"],
       sortable: false,
     },
-    {
-      name: "Status",
-      field: "IsActive",
-      property: ["IsActive"],
-      value: (IsActive) => (IsActive ? "Active" : "Inactive"),
-    },
+    // {
+    //   name: "Status",
+    //   field: "IsActive",
+    //   property: ["IsActive"],
+    //   value: (IsActive) => (IsActive ? "Active" : "Inactive"),
+    // },
     {
       name: "CreatedOn",
       field: "CreatedOn",

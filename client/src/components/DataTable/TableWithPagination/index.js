@@ -16,10 +16,10 @@ export default function TableWithPagination({
 }) {
   const [editData, setEditData] = useState();
   const [deleteTableData, setDeleteTableData] = useState();
-  const [currentPage, setCurrentPage] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [limit, setLimit] = useState(10);
+  // const [limit, setLimit] = useState(10);
   const [skip, setSkip] = useState(0);
   const [search, setSearch] = useState("");
 
@@ -55,49 +55,39 @@ export default function TableWithPagination({
     deleteAction && dispatch(deleteAction(id));
     handleClose();
   }
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    //   getAction && dispatch(getAction());
-    // }, []);
-    getAction && dispatch(getAction({ offset: skip, limit, search }));
-  }, [skip, limit, search]);
+    getAction && dispatch(getAction({ offset: skip, search }));
+  }, [skip, search]);
 
   useEffect(() => {
     if (currentPage) {
-      console.log("currentPage", currentPage);
       setSkip(currentPage - 1);
     }
-  }, [currentPage, tableData]);
+  }, [currentPage]);
 
   const ITEMS_PER_PAGE = 10;
-  const nextPage = () => {
-    let pageSize = ITEMS_PER_PAGE;
-    setLimit(pageSize);
-  };
+  // const nextPage = () => {
+  //   let pageSize = ITEMS_PER_PAGE;
+  //   setLimit(pageSize);
+  // };
 
   const allData = useMemo(() => {
     let computedData = tableData?.length ? tableData : [];
+    const firstPageIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const lastPageIndex = firstPageIndex + ITEMS_PER_PAGE;
     return computedData;
-  }, [tableData, currentPage]);
+  }, [tableData, skip]);
+
   return (
     <>
       <div className="d-flex align-items-center justify-content-between mx-3">
-        <div>
-          <Pagination
-            total={total}
-            itemsPerPage={ITEMS_PER_PAGE}
-            currentPage={currentPage}
-            onPageChange={(page) => setCurrentPage(page)}
-            nextPage={nextPage}
-          />
-        </div>
-
         {!hideSearch ? (
           <div className="d-flex flex-row-rever">
             <Search
               onSearch={(value) => {
                 setSearch(value);
-                // setCurrentPage(1);
               }}
             />
           </div>
@@ -108,6 +98,7 @@ export default function TableWithPagination({
       <Table
         id="example"
         className="table-hover table-striped"
+        responsive="md"
         // striped
         // bordered
         // hover
@@ -119,12 +110,16 @@ export default function TableWithPagination({
         <tbody>
           {allData &&
             allData?.map((data) => {
+              // console.log("data", data);
               return (
                 <tr key={data?._id}>
                   {headers &&
                     headers.map((val, i) => {
+                      // console.log("val", val);
                       return val?.property?.length ? (
-                        <td key={i}>{nestedObj(val?.property, data)}</td>
+                        <td style={{ wordBreak: "break-word" }} key={i}>
+                          {nestedObj(val?.property, data)}
+                        </td>
                       ) : null;
                     })}
                   <td>
@@ -165,6 +160,14 @@ export default function TableWithPagination({
             })}
         </tbody>
       </Table>
+
+      <Pagination
+        className="pagination-bar"
+        currentPage={currentPage}
+        totalCount={total}
+        pageSize={ITEMS_PER_PAGE}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
 
       {/* delete Modal */}
       <Modal
