@@ -7,8 +7,8 @@ import { Form, Row, Col, Image } from "react-bootstrap";
 
 const PostEditForm = ({ editState, close }) => {
   console.log("editState", editState);
-  const ImagePath = editState.Image;
-  console.log("ImagePath", ImagePath);
+  const ImgPath = editState.Image;
+  console.log("ImagePath", ImgPath);
   // const path = ImagePath.replace("\\", "/");
   // console.log("path", path);
   const dispatch = useDispatch();
@@ -22,7 +22,8 @@ const PostEditForm = ({ editState, close }) => {
   const [description, setDescription] = useState(editState?.Description || "");
   const [summary, setSummary] = useState(editState?.Summary || "");
   const [order, setOrder] = useState(editState?.Order || "");
-  const [Image, setImage] = useState(ImagePath || null);
+  const [Image, setImage] = useState();
+  const [ImagePath, setImagePath] = useState(ImgPath || null);
   const [IsActive, setIsActive] = useState(editState?.IsActive || Boolean);
 
   const onclose = close;
@@ -148,17 +149,19 @@ const PostEditForm = ({ editState, close }) => {
         <div className="mb-6 ">
           <label className="block mb-2 text-2xl font-medium">Image</label>
           <div className="py-2 shrink-0">
-            <img
-              id="output"
-              className="object-cover w-25 h-25 "
-              src={
-                `http://localhost:8848/${Image}`
-                  ? `http://localhost:8848/${Image}`
-                  : ""
-              }
-              // src={Image}
-              // src={Image ? URL.createObjectURL(Image) : ""}
-            />
+            {!!!Image ? (
+              <img
+                id="output"
+                className="object-cover w-25 h-25 "
+                src={`http://localhost:8848/${ImagePath}`}
+              />
+            ) : (
+              <img
+                id="output"
+                className="object-cover w-25 h-25 "
+                src={URL.createObjectURL(Image)}
+              />
+            )}
           </div>
           <label className="block pt-2">
             <span className="sr-only">Browse photo </span>
@@ -175,7 +178,7 @@ const PostEditForm = ({ editState, close }) => {
           <label className="block absolute inset-y-0 left-0 flex items-center pl-3">
             <input
               type="checkbox"
-              value={IsActive}
+              checked={IsActive}
               onChange={() => handleChangeSwitch(IsActive)}
               className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
             />

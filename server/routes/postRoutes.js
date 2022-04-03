@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
     const posts = await Post.find(query)
       .skip(offset * limit)
       .limit(limit * 1)
-      // .sort({ CreatedOn: -1 })
+      .sort({ CreatedOn: -1 })
       .exec();
     const total = await Post.find(query).countDocuments();
     const totalPages = Math.ceil(total / limit);

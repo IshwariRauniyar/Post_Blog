@@ -31,6 +31,10 @@ export default function TableWithPagination({
       for (let x = 0; array?.length > x; x++) {
         data = data?.[array[x]];
         if (array?.length === x + 1) {
+          if (array[x] === "IsActive") {
+            return data ? "Active" : "Inactive";
+          }
+
           return data;
         }
       }
@@ -110,12 +114,10 @@ export default function TableWithPagination({
         <tbody>
           {allData &&
             allData?.map((data) => {
-              // console.log("data", data);
               return (
                 <tr key={data?._id}>
                   {headers &&
                     headers.map((val, i) => {
-                      // console.log("val", val);
                       return val?.property?.length ? (
                         <td style={{ wordBreak: "break-word" }} key={i}>
                           {nestedObj(val?.property, data)}

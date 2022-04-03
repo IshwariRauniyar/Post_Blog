@@ -48,12 +48,12 @@ function Article() {
       property: ["Order"],
       sortable: false,
     },
-    // {
-    //   name: "Status",
-    //   field: "IsActive",
-    //   property: ["IsActive"],
-    //   value: (IsActive) => (IsActive ? "Active" : "Inactive"),
-    // },
+    {
+      name: "Status",
+      field: "IsActive",
+      property: ["IsActive"],
+      value: (IsActive) => (IsActive ? "Active" : "Inactive"),
+    },
     {
       name: "CreatedOn",
       field: "CreatedOn",
