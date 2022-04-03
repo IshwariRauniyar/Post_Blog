@@ -8,8 +8,9 @@ import { Form, Row, Col, Image } from "react-bootstrap";
 const PostEditForm = ({ editState, close }) => {
   console.log("editState", editState);
   const ImagePath = editState.Image;
-  const path = ImagePath.replace("\\", "/");
-  console.log("path", path);
+  console.log("ImagePath", ImagePath);
+  // const path = ImagePath.replace("\\", "/");
+  // console.log("path", path);
   const dispatch = useDispatch();
   const [paramid, setID] = useState(editState._id);
   const [title, setTitle] = useState(editState?.Title || "");
@@ -21,7 +22,7 @@ const PostEditForm = ({ editState, close }) => {
   const [description, setDescription] = useState(editState?.Description || "");
   const [summary, setSummary] = useState(editState?.Summary || "");
   const [order, setOrder] = useState(editState?.Order || "");
-  const [Image, setImage] = useState(path || "");
+  const [Image, setImage] = useState(ImagePath || null);
   const [IsActive, setIsActive] = useState(editState?.IsActive || Boolean);
 
   const onclose = close;
@@ -150,7 +151,12 @@ const PostEditForm = ({ editState, close }) => {
             <img
               id="output"
               className="object-cover w-25 h-25 "
-              src={Image}
+              src={
+                `http://localhost:8848/${Image}`
+                  ? `http://localhost:8848/${Image}`
+                  : ""
+              }
+              // src={Image}
               // src={Image ? URL.createObjectURL(Image) : ""}
             />
           </div>

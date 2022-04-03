@@ -58,6 +58,10 @@ router.post("/", upload.single("Image"), async (req, res) => {
   const obj = JSON.parse(JSON.stringify(req.body));
   console.log("bodydata", obj);
   console.log("img", req.file);
+  // const img = req.file.destination + "/" + req.file.filename;
+  // const path = `http://localhost:8848/api/${img}`;
+  // console.log("path", path);
+
   try {
     const PostData = await Post.create({
       Title: req.body.Title,
@@ -65,7 +69,7 @@ router.post("/", upload.single("Image"), async (req, res) => {
       SeoTitle: req.body.SeoTitle,
       SeoDescription: req.body.SeoDescription,
       PostType: req.body.PostType,
-      Image: req.file?.path,
+      Image: req.file?.destination + "/" + req.file?.filename,
       Description: req.body.Description,
       Order: req.body.Order,
       IsActive: req.body.IsActive,
