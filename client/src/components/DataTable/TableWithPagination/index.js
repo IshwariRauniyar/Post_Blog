@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { TableHeader, Pagination, Search } from "..";
 import { Button, Table, Modal } from "react-bootstrap";
 import { useDispatch } from "react-redux";
+import moment from "moment";
 
 export default function TableWithPagination({
   hideSearch = false,
@@ -24,7 +25,13 @@ export default function TableWithPagination({
   const [search, setSearch] = useState("");
 
   const dispatch = useDispatch();
+  function dateToString(CreatedOn) {
+    return moment(CreatedOn).format("YYYY-MM-DD");
+  }
 
+  {
+    /* mapping the value according to the property and return the data */
+  }
   function nestedObj(array, object) {
     if (object && array?.length) {
       let data = object;
@@ -33,6 +40,9 @@ export default function TableWithPagination({
         if (array?.length === x + 1) {
           if (array[x] === "IsActive") {
             return data ? "Active" : "Inactive";
+          }
+          if (array[x] === "CreatedOn") {
+            return dateToString(data);
           }
 
           return data;
@@ -59,7 +69,6 @@ export default function TableWithPagination({
     deleteAction && dispatch(deleteAction(id));
     handleClose();
   }
-  useEffect(() => {}, []);
 
   useEffect(() => {
     getAction && dispatch(getAction({ offset: skip, search }));
@@ -72,10 +81,6 @@ export default function TableWithPagination({
   }, [currentPage]);
 
   const ITEMS_PER_PAGE = 10;
-  // const nextPage = () => {
-  //   let pageSize = ITEMS_PER_PAGE;
-  //   setLimit(pageSize);
-  // };
 
   const allData = useMemo(() => {
     let computedData = tableData?.length ? tableData : [];

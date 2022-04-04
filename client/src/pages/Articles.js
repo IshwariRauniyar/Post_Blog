@@ -6,24 +6,11 @@ import { Card, Container, Row, Col, Button, Modal } from "react-bootstrap";
 import TableWithPagination from "../components/DataTable/TableWithPagination/index";
 import PostCreateForm from "../components/Form/PostCreateForm";
 import PostEditForm from "../components/Form/PostEditForm";
-import moment from "moment";
-import Pagination from "../components/DataTable/Pagination/index";
-
-function dateToString(CreatedOn) {
-  return moment(CreatedOn).format("YYYY-MM-DD");
-}
 
 function Article() {
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [currentPag, setCurrentPage] = useState(1);
-  const [skip, setSkip] = useState(0);
 
-  const {
-    posts: all_data,
-    total,
-    totalPages,
-    currentPage,
-  } = useSelector((state) => state.post);
+  const { posts: all_data, total } = useSelector((state) => state.post);
   console.log("all_data", all_data);
 
   const navigate = useNavigate();
@@ -52,13 +39,11 @@ function Article() {
       name: "Status",
       field: "IsActive",
       property: ["IsActive"],
-      value: (IsActive) => (IsActive ? "Active" : "Inactive"),
     },
     {
       name: "CreatedOn",
       field: "CreatedOn",
       property: ["CreatedOn"],
-      value: (CreatedOn) => dateToString(CreatedOn),
       sortable: false,
     },
     { name: "Actions", field: "actions", property: [], sortable: false },
