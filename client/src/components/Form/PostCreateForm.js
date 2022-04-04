@@ -4,7 +4,7 @@ import { createPost } from "../../redux/actions/post.actions";
 import ReactQuill, { Quill, Mixin, Toolbar } from "react-quill";
 import "../../../node_modules/react-quill/dist/quill.snow.css";
 import { Form, Row, Col, Image } from "react-bootstrap";
-import { cdn } from "../../urlConfig";
+import { v4 as uuidv4 } from "uuid";
 
 const PostCreateForm = ({ close }) => {
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ const PostCreateForm = ({ close }) => {
       .replace(/\-\-+/g, "-") // Replace multiple - with single -
       .replace(/^-+/, "") // Trim - from start of text
       .replace(/-+$/, ""); // Trim - from end of text
-    setSlug(sl);
+    setSlug(sl + "-" + uuidv4().substr(0, 8));
   };
 
   return (
@@ -157,7 +157,7 @@ const PostCreateForm = ({ close }) => {
           <label className="block mb-2 text-2xl font-medium">Summary</label>
           <textarea
             className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
-            rows={5}
+            rows={3}
             placeholder="Write short brief..."
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
