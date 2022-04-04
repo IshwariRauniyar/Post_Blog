@@ -3,10 +3,13 @@
 # dependencies
 node_modules
 .env
-.pnp
-.pnp.js
+*.png
+*.jpeg
+*.jpg
+*.pnp.js
+*.webp
 # FileUploads
-public/uploads/images
+# public/uploads/*
 
 # testing
 /coverage

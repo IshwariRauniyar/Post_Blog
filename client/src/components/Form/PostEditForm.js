@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePost } from "../../redux/actions/post.actions";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import "../../../node_modules/react-quill/dist/quill.snow.css";
 import { Form, Row, Col, Image } from "react-bootstrap";
 
 const PostEditForm = ({ editState, close }) => {
@@ -48,6 +48,7 @@ const PostEditForm = ({ editState, close }) => {
   const onEditorChange = (description) => {
     setDescription(description);
   };
+
   const handleChange = (e) => {
     setImage(e.target.files[0]);
   };
@@ -119,10 +120,37 @@ const PostEditForm = ({ editState, close }) => {
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium">Description</label>
           <ReactQuill
-            theme="snow"
+            className="block w-full h-64 mb-7 pb-11 text-lg "
             placeholder="Write something..."
             value={description}
             onChange={onEditorChange}
+            modules={{
+              toolbar: [
+                [{ header: [1, 2, false] }],
+                ["bold", "italic", "underline", "strike", "blockquote"],
+                [
+                  { list: "ordered" },
+                  { list: "bullet" },
+                  { indent: "-1" },
+                  { indent: "+1" },
+                ],
+                ["link", "image"],
+                ["clean"],
+              ],
+            }}
+            formats={[
+              "header",
+              "bold",
+              "italic",
+              "underline",
+              "strike",
+              "blockquote",
+              "list",
+              "bullet",
+              "indent",
+              "link",
+              "image",
+            ]}
           />
         </div>
 

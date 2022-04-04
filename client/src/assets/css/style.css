@@ -81,4 +81,7 @@
   width: fit-content !important;
 }
 
+.ql-container {
+  min-width: 500px !important;
+}
 /* Custom styles ends*/
