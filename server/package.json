@@ -18,6 +18,8 @@
   "homepage": "https://github.com/IshwariRauniyar/Post_Blog#readme",
   "dependencies": {
     "@hapi/boom": "^9.1.4",
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
@@ -25,6 +27,7 @@
     "fn": "^0.2.0",
     "helmet": "^5.0.2",
     "http-status-codes": "^2.2.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.7",
     "mongoose-slug-generator": "^1.0.4",
     "multer": "^1.4.4",
