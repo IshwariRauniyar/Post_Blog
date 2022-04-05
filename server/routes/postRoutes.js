@@ -12,19 +12,24 @@ router.get("/", async (req, res) => {
       query.$or = [
         { Title: { $regex: req.query.search, $options: "i" } },
         { SeoTitle: { $regex: req.query.search, $options: "i" } },
-        { Slug: { $regex: req.query.search, $options: "i" } },
       ];
     }
     const posts = await Post.find(query)
-      .skip(offset * limit)
-      .limit(limit * 1)
-      .sort({ CreatedOn: -1 })
-      .exec();
+      .skip(offset * 10)
+      .limit(limit)
+      .sort({ $natural: -1 })
+      .then((r) => {
+        return r;
+      })
+      .catch((e) => {
+        console.log(e);
+        return [];
+      });
     const total = await Post.find(query).countDocuments();
     const totalPages = Math.ceil(total / limit);
     const currentPage = parseInt(offset) + 1;
     // Math.ceil(total % offset) > 0 ? Math.ceil(total % offset) : 1;
-    res.status(HttpStatus.OK).json({
+    res.json({
       success: true,
       message: "All posts are fetched.",
       code: HttpStatus.OK,
@@ -34,7 +39,11 @@ router.get("/", async (req, res) => {
       currentPage,
     });
   } catch (error) {
-    res.send(error);
+    res.json({
+      success: false,
+      message: error.message,
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+    });
   }
 });
 
