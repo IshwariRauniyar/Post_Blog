@@ -3,7 +3,8 @@ const { Schema } = mongoose;
 
 const UserSchema = new Schema(
   {
-    FullName: { type: String, required: true },
+    FirstName: { type: String, required: true },
+    LastName: { type: String },
     Email: {
       type: String,
       required: true,
@@ -17,9 +18,10 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    CreatedOn: { type: Date, default: Date.now },
+    ModifiedOn: { type: Date, default: Date.now },
   },
-  { collection: "User" },
-  { timestamps: true }
+  { collection: "User" }
 );
 
 const User = mongoose.model("User", UserSchema);
