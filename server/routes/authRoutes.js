@@ -6,9 +6,17 @@ const User = require("../models/user");
 const HttpStatus = require("http-status-codes");
 
 router.post("/register", async (req, res) => {
-  console.log(req.body);
   try {
     const newPassword = await bcrypt.hash(req.body.Password, 10);
+    const Users = await User.findOne({
+      Email: req.body.Email,
+    });
+    if (Users?.Email === req.body.Email) {
+      res.json({
+        success: false,
+        message: "Email already exists",
+      });
+    }
     const Data = await User.create({
       FirstName: req.body.FirstName,
       LastName: req.body.LastName,
@@ -24,7 +32,7 @@ router.post("/register", async (req, res) => {
       // ...(Data && { ...Data }),
     });
   } catch (e) {
-    console.log(e)
+    console.log(e);
     return res.json({
       success: false,
       message: "something went wrong.",
