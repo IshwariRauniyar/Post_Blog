@@ -1,43 +1,37 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authLogin } from "../redux/actions/auth.actions";
-// import { Form } from "react-bootstrap";
+import { Navigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const auth = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+    window.location.href = "/article";
     const loginData = {
       Email: email,
       Password: password,
     };
-    dispatch(
-      authLogin(loginData)
-      // .then((res) => {
-      //   if (res.payload.loginSuccess) {
-      //     setLoading(false);
-      //     setError("");
-      //   } else {
-      //     setLoading(false);
-      //     setError(res.payload.loginError);
-      //   }
-      // })
-    );
+    dispatch(authLogin(loginData));
   };
 
+  // if (auth.isAuthenticated == true) {
+  //   return <Navigate to={"/article"} />;
+  // } else {
   return (
     <>
       <section className="bg-gray-100">
         <div className="max-w-6xl px-6 mx-auto">
           <div className="flex flex-col items-center h-full md:flex-row">
             <div className="flex items-center justify-center w-full h-screen px-6 md:max-w-md lg:max-w-full md:mx-auto md:w-1/2 lg:px-16 xl:px-12">
-              <div className="w-full p-10 bg-white h-100">
+              <div className="w-full p-10 bg-white">
                 <h2 className="mt-1 text-2xl font-bold leading-tight md:text-2xl">
                   Log in to your account
                 </h2>
@@ -46,12 +40,9 @@ const Login = () => {
                     <label className="block text-gray-700">Email Address</label>
                     <input
                       type="email"
-                      name
-                      id
                       placeholder="Enter Email Address"
                       className="w-full px-4 py-3 mt-2 bg-gray-100 border rounded-lg focus:border-blue-500 focus:bg-white focus:outline-none"
-                      autofocus
-                      autoComplete
+                      autoFocus
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -61,8 +52,6 @@ const Login = () => {
                     <label className="block text-gray-700">Password</label>
                     <input
                       type="password"
-                      name
-                      id
                       placeholder="Enter Password"
                       minLength={6}
                       className="w-full px-4 py-3 mt-2 bg-gray-100 border rounded-lg focus:border-blue-500 focus:bg-white focus:outline-none"
@@ -91,7 +80,7 @@ const Login = () => {
                 <p className="mt-8">
                   Need an account?{" "}
                   <a
-                    href
+                    href="/register"
                     className="font-semibold text-blue-500 hover:text-blue-700"
                   >
                     Create an account
@@ -104,6 +93,7 @@ const Login = () => {
       </section>
     </>
   );
+  // }
 };
 
 export default Login;
