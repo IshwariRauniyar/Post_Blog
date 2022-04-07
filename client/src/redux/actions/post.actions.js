@@ -9,7 +9,6 @@ export const getPost =
       const { data } = await axiosInstance.get(
         `/post/?offset=${offset}&limit=${limit}&search=${search}`
       );
-      console.log("actionData", data);
       dispatch({ type: Constants.POST_GET_ALL, payload: data });
       // Toast.success("Post fetched successfully");
     } catch (error) {
@@ -29,7 +28,7 @@ export const getSinglePost = (id) => async (dispatch) => {
 };
 
 export const deletePost = (id) => async (dispatch) => {
-  console.log(id);
+  // console.log(id);
   try {
     await axiosInstance.delete(`/post/${id}`);
     dispatch({ type: Constants.POST_DELETE, payload: id });
@@ -41,8 +40,6 @@ export const deletePost = (id) => async (dispatch) => {
 };
 
 export const createPost = (newPost) => async (dispatch) => {
-  console.log("newPost", newPost);
-  console.log("Image", newPost.Image);
   try {
     if (newPost) {
       const formData = new FormData();
@@ -57,7 +54,6 @@ export const createPost = (newPost) => async (dispatch) => {
       formData.append("IsActive", newPost.IsActive);
 
       const { data } = await axiosInstance.post("/post", formData);
-      console.log("data", data);
       dispatch({ type: Constants.POST_CREATE, payload: data.result });
     }
     Toast.success("Post created successfully");
@@ -81,7 +77,6 @@ export const updatePost = (id, updatePost) => async (dispatch) => {
       formData.append("Summary", updatePost.Summary);
       formData.append("IsActive", updatePost.IsActive);
       const { data } = await axiosInstance.put(`/post/${id}`, formData);
-      console.log("EDITdata", data);
       dispatch({ type: Constants.POST_EDIT, payload: data.result });
     }
     Toast.success("Post updated successfully");
