@@ -53,7 +53,7 @@ router.get("/:id", (req, res) => {
       res.send(err);
     }
     // res.json(post);
-    return res.status(HttpStatus.OK).json({
+    return res.json({
       success: true,
       message: "Post is fetched.",
       code: HttpStatus.OK,
@@ -65,12 +65,8 @@ router.get("/:id", (req, res) => {
 
 router.post("/", upload.single("Image"), async (req, res) => {
   const obj = JSON.parse(JSON.stringify(req.body));
-  console.log("bodydata", obj);
-  console.log("img", req.file);
-  // const img = req.file.destination + "/" + req.file.filename;
-  // const path = `http://localhost:8848/api/${img}`;
-  // console.log("path", path);
-
+  // console.log("bodydata", obj);
+  // console.log("img", req.file);
   try {
     const PostData = await Post.create({
       Title: req.body.Title,
@@ -85,8 +81,7 @@ router.post("/", upload.single("Image"), async (req, res) => {
       Summary: req.body.Summary,
     });
     // PostData.save();
-    console.log("success", PostData);
-    return res.status(HttpStatus.OK).json({
+    return res.json({
       success: true,
       message: "Post Created Successfully.",
       code: HttpStatus.OK,
@@ -94,7 +89,7 @@ router.post("/", upload.single("Image"), async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    return res.status(HttpStatus.BAD_REQUEST).json({
+    return res.json({
       success: false,
       message: "Something went wrong while creating.",
       code: HttpStatus.BAD_REQUEST,
@@ -121,15 +116,14 @@ router.put("/:id", upload.single("Image"), async (req, res) => {
       },
       { new: true }
     );
-    console.log("editsuccess", PostData);
-    return res.status(HttpStatus.OK).json({
+    return res.json({
       success: true,
       message: "Post Updated Successfully.",
       code: HttpStatus.OK,
       result: PostData,
     });
   } catch (err) {
-    return res.status(HttpStatus.BAD_REQUEST).json({
+    return res.json({
       success: false,
       message: "Something went wrong while updating.",
       code: HttpStatus.BAD_REQUEST,
@@ -141,14 +135,14 @@ router.put("/:id", upload.single("Image"), async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     await Post.findByIdAndDelete(req.params.id);
-    return res.status(HttpStatus.OK).json({
+    return res.json({
       success: true,
       message: "Post Deleted Successfully.",
       code: HttpStatus.OK,
     });
   } catch (err) {
     console.log(err);
-    return res.status(HttpStatus.BAD_REQUEST).json({
+    return res.json({
       success: false,
       message: "Something went wrong while deleting.",
       code: HttpStatus.BAD_REQUEST,
