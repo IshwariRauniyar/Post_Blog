@@ -5,10 +5,8 @@ import Toast from "../../components/Toast";
 export const authLogin = (user) => async (dispatch) => {
   try {
     const { data } = await axiosInstance.post("/auth/login", user);
-    console.log("data", data);
     if (data.success) {
       const { token, user } = data.result;
-      console.log("token", token);
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       dispatch({
@@ -19,9 +17,6 @@ export const authLogin = (user) => async (dispatch) => {
     } else {
       Toast.error(data.message);
     }
-
-    // dispatch({ type: Constants.LOGIN_SUCCESS, payload: data });
-    // // Toast.success("Login Successful");
   } catch (error) {
     Toast.error("Error logging in");
     console.log(error);
@@ -31,10 +26,11 @@ export const authLogin = (user) => async (dispatch) => {
 export const authRegister = (user) => async (dispatch) => {
   try {
     const { data } = await axiosInstance.post("/auth/register", user);
-    console.log("data", data);
+    // console.log("data", data);
     if (data.success == true) {
       dispatch({ type: Constants.REGISTER_SUCCESS, payload: data });
       Toast.success(data.message);
+      window.location.href = "/login";
     } else {
       Toast.error(data.message);
     }
