@@ -66,7 +66,19 @@ router.post("/login", async (req, res, next) => {
         Email: Users.Email,
       },
       "secret123"
+      // {
+      //   expiresIn: "10s",
+      // }
     );
+    const refreshToken = jwt.sign(
+      {
+        UserName: Users.UserName,
+        Email: Users.Email,
+      },
+      "secret123"
+      // { expiresIn: "1m" }
+    );
+
     return res.json({
       success: true,
       message: "User Logged in Successfully.",
@@ -74,6 +86,7 @@ router.post("/login", async (req, res, next) => {
       result: {
         user: Users,
         token: token,
+        // refreshToken: refreshToken,
       },
     });
   } else {
@@ -84,5 +97,35 @@ router.post("/login", async (req, res, next) => {
     });
   }
 });
+
+// router.delete("/logout", async (req, res) => {
+//   try {
+//     const token = req.headers.authorization.split(" ")[1];
+//     const refreshToken = req.headers.refreshtoken.split(" ")[1];
+//     const decoded = jwt.verify(token, "secret123");
+//     const decodedRefreshToken = jwt.verify(refreshToken, "secret123");
+//     if (decoded.UserName === decodedRefreshToken.UserName) {
+//       return res.json({
+//         success: true,
+//         message: "User Logged out Successfully.",
+//         code: HttpStatus.OK,
+//       });
+//     } else {
+//       return res.json({
+//         success: false,
+//         message: "Invalid Token.",
+//         code: HttpStatus.UNAUTHORIZED,
+//       });
+//     }
+//   } catch (e) {
+//     console.log(e);
+//     return res.json({
+//       success: false,
+//       message: "something went wrong.",
+//       code: HttpStatus.BAD_REQUEST,
+//       error: e,
+//     });
+//   }
+// });
 
 module.exports = router;
