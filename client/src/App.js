@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/animate.min.css";
 import "./assets/css/demo.css";
@@ -12,22 +13,22 @@ import Table from "./pages/Table";
 import Register from "./pages/Register";
 
 const App = () => {
+  const auth = useSelector((state) => state.auth);
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          {/* <Route
-            exact
+          <Route path="/" element={<>welcome to home page</>} />
+          <Route
             path="/login"
             element={
-              localStorage.getItem("token") ? (
+              auth.isAuthenticated == true ? (
                 <Navigate to={"/article"} />
               ) : (
                 <Login />
               )
             }
-          /> */}
-          <Route path="/login" element={<Login />} />
+          />
           <Route exact path="/post" element={<Post />} />
           <Route exact path="/postview" element={<PostView />} />
           <Route
