@@ -11,8 +11,6 @@ const Register = () => {
   const [userName, setUserName] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const auth = useSelector((state) => state.auth);
-  console.log("register", auth);
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);

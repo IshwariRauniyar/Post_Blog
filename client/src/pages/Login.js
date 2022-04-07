@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authLogin } from "../redux/actions/auth.actions";
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -9,17 +9,15 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const auth = useSelector((state) => state.auth);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    window.location.href = "/article";
     const loginData = {
       Email: email,
       Password: password,
     };
     dispatch(authLogin(loginData));
+    // window.location.href = "/article";
   };
 
   // if (auth.isAuthenticated == true) {
