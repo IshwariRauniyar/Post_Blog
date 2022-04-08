@@ -3,8 +3,9 @@ var router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const RefreshToken = require("../models/refreshToken");
 const HttpStatus = require("http-status-codes");
-
+const authConfig = require("../config/auth.config");
 router.post("/register", async (req, res) => {
   try {
     const newPassword = await bcrypt.hash(req.body.Password, 10);
@@ -65,19 +66,12 @@ router.post("/login", async (req, res, next) => {
         UserName: Users.UserName,
         Email: Users.Email,
       },
-      "secret123"
-      // {
-      //   expiresIn: "10s",
-      // }
-    );
-    const refreshToken = jwt.sign(
+      authConfig.secret,
       {
-        UserName: Users.UserName,
-        Email: Users.Email,
-      },
-      "secret123"
-      // { expiresIn: "1m" }
+        expiresIn: authConfig.expiresIn,
+      }
     );
+    const refreshToken = await RefreshToken.createToken(Users);
 
     return res.json({
       success: true,
@@ -86,7 +80,7 @@ router.post("/login", async (req, res, next) => {
       result: {
         user: Users,
         token: token,
-        // refreshToken: refreshToken,
+        refreshToken: refreshToken,
       },
     });
   } else {
@@ -94,6 +88,71 @@ router.post("/login", async (req, res, next) => {
       success: false,
       message: "Invalid Password.",
       code: HttpStatus.UNAUTHORIZED,
+    });
+  }
+});
+
+router.post("/refresh-token", async (req, res) => {
+  const { refreshToken: requestToken } = req.body;
+
+  if (requestToken == null) {
+    return res.status(403).json({ message: "Refresh Token is required!" });
+  }
+  try {
+    let refreshToken = await RefreshToken.findOne({ token: requestToken });
+
+    if (!refreshToken) {
+      res.status(403).json({ message: "Refresh token is not in database!" });
+      return;
+    }
+
+    if (RefreshToken.verifyExpiration(refreshToken)) {
+      RefreshToken.findByIdAndRemove(refreshToken._id, {
+        useFindAndModify: false,
+      }).exec();
+
+      res.status(403).json({
+        message: "Refresh token was expired. Please make a new signin request",
+      });
+      return;
+    }
+
+    const user = await User.findById(refreshToken.user);
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "User not found",
+        code: HttpStatus.UNAUTHORIZED,
+      });
+    }
+    const newToken = jwt.sign(
+      {
+        UserName: user.UserName,
+        Email: user.Email,
+      },
+      authConfig.secret,
+      {
+        expiresIn: authConfig.expiresIn,
+      }
+    );
+    const newRefreshToken = await RefreshToken.createToken(user);
+    return res.json({
+      success: true,
+      message: "Refresh token generated successfully",
+      code: HttpStatus.OK,
+      result: {
+        user: user,
+        token: newToken,
+        refreshToken: newRefreshToken,
+      },
+    });
+  } catch (e) {
+    console.log(e);
+    return res.json({
+      success: false,
+      message: "something went wrong.",
+      code: HttpStatus.BAD_REQUEST,
+      error: e,
     });
   }
 });
