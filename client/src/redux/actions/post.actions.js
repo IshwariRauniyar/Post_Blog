@@ -9,10 +9,25 @@ export const getPost =
       const { data } = await axiosInstance.get(
         `/post/?offset=${offset}&limit=${limit}&search=${search}`
       );
-      dispatch({ type: Constants.POST_GET_ALL, payload: data });
+      console.log(data);
+      if (data.success) {
+        dispatch({
+          type: Constants.GET_POST,
+          payload: data.result,
+        });
+      } else {
+        Toast.error(data.message);
+      }
+
+      // dispatch({ type: Constants.POST_GET_ALL, payload: data });
       // Toast.success("Post fetched successfully");
     } catch (error) {
-      Toast.error("Error fetching Post");
+      if (error.response) {
+        Toast.error(error.response.data.message);
+      } else {
+        Toast.error(error.message);
+      }
+      // Toast.error("Error fetching Post");
       console.log(error);
     }
   };

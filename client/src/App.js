@@ -40,6 +40,7 @@ const App = () => {
                 <Navigate to={"/login"} />
               )
             }
+            // element={code == 200 ? <Article /> : <Navigate to={"/login"} />}
           />
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/table" element={<Table />} />
