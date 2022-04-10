@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
+const HttpStatus = require("http-status-codes");
 const config = require("../config/auth.config");
-const User = require("../models/user");
 
 const { TokenExpiredError } = jwt;
 
@@ -20,7 +20,7 @@ const catchError = (err, req, res, next) => {
 };
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers["x-access-token"];
+  const token = req.headers["x-access-token"] || req.headers["authorization"]; // Express headers are auto converted to lowercase
   if (!token) {
     return res.status(401).json({
       success: false,
@@ -38,24 +38,25 @@ const verifyToken = (req, res, next) => {
   });
 };
 
-const verifyRefreshToken = (req, res, next) => {
-  const refreshToken = req.headers["x-refresh-token"];
-  if (!refreshToken) {
-    return catchError(err, req, res, next);
-  }
-  jwt.verify(refreshToken, config.refreshSecret, (err, decoded) => {
-    if (err) {
-      return catchError(err, req, res, next);
-    }
-    // req.decoded = decoded;
-    req.userId = decoded.id;
-    next();
-  });
-};
+// const verifyRefreshToken = (req, res, next) => {
+//   const refreshToken = req.headers["x-refresh-token"];
+//   if (!refreshToken) {
+//     return catchError(err, req, res, next);
+//   }
+//   jwt.verify(refreshToken, config.refreshSecret, (err, decoded) => {
+//     if (err) {
+//       return catchError(err, req, res, next);
+//     }
+//     // req.decoded = decoded;
+//     req.userId = decoded.id;
+//     next();
+//   });
+// };
 
 const authMiddleware = {
+  catchError,
   verifyToken,
-  verifyRefreshToken,
+  //   verifyRefreshToken,
 };
 
 module.exports = authMiddleware;

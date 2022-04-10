@@ -3,8 +3,9 @@ var router = express.Router();
 const Post = require("../models/post");
 const HttpStatus = require("http-status-codes");
 const upload = require("../middlewares/uploads");
+const authMiddleware = require("../middlewares/authMiddleware");
 
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware.verifyToken, async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
   const query = {};
   try {
@@ -47,7 +48,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", authMiddleware.verifyToken, (req, res) => {
   Post.findById(req.params.id, (err, post) => {
     if (err) {
       res.send(err);
@@ -63,46 +64,16 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.post("/", upload.single("Image"), async (req, res) => {
-  const obj = JSON.parse(JSON.stringify(req.body));
-  // console.log("bodydata", obj);
-  // console.log("img", req.file);
-  try {
-    const PostData = await Post.create({
-      Title: req.body.Title,
-      Slug: req.body.Slug,
-      SeoTitle: req.body.SeoTitle,
-      SeoDescription: req.body.SeoDescription,
-      PostType: req.body.PostType,
-      Image: req.file?.destination + "/" + req.file?.filename,
-      Description: req.body.Description,
-      Order: req.body.Order,
-      IsActive: req.body.IsActive,
-      Summary: req.body.Summary,
-    });
-    // PostData.save();
-    return res.json({
-      success: true,
-      message: "Post Created Successfully.",
-      code: HttpStatus.OK,
-      result: PostData,
-    });
-  } catch (err) {
-    console.log(err);
-    return res.json({
-      success: false,
-      message: "Something went wrong while creating.",
-      code: HttpStatus.BAD_REQUEST,
-      error: err,
-    });
-  }
-});
-
-router.put("/:id", upload.single("Image"), async (req, res) => {
-  try {
-    const PostData = await Post.findByIdAndUpdate(
-      req.params.id,
-      {
+router.post(
+  "/",
+  authMiddleware.verifyToken,
+  upload.single("Image"),
+  async (req, res) => {
+    const obj = JSON.parse(JSON.stringify(req.body));
+    // console.log("bodydata", obj);
+    // console.log("img", req.file);
+    try {
+      const PostData = await Post.create({
         Title: req.body.Title,
         Slug: req.body.Slug,
         SeoTitle: req.body.SeoTitle,
@@ -113,26 +84,66 @@ router.put("/:id", upload.single("Image"), async (req, res) => {
         Order: req.body.Order,
         IsActive: req.body.IsActive,
         Summary: req.body.Summary,
-      },
-      { new: true }
-    );
-    return res.json({
-      success: true,
-      message: "Post Updated Successfully.",
-      code: HttpStatus.OK,
-      result: PostData,
-    });
-  } catch (err) {
-    return res.json({
-      success: false,
-      message: "Something went wrong while updating.",
-      code: HttpStatus.BAD_REQUEST,
-      error: err,
-    });
+      });
+      // PostData.save();
+      return res.json({
+        success: true,
+        message: "Post Created Successfully.",
+        code: HttpStatus.OK,
+        result: PostData,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.json({
+        success: false,
+        message: "Something went wrong while creating.",
+        code: HttpStatus.BAD_REQUEST,
+        error: err,
+      });
+    }
   }
-});
+);
 
-router.delete("/:id", async (req, res) => {
+router.put(
+  "/:id",
+  authMiddleware.verifyToken,
+  upload.single("Image"),
+  async (req, res) => {
+    try {
+      const PostData = await Post.findByIdAndUpdate(
+        req.params.id,
+        {
+          Title: req.body.Title,
+          Slug: req.body.Slug,
+          SeoTitle: req.body.SeoTitle,
+          SeoDescription: req.body.SeoDescription,
+          PostType: req.body.PostType,
+          Image: req.file?.destination + "/" + req.file?.filename,
+          Description: req.body.Description,
+          Order: req.body.Order,
+          IsActive: req.body.IsActive,
+          Summary: req.body.Summary,
+        },
+        { new: true }
+      );
+      return res.json({
+        success: true,
+        message: "Post Updated Successfully.",
+        code: HttpStatus.OK,
+        result: PostData,
+      });
+    } catch (err) {
+      return res.json({
+        success: false,
+        message: "Something went wrong while updating.",
+        code: HttpStatus.BAD_REQUEST,
+        error: err,
+      });
+    }
+  }
+);
+
+router.delete("/:id", authMiddleware.verifyToken, async (req, res) => {
   try {
     await Post.findByIdAndDelete(req.params.id);
     return res.json({
