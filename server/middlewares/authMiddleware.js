@@ -20,7 +20,8 @@ const catchError = (err, req, res, next) => {
 };
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers["x-access-token"] || req.headers["authorization"]; // Express headers are auto converted to lowercase
+  const token = req.headers.authorization.split(" ")[1];
+  //   const token = req.headers["x-access-token"] || req.headers["authorization"]; // Express headers are auto converted to lowercase
   if (!token) {
     return res.status(401).json({
       success: false,
