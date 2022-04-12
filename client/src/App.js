@@ -22,6 +22,7 @@ const App = () => {
           <Route
             path="/login"
             element={
+              // localStorage.getItem("token")
               auth.isAuthenticated == true ? (
                 <Navigate to={"/article"} />
               ) : (

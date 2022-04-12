@@ -11,7 +11,6 @@ function Article() {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const { posts: all_data, total } = useSelector((state) => state.post);
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

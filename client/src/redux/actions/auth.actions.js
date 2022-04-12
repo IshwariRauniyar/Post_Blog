@@ -5,8 +5,10 @@ import Toast from "../../components/Toast";
 export const authLogin = (user) => async (dispatch) => {
   try {
     const { data } = await axiosInstance.post("/auth/login", user);
+    console.log(data);
     if (data.success) {
       const { token, user } = data.result;
+      console.log("ndj", data.result);
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       dispatch({
