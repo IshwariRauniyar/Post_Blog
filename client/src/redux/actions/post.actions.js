@@ -10,25 +10,26 @@ export const getPost =
         `/post/?offset=${offset}&limit=${limit}&search=${search}`
       );
       console.log(data);
-      if (data.success) {
+      if (data.success == true) {
         dispatch({
-          type: Constants.GET_POST,
-          payload: data.result,
+          type: Constants.POST_GET_ALL,
+          payload: data,
         });
       } else {
         Toast.error(data.message);
       }
-
-      // dispatch({ type: Constants.POST_GET_ALL, payload: data });
-      // Toast.success("Post fetched successfully");
     } catch (error) {
-      if (error.response) {
-        Toast.error(error.response.data.message);
-      } else {
-        Toast.error(error.message);
-      }
-      // Toast.error("Error fetching Post");
-      console.log(error);
+      // if (error?.response?.data?.code == 401) {
+      //   Toast.error(error.response.data.message);
+      //   // setTimeout(() => {
+      //   //   localStorage.removeItem("token");
+      //   //   localStorage.removeItem("user");
+      //   //   window.location.href = "/login";
+      //   // }, 3000);
+      // } else {
+      //   Toast.error(error?.message);
+      // }
+      console.log(error?.response);
     }
   };
 
