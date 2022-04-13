@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+var URLSlug = require("mongoose-slug-generator");
+
+mongoose.plugin(URLSlug);
 
 const PostSchema = new Schema(
   {
