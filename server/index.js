@@ -21,7 +21,7 @@ app.get("/", (req, res, next) => {
 
 app.use(
   "/api",
-  (req, _res, next) => {
+  (req, res, next) => {
     next();
   },
   routes

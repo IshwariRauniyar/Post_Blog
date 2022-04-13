@@ -7,6 +7,7 @@ const RefreshToken = require("../models/refreshToken");
 const HttpStatus = require("http-status-codes");
 const authConfig = require("../config/auth.config");
 const authMiddleware = require("../middlewares/authMiddleware");
+
 router.post("/register", async (req, res) => {
   try {
     const newPassword = await bcrypt.hash(req.body.Password, 10);
