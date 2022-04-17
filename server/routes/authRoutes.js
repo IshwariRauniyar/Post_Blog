@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const RefreshToken = require("../models/refreshToken");
+const Setting = require("../models/setting");
 const HttpStatus = require("http-status-codes");
 const authConfig = require("../config/auth.config");
 const authMiddleware = require("../middlewares/authMiddleware");
@@ -27,11 +28,27 @@ router.post("/register", async (req, res) => {
       Password: newPassword,
       UserName: req.body.UserName,
     });
+    console.log("Data", Data);
+    if (req.body.UserRole) {
+      const Settings = await Setting.create({
+        UserRole: req.body.UserRole,
+        User: Data._id,
+      });
+    } else {
+      const Settings = await Setting.create({
+        UserRole: "user",
+        User: Data._id,
+      });
+    }
+    const UserRole = await Setting.findOne({
+      User: Data._id,
+    });
+    console.log("UserRole", UserRole);
     return res.json({
       success: true,
       message: "User Registered Successfully.",
       code: HttpStatus.OK,
-      result: Data,
+      result: { user: Data, role: UserRole.UserRole },
       // ...(Data && { ...Data }),
     });
   } catch (e) {
@@ -49,6 +66,11 @@ router.post("/login", async (req, res, next) => {
   const Users = await User.findOne({
     Email: req.body.Email,
   });
+  const UserRole = await Setting.findOne({
+    User: Users._id,
+  });
+  // .select("UserRole");
+
   if (!Users) {
     // return next(Boom.unauthorized("User with this email not found"));
     return res.json({
@@ -67,12 +89,14 @@ router.post("/login", async (req, res, next) => {
       {
         UserName: Users.UserName,
         Email: Users.Email,
+        _id: Users._id,
       },
       authConfig.secret,
       {
         expiresIn: authConfig.expiresIn,
       }
     );
+
     const refreshToken = await RefreshToken.createToken(Users);
 
     return res.json({
@@ -82,6 +106,7 @@ router.post("/login", async (req, res, next) => {
       result: {
         user: Users,
         token: token,
+        role: UserRole.UserRole,
         refreshToken: refreshToken,
       },
     });

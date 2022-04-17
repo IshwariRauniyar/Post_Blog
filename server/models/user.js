@@ -18,6 +18,8 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    UserRole: { type: Schema.Types.ObjectId, ref: "Setting" },
+    Token: { type: String },
     CreatedOn: { type: Date, default: Date.now },
     ModifiedOn: { type: Date, default: Date.now },
   },

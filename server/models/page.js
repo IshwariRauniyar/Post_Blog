@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-
 const PageSchema = new Schema(
   {
     Title: { type: String, required: true },
@@ -10,9 +9,15 @@ const PageSchema = new Schema(
     SeoDescription: {
       type: String,
     },
+    // PostType: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "Setting",
+    // },
     PostType: {
-      type: Schema.Types.ObjectId,
-      ref: "Setting",
+      type: String,
+      required: true,
+      enum: ["page"],
+      default: "page",
     },
     Image: { type: String },
     Description: { type: String },

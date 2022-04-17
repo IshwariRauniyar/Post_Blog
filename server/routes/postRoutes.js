@@ -5,48 +5,52 @@ const HttpStatus = require("http-status-codes");
 const upload = require("../middlewares/uploads");
 const authMiddleware = require("../middlewares/authMiddleware");
 
-router.get("/", authMiddleware.verifyToken, async (req, res) => {
-  const { limit = 10, offset = 0 } = req.query;
-  const query = {};
-  try {
-    if (req.query.search) {
-      query.$or = [
-        { Title: { $regex: req.query.search, $options: "i" } },
-        { SeoTitle: { $regex: req.query.search, $options: "i" } },
-      ];
-    }
-    const posts = await Post.find(query)
-      .skip(offset * 10)
-      .limit(limit)
-      .sort({ $natural: -1 })
-      .then((r) => {
-        return r;
-      })
-      .catch((e) => {
-        console.log(e);
-        return [];
+router.get(
+  "/",
+  // authMiddleware.verifyToken,
+  async (req, res) => {
+    const { limit = 10, offset = 0 } = req.query;
+    const query = {};
+    try {
+      if (req.query.search) {
+        query.$or = [
+          { Title: { $regex: req.query.search, $options: "i" } },
+          { SeoTitle: { $regex: req.query.search, $options: "i" } },
+        ];
+      }
+      const posts = await Post.find(query)
+        .skip(offset * 10)
+        .limit(limit)
+        .sort({ $natural: -1 })
+        .then((r) => {
+          return r;
+        })
+        .catch((e) => {
+          console.log(e);
+          return [];
+        });
+      const total = await Post.find(query).countDocuments();
+      const totalPages = Math.ceil(total / limit);
+      const currentPage = parseInt(offset) + 1;
+      // Math.ceil(total % offset) > 0 ? Math.ceil(total % offset) : 1;
+      res.json({
+        success: true,
+        message: "All posts are fetched.",
+        code: HttpStatus.OK,
+        posts,
+        total,
+        totalPages,
+        currentPage,
       });
-    const total = await Post.find(query).countDocuments();
-    const totalPages = Math.ceil(total / limit);
-    const currentPage = parseInt(offset) + 1;
-    // Math.ceil(total % offset) > 0 ? Math.ceil(total % offset) : 1;
-    res.json({
-      success: true,
-      message: "All posts are fetched.",
-      code: HttpStatus.OK,
-      posts,
-      total,
-      totalPages,
-      currentPage,
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      message: error.message,
-      code: HttpStatus.INTERNAL_SERVER_ERROR,
-    });
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error.message,
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
   }
-});
+);
 
 router.get("/:id", authMiddleware.verifyToken, (req, res) => {
   Post.findById(req.params.id, (err, post) => {

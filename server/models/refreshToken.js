@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 const authConfig = require("../config/auth.config");
 
 const RefreshTokenSchema = new Schema({
+  // tk: String,
   token: String,
   user: {
     type: Schema.Types.ObjectId,
@@ -23,13 +24,15 @@ RefreshTokenSchema.statics.createToken = async function (user) {
   let _token = uuidv4();
 
   let _object = new this({
+    // tk: tk,
     token: _token,
     user: user._id,
     expiryDate: expiredAt.getTime(),
   });
-  console.log(_object);
+  console.log("dfjd", _object);
 
   let refreshToken = await _object.save();
+  console.log("rf", refreshToken);
   return refreshToken.token;
 };
 

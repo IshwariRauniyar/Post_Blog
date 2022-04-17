@@ -3,10 +3,11 @@ const { Schema } = mongoose;
 
 const SettingSchema = new Schema(
   {
+    User: { type: Schema.Types.ObjectId, ref: "User" },
     Status: {
       type: String,
       enum: ["active", "inactive"],
-      default: "inactive",
+      default: "active",
     },
     PostType: {
       type: String,
@@ -24,11 +25,11 @@ const SettingSchema = new Schema(
         "404",
         "other",
       ],
-      default: "post",
     },
     // UserType: { type: String, enum: ["new", "old"], default: "new" },
     UserRole: {
       type: String,
+      required: true,
       enum: ["superAdmin", "admin", "user"],
       default: "user",
     },
