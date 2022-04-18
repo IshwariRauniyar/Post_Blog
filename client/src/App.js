@@ -42,11 +42,20 @@ const App = () => {
                 <Navigate to={"/login"} />
               )
             }
-            // element={code == 200 ? <Article /> : <Navigate to={"/login"} />}
           />
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/table" element={<Table />} />
-          <Route exact path="/page" element={<Page />} />
+          <Route
+            exact
+            path="/page"
+            element={
+              localStorage.getItem("token") ? (
+                <Page />
+              ) : (
+                <Navigate to={"/login"} />
+              )
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
