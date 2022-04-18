@@ -4,6 +4,7 @@ const Page = require("../models/page");
 const upload = require("../middlewares/uploads");
 const authMiddleware = require("../middlewares/authMiddleware");
 const User = require("../models/user");
+const Setting = require("../models/setting");
 
 router.get("/", async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
@@ -63,7 +64,8 @@ router.get("/:id", async (req, res) => {
 
 router.post(
   "/",
-  authMiddleware.verifyToken,
+  [authMiddleware.verifyToken, authMiddleware.role],
+
   upload.single("Image"),
   async (req, res) => {
     const user = req.decoded;
@@ -84,18 +86,25 @@ router.post(
       //   });
 
       const users = await User.findById(PageData.CreatedBy);
-      console.log("dsjfjd", users);
+      //   console.log("dsjfjd", users);
+      const role = await Setting.findOne({
+        User: users._id,
+      });
+      //   console.log("role", role);
       res.json({
         success: true,
         message: "Page created Successfully",
         code: 200,
-        PageData,
-        user: {
-          _id: users._id,
-          Email: users.Email,
-          UserName: users.UserName,
-          FirstName: users.FirstName,
-          LastName: users.LastName,
+        result: {
+          PageData,
+          user: {
+            _id: users._id,
+            Email: users.Email,
+            UserName: users.UserName,
+            FirstName: users.FirstName,
+            LastName: users.LastName,
+            UserRole: role.UserRole,
+          },
         },
       });
     } catch (error) {
@@ -114,7 +123,7 @@ router.put(
   upload.single("Image"),
   async (req, res) => {
     const user = req.decoded;
-    console.log("user", user);
+    // console.log("user", user);
     try {
       const PageData = await Page.findById(req.params.id);
       if (!PageData) {
@@ -139,22 +148,24 @@ router.put(
         },
         { new: true }
       );
-      console.log("updatedPage", updatedPage);
+      //   console.log("updatedPage", updatedPage);
       const users = await User.findById(updatedPage.ModifiedBy);
-      console.log("dsjfjd", users);
+      const role = await Setting.findOne({
+        User: users._id,
+      });
       return res.json({
         success: true,
         message: "Page updated Successfully",
         code: 200,
         result: {
           updatedPage,
-
           user: {
             _id: users._id,
             Email: users.Email,
             UserName: users.UserName,
             FirstName: users.FirstName,
             LastName: users.LastName,
+            UserRole: role.UserRole,
           },
         },
       });

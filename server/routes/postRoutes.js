@@ -4,6 +4,8 @@ const Post = require("../models/post");
 const HttpStatus = require("http-status-codes");
 const upload = require("../middlewares/uploads");
 const authMiddleware = require("../middlewares/authMiddleware");
+const User = require("../models/user");
+const Setting = require("../models/setting");
 
 router.get(
   "/",
@@ -76,6 +78,7 @@ router.post(
     const obj = JSON.parse(JSON.stringify(req.body));
     // console.log("bodydata", obj);
     // console.log("img", req.file);
+    const user = req.decoded;
     try {
       const PostData = await Post.create({
         Title: req.body.Title,
@@ -88,20 +91,35 @@ router.post(
         Order: req.body.Order,
         IsActive: req.body.IsActive,
         Summary: req.body.Summary,
+        CreatedBy: user._id,
       });
       // PostData.save();
+      const users = await User.findById(PostData.CreatedBy);
+      const role = await Setting.findOne({
+        User: users._id,
+      });
       return res.json({
         success: true,
         message: "Post Created Successfully.",
         code: HttpStatus.OK,
-        result: PostData,
+        result: {
+          PostData,
+          user: {
+            _id: users._id,
+            Email: users.Email,
+            UserName: users.UserName,
+            FirstName: users.FirstName,
+            LastName: users.LastName,
+            UserRole: role.UserRole,
+          },
+        },
       });
     } catch (err) {
       console.log(err);
       return res.json({
         success: false,
         message: "Something went wrong while creating.",
-        code: HttpStatus.BAD_REQUEST,
+        code: 500,
         error: err,
       });
     }
@@ -113,8 +131,17 @@ router.put(
   authMiddleware.verifyToken,
   upload.single("Image"),
   async (req, res) => {
+    const user = req.decoded;
     try {
-      const PostData = await Post.findByIdAndUpdate(
+      const PostData = await Post.findById(req.params.id);
+      if (!PostData) {
+        return res.json({
+          success: false,
+          message: "Post not found.",
+          code: 404,
+        });
+      }
+      const updatedPost = await Post.findByIdAndUpdate(
         req.params.id,
         {
           Title: req.body.Title,
@@ -127,20 +154,35 @@ router.put(
           Order: req.body.Order,
           IsActive: req.body.IsActive,
           Summary: req.body.Summary,
+          ModifiedBy: user?._id,
         },
         { new: true }
       );
+      const users = await User.findById(updatedPost.ModifiedBy);
+      const role = await Setting.findOne({
+        User: users._id,
+      });
       return res.json({
         success: true,
         message: "Post Updated Successfully.",
         code: HttpStatus.OK,
-        result: PostData,
+        result: {
+          updatedPost,
+          user: {
+            _id: users._id,
+            Email: users.Email,
+            UserName: users.UserName,
+            FirstName: users.FirstName,
+            LastName: users.LastName,
+            UserRole: role.UserRole,
+          },
+        },
       });
     } catch (err) {
       return res.json({
         success: false,
         message: "Something went wrong while updating.",
-        code: HttpStatus.BAD_REQUEST,
+        code: 500,
         error: err,
       });
     }
@@ -149,18 +191,27 @@ router.put(
 
 router.delete("/:id", authMiddleware.verifyToken, async (req, res) => {
   try {
-    await Post.findByIdAndDelete(req.params.id);
+    const PostData = await Post.findById(req.params.id);
+    if (!PostData) {
+      return res.json({
+        success: false,
+        message: "Post not found.",
+        code: 404,
+      });
+    }
+    const deletedPost = await Post.findByIdAndDelete(req.params.id);
     return res.json({
       success: true,
       message: "Post Deleted Successfully.",
-      code: HttpStatus.OK,
+      code: 200,
+      PostData: deletedPost,
     });
   } catch (err) {
     console.log(err);
     return res.json({
       success: false,
       message: "Something went wrong while deleting.",
-      code: HttpStatus.BAD_REQUEST,
+      code: 500,
       error: err,
     });
   }

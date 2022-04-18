@@ -38,9 +38,9 @@ const PostSchema = new Schema(
     Summary: { type: String },
     PublishedAfter: { type: Date },
     CreatedOn: { type: Date, default: Date.now },
-    // CreatedBy: { type: Schema.ObjectId, ref: "User" },
+    CreatedBy: { type: Schema.Types.ObjectId, ref: "User" },
     ModifiedOn: { type: Date, default: Date.now },
-    // ModifiedBy: { type: Schema.ObjectId, ref: "User" },
+    ModifiedBy: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { collection: "Post" }
 );

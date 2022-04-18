@@ -70,7 +70,7 @@ export const createPost = (newPost) => async (dispatch) => {
       formData.append("IsActive", newPost.IsActive);
 
       const { data } = await axiosInstance.post("/post", formData);
-      dispatch({ type: Constants.POST_CREATE, payload: data.result });
+      dispatch({ type: Constants.POST_CREATE, payload: data.result.PostData });
     }
     Toast.success("Post created successfully");
   } catch (error) {
@@ -93,7 +93,7 @@ export const updatePost = (id, updatePost) => async (dispatch) => {
       formData.append("Summary", updatePost.Summary);
       formData.append("IsActive", updatePost.IsActive);
       const { data } = await axiosInstance.put(`/post/${id}`, formData);
-      dispatch({ type: Constants.POST_EDIT, payload: data.result });
+      dispatch({ type: Constants.POST_EDIT, payload: data.result.updatedPost });
     }
     Toast.success("Post updated successfully");
   } catch (error) {
