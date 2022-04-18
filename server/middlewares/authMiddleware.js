@@ -59,30 +59,6 @@ const verifyToken = (req, res, next) => {
   // });
 };
 
-// const getUserFromToken = async (req, res, next) => {
-//   const token = req.headers.authorization.split(" ")[1];
-
-//   if (!token) {
-//     return res.status(401).json({
-//       success: false,
-//       message: "Unauthorized! Token not found",
-//       code: HttpStatus.UNAUTHORIZED,
-//     });
-//   }
-//   jwt.verify(token, config.secret, (err, decoded) => {
-//     if (err) {
-//       return res.status(401).json({
-//         success: false,
-//         message: "Unauthorized! Token is not valid",
-//         code: HttpStatus.UNAUTHORIZED,
-//       });
-//     }
-//     req.decoded = decoded;
-//     console.log("decoded", req.decoded);
-//     next();
-//   });
-// };
-
 // const verifyRefreshToken = (req, res, next) => {
 //   const refreshToken = req.headers["x-refresh-token"];
 //   if (!refreshToken) {

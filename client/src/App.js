@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Post from "./pages/Post";
 import PostView from "./pages/PostView";
 import Article from "./pages/Articles";
+import Page from "./pages/Pages";
 import Table from "./pages/Table";
 import Register from "./pages/Register";
 
@@ -45,6 +46,7 @@ const App = () => {
           />
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/table" element={<Table />} />
+          <Route exact path="/page" element={<Page />} />
         </Routes>
       </BrowserRouter>
     </div>

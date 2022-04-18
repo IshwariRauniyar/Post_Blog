@@ -21,7 +21,7 @@ const PageSchema = new Schema(
     },
     Image: { type: String },
     Description: { type: String },
-    Status: { type: Schema.Types.ObjectId, ref: "Setting" },
+    IsActive: { type: Boolean, default: false },
     PublishedAfter: { type: Date },
     CreatedOn: { type: Date, default: Date.now },
     CreatedBy: { type: Schema.Types.ObjectId, ref: "User" },

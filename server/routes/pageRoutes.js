@@ -3,9 +3,7 @@ var router = express.Router();
 const Page = require("../models/page");
 const upload = require("../middlewares/uploads");
 const authMiddleware = require("../middlewares/authMiddleware");
-const RefreshToken = require("../models/refreshToken");
 const User = require("../models/user");
-const Setting = require("../models/setting");
 
 router.get("/", async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
@@ -66,19 +64,17 @@ router.get("/:id", async (req, res) => {
 router.post(
   "/",
   authMiddleware.verifyToken,
-  upload.single("image"),
+  upload.single("Image"),
   async (req, res) => {
     const user = req.decoded;
-    console.log("user", user);
     try {
       const PageData = await Page.create({
         Title: req.body.Title,
         Slug: req.body.Slug,
         SeoTitle: req.body.SeoTitle,
         SeoDescription: req.body.SeoDescription,
-        // PostType: req.body.PostType,
         Description: req.body.Description,
-        Content: req.body.Content,
+        IsActive: req.body.IsActive,
         Image: req.file?.destination + "/" + req.file?.filename,
         CreatedBy: user._id,
       });
@@ -86,17 +82,6 @@ router.post(
       //   const users = await User.find({
       //     _id: { $in: PageData.CreatedBy },
       //   });
-      //   if(req.body.PostType){
-      //     const Settings = await Setting.create({
-      //         PageId: PageData._id,
-      //         PostType: req.body.PostType,
-      //     })
-      // }  else {
-      //     const Settings = await Setting.create({
-      //         PageId: PageData._id,
-      //         PostType: "page",
-      //     })
-      // }
 
       const users = await User.findById(PageData.CreatedBy);
       console.log("dsjfjd", users);
@@ -126,7 +111,7 @@ router.post(
 router.put(
   "/:id",
   authMiddleware.verifyToken,
-  upload.single("image"),
+  upload.single("Image"),
   async (req, res) => {
     const user = req.decoded;
     console.log("user", user);
@@ -148,9 +133,9 @@ router.put(
           SeoDescription: req.body.SeoDescription,
           // PostType: req.body.PostType,
           Description: req.body.Description,
-          Content: req.body.Content,
+          IsActive: req.body.IsActive,
           Image: req.file?.destination + "/" + req.file?.filename,
-          ModifiedBy: user._id,
+          ModifiedBy: user?._id,
         },
         { new: true }
       );
@@ -161,14 +146,16 @@ router.put(
         success: true,
         message: "Page updated Successfully",
         code: 200,
-        PageData: updatedPage,
+        result: {
+          updatedPage,
 
-        user: {
-          _id: users._id,
-          Email: users.Email,
-          UserName: users.UserName,
-          FirstName: users.FirstName,
-          LastName: users.LastName,
+          user: {
+            _id: users._id,
+            Email: users.Email,
+            UserName: users.UserName,
+            FirstName: users.FirstName,
+            LastName: users.LastName,
+          },
         },
       });
     } catch (error) {
@@ -181,7 +168,7 @@ router.put(
   }
 );
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMiddleware.verifyToken, async (req, res) => {
   try {
     const PageData = await Page.findById(req.params.id);
     if (!PageData) {

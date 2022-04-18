@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getPost, deletePost } from "../redux/actions/post.actions";
+import { getPage, deletePage } from "../redux/actions/page.actions";
 import { useNavigate } from "react-router-dom";
 import { Card, Container, Row, Col, Button, Modal } from "react-bootstrap";
 import TableWithPagination from "../components/DataTable/TableWithPagination/index";
-import PostCreateForm from "../components/Form/PostCreateForm";
-import PostEditForm from "../components/Form/PostEditForm";
+import PageCreateForm from "../components/Form/PageCreateForm";
+import PageEditForm from "../components/Form/PageEditForm";
 
-function Article() {
+function Page() {
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const { posts: all_data, total } = useSelector((state) => state.post);
-  console.table(all_data);
+  const { pages: all_data, total } = useSelector((state) => state.page);
+  console.log("pagessss", all_data);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -25,12 +25,6 @@ function Article() {
       name: "Slug",
       field: "Slug",
       property: ["Slug"],
-      sortable: false,
-    },
-    {
-      name: "Order No.",
-      field: "  Order",
-      property: ["Order"],
       sortable: false,
     },
     {
@@ -57,7 +51,7 @@ function Article() {
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
               <Card.Header className="d-flex align-items-center justify-content-between">
-                <Card.Title>Post List</Card.Title>
+                <Card.Title>Page List</Card.Title>
                 <Button
                   className="btn-fill pull-right"
                   type="submit"
@@ -66,19 +60,19 @@ function Article() {
                   onClick={() => handleCreateShow()}
                 >
                   <i className="fas fa-plus"></i>
-                  Add New Post
+                  Add New Page
                 </Button>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <TableWithPagination
-                  title="Post"
+                  title="Page"
                   tableData={all_data}
                   total={total}
                   headers={headers}
-                  getAction={(custom_props) => getPost({ ...custom_props })}
-                  deleteAction={deletePost}
+                  getAction={(custom_props) => getPage({ ...custom_props })}
+                  deleteAction={deletePage}
                   EditForm={(custom_props) => (
-                    <PostEditForm {...custom_props} />
+                    <PageEditForm {...custom_props} />
                   )}
                   actionButtons={["edit", "delete"]}
                 />
@@ -96,7 +90,7 @@ function Article() {
                 </Modal.Header>
                 <Modal.Body>
                   {/* Create Form */}
-                  <PostCreateForm close={handleCreateClose} />
+                  <PageCreateForm close={handleCreateClose} />
                 </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleCreateClose}>
@@ -112,4 +106,4 @@ function Article() {
   );
 }
 
-export default Article;
+export default Page;

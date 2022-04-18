@@ -106,7 +106,7 @@ router.post("/login", async (req, res, next) => {
       result: {
         user: Users,
         token: token,
-        role: UserRole.UserRole,
+        role: UserRole?.UserRole,
         refreshToken: refreshToken,
       },
     });
