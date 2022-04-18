@@ -48,7 +48,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authMiddleware.verifyToken, async (req, res) => {
   Page.findById(req.params.id, (err, page) => {
     if (err) {
       res.send(err);
@@ -119,7 +119,7 @@ router.post(
 
 router.put(
   "/:id",
-  authMiddleware.verifyToken,
+  [authMiddleware.verifyToken, authMiddleware.role],
   upload.single("Image"),
   async (req, res) => {
     const user = req.decoded;
@@ -179,30 +179,34 @@ router.put(
   }
 );
 
-router.delete("/:id", authMiddleware.verifyToken, async (req, res) => {
-  try {
-    const PageData = await Page.findById(req.params.id);
-    if (!PageData) {
+router.delete(
+  "/:id",
+  [authMiddleware.verifyToken, authMiddleware.role],
+  async (req, res) => {
+    try {
+      const PageData = await Page.findById(req.params.id);
+      if (!PageData) {
+        return res.json({
+          success: false,
+          message: "Page not found.",
+          code: 404,
+        });
+      }
+      const deletedPage = await Page.findByIdAndDelete(req.params.id);
+      res.json({
+        success: true,
+        message: "Page deleted Successfully",
+        code: 200,
+        PageData: deletedPage,
+      });
+    } catch (error) {
       return res.json({
         success: false,
-        message: "Page not found.",
-        code: 404,
+        message: error.message,
+        code: 500,
       });
     }
-    const deletedPage = await Page.findByIdAndDelete(req.params.id);
-    res.json({
-      success: true,
-      message: "Page deleted Successfully",
-      code: 200,
-      PageData: deletedPage,
-    });
-  } catch (error) {
-    return res.json({
-      success: false,
-      message: error.message,
-      code: 500,
-    });
   }
-});
+);
 
 module.exports = router;

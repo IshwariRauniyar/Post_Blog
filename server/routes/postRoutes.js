@@ -72,7 +72,7 @@ router.get("/:id", authMiddleware.verifyToken, (req, res) => {
 
 router.post(
   "/",
-  authMiddleware.verifyToken,
+  [authMiddleware.verifyToken, authMiddleware.role],
   upload.single("Image"),
   async (req, res) => {
     const obj = JSON.parse(JSON.stringify(req.body));
@@ -128,7 +128,7 @@ router.post(
 
 router.put(
   "/:id",
-  authMiddleware.verifyToken,
+  [authMiddleware.verifyToken, authMiddleware.role],
   upload.single("Image"),
   async (req, res) => {
     const user = req.decoded;
@@ -189,32 +189,36 @@ router.put(
   }
 );
 
-router.delete("/:id", authMiddleware.verifyToken, async (req, res) => {
-  try {
-    const PostData = await Post.findById(req.params.id);
-    if (!PostData) {
+router.delete(
+  "/:id",
+  [authMiddleware.verifyToken, authMiddleware.role],
+  async (req, res) => {
+    try {
+      const PostData = await Post.findById(req.params.id);
+      if (!PostData) {
+        return res.json({
+          success: false,
+          message: "Post not found.",
+          code: 404,
+        });
+      }
+      const deletedPost = await Post.findByIdAndDelete(req.params.id);
+      return res.json({
+        success: true,
+        message: "Post Deleted Successfully.",
+        code: 200,
+        PostData: deletedPost,
+      });
+    } catch (err) {
+      console.log(err);
       return res.json({
         success: false,
-        message: "Post not found.",
-        code: 404,
+        message: "Something went wrong while deleting.",
+        code: 500,
+        error: err,
       });
     }
-    const deletedPost = await Post.findByIdAndDelete(req.params.id);
-    return res.json({
-      success: true,
-      message: "Post Deleted Successfully.",
-      code: 200,
-      PostData: deletedPost,
-    });
-  } catch (err) {
-    console.log(err);
-    return res.json({
-      success: false,
-      message: "Something went wrong while deleting.",
-      code: 500,
-      error: err,
-    });
   }
-});
+);
 
 module.exports = router;
