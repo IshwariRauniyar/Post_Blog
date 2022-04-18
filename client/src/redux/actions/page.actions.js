@@ -10,7 +10,7 @@ export const getPage =
         `/page/?offset=${offset}&limit=${limit}&search=${search}`
       );
       console.log(data);
-      if (data.success == true) {
+      if (data.success === true) {
         dispatch({
           type: Constants.PAGE_GET_ALL,
           payload: data,
@@ -58,11 +58,18 @@ export const createPage = (newPage) => async (dispatch) => {
       formData.append("IsActive", newPage.IsActive);
 
       const { data } = await axiosInstance.post("/page", formData);
-      dispatch({ type: Constants.PAGE_CREATE, payload: data.result });
+      if (data.success === true) {
+        dispatch({
+          type: Constants.PAGE_CREATE,
+          payload: data.result.PageData,
+        });
+        Toast.success("Page created successfully");
+      } else {
+        Toast.error(data.message);
+      }
     }
-    Toast.success("Page created successfully");
   } catch (error) {
-    Toast.error("Error creating Page");
+    Toast.error(error.message);
     console.log(error);
   }
 };
