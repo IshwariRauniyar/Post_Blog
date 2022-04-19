@@ -24,7 +24,6 @@ router.get("/", async (req, res) => {
         return r;
       })
       .catch((e) => {
-        console.log(e);
         return [];
       });
     const total = await Page.find(query).countDocuments();

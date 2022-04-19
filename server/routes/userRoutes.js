@@ -1,31 +1,49 @@
 var express = require("express");
 var router = express.Router();
-const userController = require("../controllers/user");
-const catchException = require("../middlewares/catchException");
+const User = require("../models/user");
+const authMiddleware = require("../middlewares/authMiddleware");
 
-/**
- * GET /api/user
- */
-router.get("/", catchException(userController.fetchAll));
-
-/**
- * GET /api/user/:id
- */
-router.get("/:id", catchException(userController.fetchById));
-
-/**
- * POST /api/user
- */
-router.post("/", catchException(userController.create));
-
-/**
- * PUT /api/user/:id
- */
-router.put("/:id", catchException(userController.update));
-
-/**
- * DELETE /api/user/:id
- */
-router.delete("/:id", catchException(userController.deleteuser));
+router.get("/", async (req, res, next) => {
+  const { limit = 10, offset = 0 } = req.query;
+  const query = {};
+  try {
+    if (req.query.search) {
+      query.$or = [
+        { FirstName: { $regex: req.query.search, $options: "i" } },
+        { LastName: { $regex: req.query.search, $options: "i" } },
+        { Email: { $regex: req.query.search, $options: "i" } },
+      ];
+    }
+    const users = await User.find(query)
+      .skip(offset * 10)
+      .limit(limit)
+      .sort({ $natural: -1 })
+      .then((r) => {
+        return r;
+      })
+      .catch((e) => {
+        console.log(e);
+        return [];
+      });
+    const total = await User.find(query).countDocuments();
+    const totalPages = Math.ceil(total / limit);
+    const currentPage = parseInt(offset) + 1;
+    res.json({
+      success: true,
+      message: "All users are fetched.",
+      code: 200,
+      users,
+      total,
+      totalPages,
+      currentPage,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message,
+      code: 500,
+    });
+  }
+});
 
 module.exports = router;
