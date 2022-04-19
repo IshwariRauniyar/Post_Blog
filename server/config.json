@@ -1,0 +1,5 @@
+{
+    "SiteName":"test CMS",
+    "DB":"",
+    "Menus":["page","post","user","role"]
+}
