@@ -3,36 +3,13 @@ const { Schema } = mongoose;
 
 const SettingSchema = new Schema(
   {
-    User: { type: Schema.Types.ObjectId, ref: "User" },
-    Status: {
-      type: String,
-      enum: ["active", "inactive"],
-      default: "active",
-    },
-    // PostType: {
-    //   type: String,
-    //   required: true,
-    //   enum: [
-    //     "post",
-    //     "page",
-    //     "product",
-    //     "category",
-    //     "tag",
-    //     "author",
-    //     "archive",
-    //     "search",
-    //     "home",
-    //     "404",
-    //     "other",
-    //   ],
-    // },
-    // UserType: { type: String, enum: ["new", "old"], default: "new" },
-    UserRole: {
-      type: String,
-      required: true,
-      enum: ["superAdmin", "admin", "user"],
-      default: "user",
-    },
+    Title: { type: String, required: true },
+    UniqueName: { type: String, required: true, unique: true },
+    Type: { type: String, default: "role" },
+    Value: { type: String },
+    IsActive: { type: Boolean, default: true },
+    CreatedOn: { type: Date, default: Date.now },
+    ModifiedOn: { type: Date, default: Date.now },
   },
   { collection: "Setting" },
   { timestamps: true }

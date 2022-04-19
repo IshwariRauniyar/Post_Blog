@@ -1,17 +1,10 @@
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser");
-const db = require("./db");
+require("./db");
 const routes = require("./routes");
 const cors = require("cors");
-var fs = require("fs");
-var path = require("path");
-
 app.use(cors());
 app.use(express.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
-// app.use("uploads", express.static("uploads"));
 app.use(express.static(__dirname));
 app.get("/", (req, res, next) => {
   res.send("Hello World!");

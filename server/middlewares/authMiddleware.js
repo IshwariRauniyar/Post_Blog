@@ -1,24 +1,22 @@
 const jwt = require("jsonwebtoken");
-const HttpStatus = require("http-status-codes");
 const config = require("../config/auth.config");
 const User = require("../models/user");
-const RefreshToken = require("../models/refreshToken");
 const Setting = require("../models/setting");
 
 const { TokenExpiredError } = jwt;
 // console.log("tok", TokenExpiredError());
 const catchError = (err, req, res, next) => {
   if (err instanceof TokenExpiredError) {
-    return res.status(401).json({
+    return res.json({
       success: false,
       message: "Unauthorized! Token expired",
-      code: HttpStatus.UNAUTHORIZED,
+      code: 401,
     });
   }
-  return res.status(500).json({
+  return res.json({
     success: false,
     message: "Something went wrong",
-    code: HttpStatus.INTERNAL_SERVER_ERROR,
+    code: 500,
   });
 };
 
@@ -34,33 +32,33 @@ const verifyToken = (req, res, next) => {
   }
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
-      return res.json({
-        success: false,
-        message: "Unauthorized! Token is not valid",
-        code: 401,
-      });
+      return catchError(err, req, res, next);
     }
     req.decoded = decoded;
-    console.log("decoded", req.decoded);
+    // console.log("decoded", req.decoded);
     next();
   });
   return req.decoded;
 };
 
-// const verifyRefreshToken = (req, res, next) => {
-//   const refreshToken = req.headers["x-refresh-token"];
-//   if (!refreshToken) {
-//     return catchError(err, req, res, next);
-//   }
-//   jwt.verify(refreshToken, config.refreshSecret, (err, decoded) => {
-//     if (err) {
-//       return catchError(err, req, res, next);
-//     }
-//     // req.decoded = decoded;
-//     req.userId = decoded.id;
-//     next();
-//   });
-// };
+const verifyRefreshToken = async (req, res, next) => {
+  const refreshToken = req.headers["x-refresh-token"];
+  if (!refreshToken) {
+    return res.json({
+      success: false,
+      message: "Unauthorized! Token not found",
+      code: 401,
+    });
+  }
+  jwt.verify(refreshToken, config.refreshSecret, (err, decoded) => {
+    if (err) {
+      return catchError(err, req, res, next);
+    }
+    req.decoded = decoded;
+    next();
+  });
+  return req.decoded;
+};
 
 const role = async (req, res, next) => {
   const user = req.decoded._id;
@@ -81,8 +79,8 @@ const role = async (req, res, next) => {
 const authMiddleware = {
   catchError,
   verifyToken,
+  verifyRefreshToken,
   role,
-  //   verifyRefreshToken,
 };
 
 module.exports = authMiddleware;

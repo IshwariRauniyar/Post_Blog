@@ -86,7 +86,7 @@ function Page() {
                 dialogClassName="modal-lg"
               >
                 <Modal.Header closeButton>
-                  <Modal.Title>Create Post</Modal.Title>
+                  <Modal.Title>Create Page</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   {/* Create Form */}

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const bcrypt = require("bcryptjs");
 
 const UserSchema = new Schema(
   {
@@ -12,19 +13,19 @@ const UserSchema = new Schema(
       match: [/\S+@\S+\.\S+/, "provided email is invalid"],
       index: true,
     },
+    UserName: { type: String },
     Password: { type: String, required: true },
-    Image: String,
-    UserName: {
-      type: String,
-      required: true,
-    },
-    UserRole: { type: Schema.Types.ObjectId, ref: "Setting" },
-    Token: { type: String },
+    UserRole: String,
     CreatedOn: { type: Date, default: Date.now },
     ModifiedOn: { type: Date, default: Date.now },
   },
   { collection: "User" }
 );
+
+UserSchema.pre("save", function (next) {
+  this.Password = bcrypt.hashSync(this.Password, 10);
+  next();
+});
 
 const User = mongoose.model("User", UserSchema);
 
