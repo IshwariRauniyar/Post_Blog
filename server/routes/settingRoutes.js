@@ -14,8 +14,6 @@ router.get("/", async (req, res) => {
         { Type: { $regex: req.query.search, $options: "i" } },
       ];
     }
-    const val = config.Menus;
-    console.log("menus", val);
     const settings = await Setting.find(query)
       .skip(offset * 10)
       .limit(limit)
@@ -64,13 +62,16 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   //   const user = req.decoded;
   try {
-    const val = config.Menus;
-    console.log("val", val);
-    val.forEach((element) => {
-      console.log("element", element);
-    });
-    // req.body.Value must be from val
-
+    const menu = config.Menus;
+    // const check = menu.some((m) => {
+    //   if (m === req.body.Value) {
+    //     req.body.Value = m;
+    //     console.log("menu", req.body.Value);
+    //     return true;
+    //   }
+    // });
+    // console.log("check", check);
+    console.log(req.body.Value);
     const Settings = await Setting.create({
       Title: req.body.Title,
       UniqueName: req.body.UniqueName,

@@ -1,5 +1,5 @@
 {
     "SiteName":"test CMS",
     "DB":"",
-    "Menus":["page","post","user","role"]
+    "Menus":"[\"page\",\"post\",\"user\",\"role\"]"
 }

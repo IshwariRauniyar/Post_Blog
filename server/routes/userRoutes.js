@@ -1,9 +1,9 @@
 var express = require("express");
 var router = express.Router();
 const User = require("../models/user");
-const authMiddleware = require("../middlewares/authMiddleware");
+const { verifyToken, role } = require("../middlewares/authMiddleware");
 
-router.get("/", async (req, res, next) => {
+router.get("/", role, async (req, res, next) => {
   const { limit = 10, offset = 0 } = req.query;
   const query = {};
   try {

@@ -60,20 +60,77 @@ const verifyRefreshToken = async (req, res, next) => {
   return req.decoded;
 };
 
-const role = async (req, res, next) => {
-  const user = req.decoded._id;
-  const roles = await Setting.findOne({ User: user });
+// async function role(v, req) {
+//   const user = req.decoded;
+//   console.log("user", user);
+//   const userRole = await Setting.findOne(
+//     { UniqueName: user.UserRole },
+//     { Value: 1, _id: 0 } // [Value]
+//   );
+//   console.log("userRole", userRole);
+//   console.log("userRoleValue", userRole.Value);
+//   if (userRole.Value.includes(v)) {
+//     return true;
+//   }
+//   return false;
+// }
 
-  console.log("userRole", roles);
-  if (roles.UserRole === "superAdmin" || roles.UserRole === "user") {
-    next();
+const role = async (req, res, next, v) => {
+  const user = req.decoded;
+  console.log("user", user);
+  const userRole = await Setting.findOne(
+    { UniqueName: user.UserRole },
+    { Value: 1, _id: 0 } // [Value]
+  );
+  console.log("userRole", userRole);
+  console.log("userRoleValue", userRole.Value);
+  const check = userRole.Value.includes("user");
+  console.log("check", check);
+  const check1 = userRole.Value.includes("page");
+  const check2 = userRole.Value.includes("user");
+  const check3 = userRole.Value.includes("role");
+  if (check || check1 || check2 || check3 === true) {
+    return next();
   } else {
-    return res.status(401).json({
+    return res.json({
       success: false,
-      message: "Unauthorized! You are not authorized to perform this action",
+      message: "Unauthorized! You don't have permission to access this page",
       code: 401,
     });
   }
+
+  // if (check === true) {
+  //   next();
+  // } else {
+  //   return res.json({
+  //     success: false,
+  //     message: "Unauthorized! You are not allowed to access this route",
+  //     code: 401,
+  //   });
+  // }
+  // if (check1 === true) {
+  //   next();
+  // } else {
+  //   return res.json({
+  //     success: false,
+  //     message: "Unauthorized! You are not allowed to access this route",
+  //     code: 401,
+  //   });
+  // }
+
+  // const menu = userRole.value.array.forEach(element => {
+
+  // });
+
+  // if (roles.UserRole === "superAdmin" || roles.UserRole === "user") {
+  //   next();
+  // } else {
+  //   return res.status(401).json({
+  //     success: false,
+  //     message: "Unauthorized! You are not authorized to perform this action",
+  //     code: 401,
+  //   });
+  // }
 };
 
 const authMiddleware = {

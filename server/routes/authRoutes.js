@@ -80,6 +80,7 @@ router.post("/login", async (req, res, next) => {
           UserName: Users.UserName,
           Email: Users.Email,
           _id: Users._id,
+          UserRole: Users.UserRole,
         },
         authConfig.secret,
         {
@@ -92,6 +93,7 @@ router.post("/login", async (req, res, next) => {
           UserName: Users.UserName,
           Email: Users.Email,
           _id: Users._id,
+          UserRole: Users.UserRole,
         },
         authConfig.refreshSecret,
         {
@@ -127,13 +129,12 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-// router.get("/logout", async (req, res) => {
-
-//   return res.json({
-//     success: true,
-//     message: "User Logged out Successfully.",
-//     code: 200,
-//   });
-// });
+router.get("/logout", async (req, res) => {
+  return res.json({
+    success: true,
+    message: "User Logged out Successfully.",
+    code: 200,
+  });
+});
 
 module.exports = router;

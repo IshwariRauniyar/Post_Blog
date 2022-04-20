@@ -2,11 +2,15 @@ var express = require("express");
 var router = express.Router();
 const Page = require("../models/page");
 const upload = require("../middlewares/uploads");
-const authMiddleware = require("../middlewares/authMiddleware");
+const {
+  verifyRefreshToken,
+  verifyToken,
+  role,
+} = require("../middlewares/authMiddleware");
 const User = require("../models/user");
 const Setting = require("../models/setting");
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, role, async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
   const query = {};
   try {
@@ -47,7 +51,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", authMiddleware.verifyToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   Page.findById(req.params.id, (err, page) => {
     if (err) {
       res.send(err);
@@ -63,7 +67,6 @@ router.get("/:id", authMiddleware.verifyToken, async (req, res) => {
 
 router.post(
   "/",
-  [authMiddleware.verifyToken, authMiddleware.role],
 
   upload.single("Image"),
   async (req, res) => {
@@ -116,71 +119,66 @@ router.post(
   }
 );
 
-router.put(
-  "/:id",
-  [authMiddleware.verifyToken, authMiddleware.role],
-  upload.single("Image"),
-  async (req, res) => {
-    const user = req.decoded;
-    // console.log("user", user);
-    try {
-      const PageData = await Page.findById(req.params.id);
-      if (!PageData) {
-        return res.json({
-          success: false,
-          message: "Page not found.",
-          code: 404,
-        });
-      }
-      const updatedPage = await Page.findByIdAndUpdate(
-        req.params.id,
-        {
-          Title: req.body.Title,
-          Slug: req.body.Slug,
-          SeoTitle: req.body.SeoTitle,
-          SeoDescription: req.body.SeoDescription,
-          // PostType: req.body.PostType,
-          Description: req.body.Description,
-          IsActive: req.body.IsActive,
-          Image: req.file?.destination + "/" + req.file?.filename,
-          ModifiedBy: user?._id,
-        },
-        { new: true }
-      );
-      //   console.log("updatedPage", updatedPage);
-      const users = await User.findById(updatedPage.ModifiedBy);
-      const role = await Setting.findOne({
-        User: users._id,
-      });
-      return res.json({
-        success: true,
-        message: "Page updated Successfully",
-        code: 200,
-        result: {
-          updatedPage,
-          user: {
-            _id: users._id,
-            Email: users.Email,
-            UserName: users.UserName,
-            FirstName: users.FirstName,
-            LastName: users.LastName,
-            UserRole: role.UserRole,
-          },
-        },
-      });
-    } catch (error) {
+router.put("/:id", upload.single("Image"), async (req, res) => {
+  const user = req.decoded;
+  // console.log("user", user);
+  try {
+    const PageData = await Page.findById(req.params.id);
+    if (!PageData) {
       return res.json({
         success: false,
-        message: error.message,
-        code: 500,
+        message: "Page not found.",
+        code: 404,
       });
     }
+    const updatedPage = await Page.findByIdAndUpdate(
+      req.params.id,
+      {
+        Title: req.body.Title,
+        Slug: req.body.Slug,
+        SeoTitle: req.body.SeoTitle,
+        SeoDescription: req.body.SeoDescription,
+        // PostType: req.body.PostType,
+        Description: req.body.Description,
+        IsActive: req.body.IsActive,
+        Image: req.file?.destination + "/" + req.file?.filename,
+        ModifiedBy: user?._id,
+      },
+      { new: true }
+    );
+    //   console.log("updatedPage", updatedPage);
+    const users = await User.findById(updatedPage.ModifiedBy);
+    const role = await Setting.findOne({
+      User: users._id,
+    });
+    return res.json({
+      success: true,
+      message: "Page updated Successfully",
+      code: 200,
+      result: {
+        updatedPage,
+        user: {
+          _id: users._id,
+          Email: users.Email,
+          UserName: users.UserName,
+          FirstName: users.FirstName,
+          LastName: users.LastName,
+          UserRole: role.UserRole,
+        },
+      },
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error.message,
+      code: 500,
+    });
   }
-);
+});
 
 router.delete(
   "/:id",
-  [authMiddleware.verifyToken, authMiddleware.role],
+  // [authMiddleware.verifyToken, authMiddleware.role],
   async (req, res) => {
     try {
       const PageData = await Page.findById(req.params.id);
