@@ -3,11 +3,11 @@ var router = express.Router();
 const Post = require("../models/post");
 const HttpStatus = require("http-status-codes");
 const upload = require("../middlewares/uploads");
-const { verifyToken, role } = require("../middlewares/authMiddleware");
+const { verifyToken, access } = require("../middlewares/authMiddleware");
 const User = require("../models/user");
 const Setting = require("../models/setting");
 
-router.get("/", verifyToken, role, async (req, res) => {
+router.get("/", verifyToken, access("post"), async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
   const query = {};
   try {
@@ -50,7 +50,7 @@ router.get("/", verifyToken, role, async (req, res) => {
   }
 });
 
-router.get("/:id", verifyToken, (req, res) => {
+router.get("/:id", verifyToken, access("post"), (req, res) => {
   Post.findById(req.params.id, (err, post) => {
     if (err) {
       res.send(err);
@@ -69,7 +69,7 @@ router.get("/:id", verifyToken, (req, res) => {
 router.post(
   "/",
   verifyToken,
-  role,
+  access("post"),
   upload.single("Image"),
   async (req, res) => {
     const obj = JSON.parse(JSON.stringify(req.body));
@@ -126,7 +126,7 @@ router.post(
 router.put(
   "/:id",
   verifyToken,
-  role,
+  access("post"),
   upload.single("Image"),
   async (req, res) => {
     const user = req.decoded;
@@ -187,7 +187,7 @@ router.put(
   }
 );
 
-router.delete("/:id", verifyToken, role, async (req, res) => {
+router.delete("/:id", verifyToken, access("post"), async (req, res) => {
   try {
     const PostData = await Post.findById(req.params.id);
     if (!PostData) {
