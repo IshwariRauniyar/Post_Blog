@@ -1,28 +1,50 @@
 import React from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import Sidebar from "./Sidebar";
+import routes from "../routes";
 
 export default function Layout() {
+  const location = useLocation();
+  const getRoutes = (routes) => {
+    return routes.map((prop, key) => {
+      if (prop.layout === "/") {
+        return (
+          <Route
+            path={prop.layout + prop.path}
+            render={(props) => <prop.component {...props} />}
+            key={key}
+          />
+        );
+      } else {
+        return null;
+      }
+    });
+  };
+  React.useEffect(() => {
+    document.documentElement.scrollTop = 0;
+    document.scrollingElement.scrollTop = 0;
+    if (
+      window.innerWidth < 993 &&
+      document.documentElement.className.indexOf("nav-open") !== -1
+    ) {
+      document.documentElement.classList.toggle("nav-open");
+      var element = document.getElementById("bodyClick");
+      element.parentNode.removeChild(element);
+    }
+  }, [location]);
   return (
     <>
-      <div>
-        <title>Page title</title>
-        <meta charSet="utf-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
-        <meta name="description" />
-        <meta name="author" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap"
-        />
-        <link rel="stylesheet" href="css/tailwind/tailwind.min.css" />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="favicon-tailwind.png"
-        />
+      <div className="wrapper">
+        <Sidebar routes={routes} />
+        <div className="content">
+          <Routes>{getRoutes(routes)}</Routes>
+        </div>
       </div>
     </>
   );
