@@ -7,7 +7,7 @@ const SettingCreateForm = ({ close }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [uniqueName, setUniqueName] = useState("");
-  const [menu, setMenu] = useState([]);
+  const [menu, setMenu] = useState("");
   const [IsActive, setIsActive] = useState(Boolean);
   const onclose = close;
   const handleSubmit = (e) => {
@@ -15,10 +15,9 @@ const SettingCreateForm = ({ close }) => {
     const newRole = {
       Title: title,
       UniqueName: uniqueName,
-      Value: menu,
+      Value: JSON.stringify(menu),
       IsActive: IsActive,
     };
-    console.log(newRole);
     dispatch(createRole(newRole));
     onclose();
   };
@@ -63,14 +62,62 @@ const SettingCreateForm = ({ close }) => {
         </div>
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium"> Value</label>
-          <input
-            className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
-            type="text"
-            required
-            value={menu}
-            onChange={(e) => setMenu(e.target.value)}
-            placeholder="Enter Value of Menu"
-          />
+          <fieldset className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded">
+            <Form.Group controlId="formBasicCheckbox">
+              <Form.Check
+                type="checkbox"
+                label="page"
+                name="page"
+                value="page"
+                onChange={(e) => {
+                  if (menu.includes(e.target.value)) {
+                    setMenu(menu.filter((item) => item !== e.target.value));
+                  } else {
+                    setMenu([...menu, e.target.value]);
+                  }
+                }}
+              />
+              <Form.Check
+                type="checkbox"
+                label="post"
+                name="post"
+                value="post"
+                onChange={(e) => {
+                  if (menu.includes(e.target.value)) {
+                    setMenu(menu.filter((item) => item !== e.target.value));
+                  } else {
+                    setMenu([...menu, e.target.value]);
+                  }
+                }}
+              />
+              <Form.Check
+                type="checkbox"
+                label="user"
+                name="user"
+                value="user"
+                onChange={(e) => {
+                  if (menu.includes(e.target.value)) {
+                    setMenu(menu.filter((item) => item !== e.target.value));
+                  } else {
+                    setMenu([...menu, e.target.value]);
+                  }
+                }}
+              />
+              <Form.Check
+                type="checkbox"
+                label="role"
+                name="role"
+                value="role"
+                onChange={(e) => {
+                  if (menu.includes(e.target.value)) {
+                    setMenu(menu.filter((item) => item !== e.target.value));
+                  } else {
+                    setMenu([...menu, e.target.value]);
+                  }
+                }}
+              />
+            </Form.Group>
+          </fieldset>
         </div>
 
         <label className="block mb-2 text-2xl font-medium">IsActive</label>

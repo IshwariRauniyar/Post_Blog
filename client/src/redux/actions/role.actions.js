@@ -16,7 +16,6 @@ export const getRole =
           `/setting/?offset=${offset}&limit=${limit}&search=${search}`,
           setHeaders
         );
-        console.log(data);
         if (data.success === true) {
           dispatch({
             type: Constants.ROLE_GET_ALL,
@@ -81,7 +80,6 @@ export const createRole = (newRole) => async (dispatch) => {
           newRole,
           setHeaders
         );
-        console.log("d", data);
         if (data.success === true) {
           dispatch({
             type: Constants.ROLE_CREATE,
