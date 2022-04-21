@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { getPage, deletePage } from "../redux/actions/page.actions";
+import { getRole } from "../redux/actions/role.actions";
 import { Card, Container, Row, Col, Button, Modal } from "react-bootstrap";
 import TableWithPagination from "../components/DataTable/TableWithPagination/index";
-import PageCreateForm from "../components/Form/PageCreateForm";
-import PageEditForm from "../components/Form/PageEditForm";
+import RoleCreateForm from "../components/Form/RoleCreateForm";
 import Header from "../components/Navbar";
 
-function Page() {
+function Role() {
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const { pages: all_data, total } = useSelector((state) => state.page);
+  const { roles: all_data, total } = useSelector((state) => state.role);
 
   const headers = [
     {
@@ -19,13 +18,19 @@ function Page() {
       sortable: false,
     },
     {
-      name: "Slug",
-      field: "Slug",
-      property: ["Slug"],
+      name: "UniqueName",
+      field: "UniqueName",
+      property: ["UniqueName"],
       sortable: false,
     },
     {
-      name: "Status",
+      name: "Value",
+      field: "Value",
+      property: ["Value"],
+      sortable: false,
+    },
+    {
+      name: "IsActive",
       field: "IsActive",
       property: ["IsActive"],
     },
@@ -35,7 +40,6 @@ function Page() {
       property: ["CreatedOn"],
       sortable: false,
     },
-    { name: "Actions", field: "actions", property: [], sortable: false },
   ];
 
   const handleCreateClose = () => setShowCreateModal(false);
@@ -50,7 +54,7 @@ function Page() {
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
               <Card.Header className="d-flex align-items-center justify-content-between">
-                <Card.Title>Page List</Card.Title>
+                <Card.Title>Role List</Card.Title>
                 <Button
                   className="btn-fill pull-right"
                   type="submit"
@@ -59,21 +63,16 @@ function Page() {
                   onClick={() => handleCreateShow()}
                 >
                   <i className="fas fa-plus"></i>
-                  Add New Page
+                  Add New Role
                 </Button>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <TableWithPagination
-                  title="Page"
+                  title="Role"
                   tableData={all_data}
                   total={total}
                   headers={headers}
-                  getAction={(custom_props) => getPage({ ...custom_props })}
-                  deleteAction={deletePage}
-                  EditForm={(custom_props) => (
-                    <PageEditForm {...custom_props} />
-                  )}
-                  actionButtons={["edit", "delete"]}
+                  getAction={(custom_props) => getRole({ ...custom_props })}
                 />
               </Card.Body>
               {/* Create Modal */}
@@ -85,11 +84,11 @@ function Page() {
                 dialogClassName="modal-lg"
               >
                 <Modal.Header closeButton>
-                  <Modal.Title>Create Page</Modal.Title>
+                  <Modal.Title>Create Role</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   {/* Create Form */}
-                  <PageCreateForm close={handleCreateClose} />
+                  <RoleCreateForm close={handleCreateClose} />
                 </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleCreateClose}>
@@ -105,4 +104,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default Role;

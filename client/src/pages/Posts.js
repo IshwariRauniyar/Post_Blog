@@ -1,18 +1,14 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { getPost, deletePost } from "../redux/actions/post.actions";
-import { useNavigate } from "react-router-dom";
 import { Card, Container, Row, Col, Button, Modal } from "react-bootstrap";
 import TableWithPagination from "../components/DataTable/TableWithPagination/index";
 import PostCreateForm from "../components/Form/PostCreateForm";
 import PostEditForm from "../components/Form/PostEditForm";
-
-function Article() {
+import Header from "../components/Navbar";
+function Post() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { posts: all_data, total } = useSelector((state) => state.post);
-  console.table(all_data);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const headers = [
     {
@@ -52,6 +48,7 @@ function Article() {
 
   return (
     <>
+      <Header />
       <Container fluid>
         <Row>
           <Col md="12">
@@ -112,4 +109,4 @@ function Article() {
   );
 }
 
-export default Article;
+export default Post;

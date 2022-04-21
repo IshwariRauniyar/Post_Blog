@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { authLogin } from "../redux/actions/auth.actions";
 // import { Navigate } from "react-router-dom";
 
@@ -58,14 +58,6 @@ const Login = () => {
                       onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
-                  <div className="mt-2 text-right">
-                    <a
-                      href="#"
-                      className="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700"
-                    >
-                      Forgot Password?
-                    </a>
-                  </div>
                   <button
                     type="submit"
                     className="block w-full px-4 py-3 mt-6 font-semibold text-white bg-indigo-500 rounded-lg hover:bg-indigo-400 focus:bg-indigo-400"
@@ -73,17 +65,6 @@ const Login = () => {
                     Log In
                   </button>
                 </form>
-                <hr className="w-full my-6 border-gray-300" />
-
-                <p className="mt-8">
-                  Need an account?{" "}
-                  <a
-                    href="/register"
-                    className="font-semibold text-blue-500 hover:text-blue-700"
-                  >
-                    Create an account
-                  </a>
-                </p>
               </div>
             </div>
           </div>
