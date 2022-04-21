@@ -97,34 +97,29 @@ export const createRole = (newRole) => async (dispatch) => {
   }
 };
 
-// export const updateRole = (id, updateRole) => async (dispatch) => {
-//   try {
-//     if (localStorage.getItem("token")) {
-//       const setHeaders = {
-//         headers: {
-//           Authorization: `Bearer ${localStorage.getItem("token")}`,
-//         },
-//       };
-//       if (updateRole) {
-//         const formData = new FormData();
-//         formData.append("Title", newRole.Title);
-//         formData.append("UniqueName", newRole.UniqueName);
-//         formData.append("Value", newRole.Value);
-//         formData.append("IsActive", newRole.IsActive);
-//         const { data } = await axiosInstance.put(
-//           `/setting/${id}`,
-//           formData,
-//           setHeaders
-//         );
-//         dispatch({
-//           type: Constants.ROLE_EDIT,
-//           payload: data.result.updatedRole,
-//         });
-//       }
-//       Toast.success("Role updated successfully");
-//     }
-//   } catch (error) {
-//     Toast.error("Error updating Role");
-//     console.log(error);
-//   }
-// };
+export const updateRole = (id, updateRole) => async (dispatch) => {
+  try {
+    if (localStorage.getItem("token")) {
+      const setHeaders = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      };
+      if (updateRole) {
+        const { data } = await axiosInstance.put(
+          `/setting/${id}`,
+          updateRole,
+          setHeaders
+        );
+        dispatch({
+          type: Constants.ROLE_EDIT,
+          payload: data.result,
+        });
+      }
+      Toast.success("Role updated successfully");
+    }
+  } catch (error) {
+    Toast.error("Error updating Role");
+    console.log(error);
+  }
+};

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { getRole } from "../redux/actions/role.actions";
+import { getRole, deleteRole } from "../redux/actions/role.actions";
 import { Card, Container, Row, Col, Button, Modal } from "react-bootstrap";
 import TableWithPagination from "../components/DataTable/TableWithPagination/index";
 import RoleCreateForm from "../components/Form/RoleCreateForm";
+import RoleEditForm from "../components/Form/RoleEditForm";
 import Header from "../components/Navbar";
 
 function Role() {
@@ -40,6 +41,7 @@ function Role() {
       property: ["CreatedOn"],
       sortable: false,
     },
+    { name: "Actions", field: "actions", property: [], sortable: false },
   ];
 
   const handleCreateClose = () => setShowCreateModal(false);
@@ -73,6 +75,11 @@ function Role() {
                   total={total}
                   headers={headers}
                   getAction={(custom_props) => getRole({ ...custom_props })}
+                  deleteAction={deleteRole}
+                  EditForm={(custom_props) => (
+                    <RoleEditForm {...custom_props} />
+                  )}
+                  actionButtons={["edit", "delete"]}
                 />
               </Card.Body>
               {/* Create Modal */}

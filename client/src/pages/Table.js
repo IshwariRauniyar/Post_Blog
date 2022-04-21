@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-import { Card, Container, Row, Col, Button, Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import PostCreateForm from "../components/Form/PostCreateForm";
 
 export default function Table() {

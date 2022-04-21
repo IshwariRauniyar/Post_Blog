@@ -12,7 +12,6 @@ export default function Post() {
   const dispatch = useDispatch();
   // dispatch(getPost({ offset: 0, limit: 10 }));
   const { post: all_data } = useSelector((state) => state.post);
-  console.log("pooooost", all_data);
 
   const [post, setPost] = useState([]);
   useEffect(() => {

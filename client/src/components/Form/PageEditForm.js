@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { updatePage } from "../../redux/actions/page.actions";
 import ReactQuill from "react-quill";
 import "../../../node_modules/react-quill/dist/quill.snow.css";
-import { Form, Row, Col, Image } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 
 const PageEditForm = ({ editState, close }) => {
