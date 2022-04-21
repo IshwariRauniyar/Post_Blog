@@ -16,7 +16,6 @@ export const getPage =
           `/page/?offset=${offset}&limit=${limit}&search=${search}`,
           setHeaders
         );
-        console.log(data);
         if (data.success === true) {
           dispatch({
             type: Constants.PAGE_GET_ALL,

@@ -3,8 +3,9 @@ const authMiddleware = require("../middlewares/authMiddleware");
 var router = express.Router();
 const Setting = require("../models/setting");
 const config = require("../config.json");
+const { verifyToken, access } = require("../middlewares/authMiddleware");
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, access("role"), async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
   const query = {};
   try {
@@ -45,7 +46,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, access("role"), async (req, res) => {
   Setting.findById(req.params.id, (err, setting) => {
     if (err) {
       res.send(err);
@@ -59,7 +60,7 @@ router.get("/:id", async (req, res) => {
   });
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, access("role"), async (req, res) => {
   //   const user = req.decoded;
   try {
     const menu = config.Menus;
@@ -71,14 +72,12 @@ router.post("/", async (req, res) => {
     //   }
     // });
     // console.log("check", check);
-    console.log(req.body.Value);
     const Settings = await Setting.create({
       Title: req.body.Title,
       UniqueName: req.body.UniqueName,
       IsActive: req.body.IsActive,
       Value: req.body.Value,
     });
-    console.log("Settings", Settings);
     res.json({
       success: true,
       message: "Setting created.",
