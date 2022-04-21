@@ -17,7 +17,7 @@ const Login = () => {
       Password: password,
     };
     dispatch(authLogin(loginData));
-    // window.location.href = "/article";
+    window.location.href = "/header";
   };
 
   // if (auth.isAuthenticated == true) {

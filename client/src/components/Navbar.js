@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { authLogout } from "../redux/actions/auth.actions";
 
-function Header() {
+export default function Header() {
   const dispatch = useDispatch();
   const [state, setState] = useState({
     menu: false,
@@ -31,7 +31,7 @@ function Header() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg flex navbar-light bg-light">
       <Link className="navbar-brand" to="/header">
         TestCMS
       </Link>
@@ -39,7 +39,7 @@ function Header() {
         <span className="navbar-toggler-icon" />
       </button>
       <div className={"collapse navbar-collapse " + show}>
-        <div className="navbar-nav">
+        <div className="navbar-nav flex justify-center">
           <Link
             className={state.pageLinkClass}
             to="/page"
@@ -98,5 +98,3 @@ function Header() {
     </nav>
   );
 }
-
-export default Header;

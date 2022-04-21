@@ -16,7 +16,16 @@ const App = () => {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/header" element={<Header />} />
+          <Route
+            path="/header"
+            element={
+              localStorage.getItem("token") ? (
+                <Header />
+              ) : (
+                <Navigate to={"/login"} />
+              )
+            }
+          />
           <Route
             path="/"
             element={
@@ -80,6 +89,7 @@ const App = () => {
               )
             }
           />
+          <Route path="*" element={<>404 NOT FOUND</>} />
         </Routes>
       </BrowserRouter>
     </div>
