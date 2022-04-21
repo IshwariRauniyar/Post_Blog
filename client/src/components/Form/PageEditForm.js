@@ -7,7 +7,6 @@ import { Form, Row, Col, Image } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 
 const PageEditForm = ({ editState, close }) => {
-  console.log("editState", editState);
   const ImgPath = editState.Image;
   const dispatch = useDispatch();
   const [paramid, setID] = useState(editState._id);

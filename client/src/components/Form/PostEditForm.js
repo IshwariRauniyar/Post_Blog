@@ -7,7 +7,6 @@ import { Form, Row, Col, Image } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 
 const PostEditForm = ({ editState, close }) => {
-  console.log("editState", editState);
   const ImgPath = editState.Image;
   // const path = ImagePath.replace("\\", "/");
   // console.log("path", path);
