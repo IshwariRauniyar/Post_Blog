@@ -1,5 +1,4 @@
 var express = require("express");
-const authMiddleware = require("../middlewares/authMiddleware");
 var router = express.Router();
 const Setting = require("../models/setting");
 const config = require("../config.json");
@@ -47,6 +46,14 @@ router.get("/", verifyToken, access("role"), async (req, res) => {
 });
 
 router.get("/:id", verifyToken, access("role"), async (req, res) => {
+  const SettingData = await Setting.findById(req.params.id);
+  if (!SettingData) {
+    return res.json({
+      success: false,
+      message: "Setting not found.",
+      code: 404,
+    });
+  }
   Setting.findById(req.params.id, (err, setting) => {
     if (err) {
       res.send(err);
@@ -61,17 +68,23 @@ router.get("/:id", verifyToken, access("role"), async (req, res) => {
 });
 
 router.post("/", verifyToken, access("role"), async (req, res) => {
-  //   const user = req.decoded;
   try {
-    const menu = config.Menus;
-    // const check = menu.some((m) => {
-    //   if (m === req.body.Value) {
-    //     req.body.Value = m;
-    //     console.log("menu", req.body.Value);
-    //     return true;
+    // const menu = config.Menus;
+    // console.log("m", menu);
+    // const newValue = JSON.stringify(menu);
+    // console.log("newValue", newValue);
+    // const val = JSON.parse(newValue);
+    // console.log("val", val);
+    // const data = JSON.stringify(req.body.Value);
+    // console.log(JSON.parse(data));
+    // const check = newValue.forEach((element) => {
+    //   if (element === JSON.parse(data)) {
+    //     console.log("true");
     //   }
     // });
     // console.log("check", check);
+
+    // if (check === true) {
     const Settings = await Setting.create({
       Title: req.body.Title,
       UniqueName: req.body.UniqueName,
@@ -81,6 +94,79 @@ router.post("/", verifyToken, access("role"), async (req, res) => {
     res.json({
       success: true,
       message: "Setting created.",
+      code: 200,
+      result: Settings,
+    });
+    // } else {
+    //   res.json({
+    //     success: false,
+    //     message: "Value is not valid.",
+    //     code: 500,
+    //   });
+    // }
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message,
+      code: 500,
+    });
+  }
+});
+
+router.put("/:id", verifyToken, access("role"), async (req, res) => {
+  try {
+    // const menu = config.Menus;
+    // const check = menu.includes(JSON.parse(req.body.Value));
+
+    // console.log("check", check);
+    const SettingData = await Setting.findById(req.params.id);
+    if (!SettingData) {
+      return res.json({
+        success: false,
+        message: "Setting not found.",
+        code: 404,
+      });
+    }
+
+    const Settings = await Setting.findByIdAndUpdate(
+      req.params.id,
+      {
+        Title: req.body?.Title,
+        UniqueName: req.body?.UniqueName,
+        IsActive: req.body?.IsActive,
+        Value: req.body?.Value,
+      },
+      { new: true }
+    );
+    res.json({
+      success: true,
+      message: "Setting updated.",
+      code: 200,
+      result: Settings,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message,
+      code: 500,
+    });
+  }
+});
+
+router.delete("/:id", verifyToken, access("role"), async (req, res) => {
+  try {
+    const SettingData = await Setting.findById(req.params.id);
+    if (!SettingData) {
+      return res.json({
+        success: false,
+        message: "Setting not found.",
+        code: 404,
+      });
+    }
+    const Settings = await Setting.findByIdAndDelete(req.params.id);
+    res.json({
+      success: true,
+      message: "Setting deleted.",
       code: 200,
       result: Settings,
     });
