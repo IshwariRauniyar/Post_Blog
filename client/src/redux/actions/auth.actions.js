@@ -6,9 +6,10 @@ export const authLogin = (user) => async (dispatch) => {
   try {
     const { data } = await axiosInstance.post("/auth/login", user);
     if (data.success) {
-      const { token, user } = data.result;
+      const { token, user, refreshToken } = data.result;
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("refreshToken", refreshToken);
       dispatch({
         type: Constants.LOGIN_SUCCESS,
         payload: data.result,
@@ -46,6 +47,7 @@ export const authLogout = (user) => async (dispatch) => {
     if (data.success === true) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("refreshToken");
       dispatch({ type: Constants.LOGOUT_SUCCESS, payload: data });
       Toast.success(data.message);
       window.location.href = "/login";

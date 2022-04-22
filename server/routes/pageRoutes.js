@@ -3,7 +3,6 @@ var router = express.Router();
 const Page = require("../models/page");
 const upload = require("../middlewares/uploads");
 const { verifyToken, access } = require("../middlewares/authMiddleware");
-const User = require("../models/user");
 
 router.get("/", verifyToken, access("page"), async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
@@ -16,7 +15,7 @@ router.get("/", verifyToken, access("page"), async (req, res) => {
       ];
     }
     const pages = await Page.find(query)
-      .skip(offset * 10)
+      .skip(offset * limit)
       .limit(limit)
       .sort({ $natural: -1 })
       .then((r) => {
@@ -28,20 +27,18 @@ router.get("/", verifyToken, access("page"), async (req, res) => {
     const total = await Page.find(query).countDocuments();
     const totalPages = Math.ceil(total / limit);
     const currentPage = parseInt(offset) + 1;
-    res.json({
+    res.status(200).json({
       success: true,
       message: "All pages are fetched.",
-      code: 200,
       pages,
       total,
       totalPages,
       currentPage,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message,
-      code: 500,
     });
   }
 });
@@ -51,10 +48,9 @@ router.get("/:id", verifyToken, access("page"), async (req, res) => {
     if (err) {
       res.send(err);
     }
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Page fetched.",
-      code: 200,
       page,
     });
   });
@@ -78,27 +74,17 @@ router.post(
         Image: req.file?.destination + "/" + req.file?.filename,
         CreatedBy: user._id,
       });
-      // console.log("PageDts", PageData);
-      //   const users = await User.find({
-      //     _id: { $in: PageData.CreatedBy },
-      //   });
-
-      const users = await User.findById(PageData?.CreatedBy);
-      //   console.log("role", role);
-      res.json({
+      res.status(200).json({
         success: true,
         message: "Page created Successfully",
-        code: 200,
         result: {
           PageData,
-          users,
         },
       });
     } catch (error) {
-      return res.json({
+      return res.status(500).json({
         success: false,
         message: error.message,
-        code: 500,
       });
     }
   }
@@ -115,10 +101,9 @@ router.put(
     try {
       const PageData = await Page.findById(req.params.id);
       if (!PageData) {
-        return res.json({
+        return res.status(404).json({
           success: false,
           message: "Page not found.",
-          code: 404,
         });
       }
       const updatedPage = await Page.findByIdAndUpdate(
@@ -128,7 +113,6 @@ router.put(
           Slug: req.body.Slug,
           SeoTitle: req.body.SeoTitle,
           SeoDescription: req.body.SeoDescription,
-          // PostType: req.body.PostType,
           Description: req.body.Description,
           IsActive: req.body.IsActive,
           Image: req.file?.destination + "/" + req.file?.filename,
@@ -137,21 +121,18 @@ router.put(
         { new: true }
       );
       //   console.log("updatedPage", updatedPage);
-      const users = await User.findById(updatedPage?.ModifiedBy);
-      return res.json({
+      // const users = await User.findById(updatedPage?.ModifiedBy);
+      return res.status(200).json({
         success: true,
         message: "Page updated Successfully",
-        code: 200,
         result: {
           updatedPage,
-          users,
         },
       });
     } catch (error) {
-      return res.json({
+      return res.status(500).json({
         success: false,
         message: error.message,
-        code: 500,
       });
     }
   }
@@ -161,24 +142,19 @@ router.delete("/:id", verifyToken, access("page"), async (req, res) => {
   try {
     const PageData = await Page.findById(req.params.id);
     if (!PageData) {
-      return res.json({
+      return res.status(404).json({
         success: false,
         message: "Page not found.",
-        code: 404,
       });
     }
-    const deletedPage = await Page.findByIdAndDelete(req.params.id);
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Page deleted Successfully",
-      code: 200,
-      PageData: deletedPage,
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: error.message,
-      code: 500,
     });
   }
 });

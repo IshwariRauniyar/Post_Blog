@@ -14,8 +14,8 @@ const catchError = (err, req, res, next) => {
   }
   return res.json({
     success: false,
-    message: "Something went wrong",
-    code: 500,
+    message: "Unauthorized! Token not valid",
+    code: 401,
   });
 };
 

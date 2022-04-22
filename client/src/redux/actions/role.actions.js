@@ -22,6 +22,10 @@ export const getRole =
             payload: data,
           });
         } else {
+          // dispatch({
+          //   type: Constants.ROLE_GET_ALL,
+          //   payload: data,
+          // });
           Toast.error(data.message);
         }
       }

@@ -9,8 +9,8 @@ import Header from "../components/Navbar";
 
 function Role() {
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const { roles: all_data, total } = useSelector((state) => state.role);
-
+  const { roles: all_data, total, errors } = useSelector((state) => state.role);
+  // console.log("errors", errors);
   const headers = [
     {
       name: "Title",
@@ -57,6 +57,7 @@ function Role() {
             <Card className="strpied-tabled-with-hover">
               <Card.Header className="d-flex align-items-center justify-content-between">
                 <Card.Title>Role List</Card.Title>
+
                 <Button
                   className="btn-fill pull-right"
                   type="submit"

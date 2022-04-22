@@ -24,6 +24,16 @@ export const getPage =
         } else {
           Toast.error(data.message);
         }
+
+        // if (data.code === 401) {
+        //   localStorage.removeItem("token");
+        //   localStorage.removeItem("user");
+        //   dispatch({
+        //     type: Constants.LOGOUT_SUCCESS,
+        //     payload: data,
+        //   });
+        //   window.location.href = "/login";
+        // }
       }
     } catch (error) {
       console.log(error?.response);
