@@ -37,7 +37,7 @@ const Pagination = (props) => {
       className={classnames("pagination-container", { [className]: className })}
     >
       <li
-        key={`${currentPage}-previous`}
+        key={`${currentPage}-pagination-item`}
         className={classnames("pagination-item", {
           disabled: currentPage === 1,
         })}
@@ -47,7 +47,11 @@ const Pagination = (props) => {
       </li>
       {paginationRange.map((pageNumber, i) => {
         if (pageNumber === DOTS) {
-          return <li className="pagination-item dots">&#8230;</li>;
+          return (
+            <li key={`pagination-item-${i}`} className="pagination-item dots">
+              &#8230;
+            </li>
+          );
         }
 
         return (
