@@ -14,6 +14,7 @@ export const authLogin = (user) => async (dispatch) => {
         payload: data.result,
       });
       Toast.success(data.message);
+      window.location.href = "/header";
     } else {
       Toast.error(data.message);
     }
