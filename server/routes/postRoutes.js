@@ -1,11 +1,9 @@
 var express = require("express");
 var router = express.Router();
 const Post = require("../models/post");
-const HttpStatus = require("http-status-codes");
 const upload = require("../middlewares/uploads");
 const { verifyToken, access } = require("../middlewares/authMiddleware");
 const User = require("../models/user");
-const Setting = require("../models/setting");
 
 router.get("/", verifyToken, access("post"), async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
@@ -35,7 +33,7 @@ router.get("/", verifyToken, access("post"), async (req, res) => {
     res.json({
       success: true,
       message: "All posts are fetched.",
-      code: HttpStatus.OK,
+      code: 200,
       posts,
       total,
       totalPages,
@@ -45,7 +43,7 @@ router.get("/", verifyToken, access("post"), async (req, res) => {
     res.json({
       success: false,
       message: error.message,
-      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      code: 500,
     });
   }
 });
@@ -59,7 +57,7 @@ router.get("/:id", verifyToken, access("post"), (req, res) => {
     return res.json({
       success: true,
       message: "Post is fetched.",
-      code: HttpStatus.OK,
+      code: 200,
       post,
       // ...(post && { ...post }),
     });
@@ -72,7 +70,7 @@ router.post(
   access("post"),
   upload.single("Image"),
   async (req, res) => {
-    const obj = JSON.parse(JSON.stringify(req.body));
+    // const obj = JSON.parse(JSON.stringify(req.body));
     // console.log("bodydata", obj);
     // console.log("img", req.file);
     const user = req.decoded;
@@ -91,24 +89,14 @@ router.post(
         CreatedBy: user._id,
       });
       // PostData.save();
-      const users = await User.findById(PostData.CreatedBy);
-      const role = await Setting.findOne({
-        User: users._id,
-      });
+      const users = await User.findById(PostData?.CreatedBy);
       return res.json({
         success: true,
         message: "Post Created Successfully.",
-        code: HttpStatus.OK,
+        code: 200,
         result: {
           PostData,
-          user: {
-            _id: users._id,
-            Email: users.Email,
-            UserName: users.UserName,
-            FirstName: users.FirstName,
-            LastName: users.LastName,
-            UserRole: role.UserRole,
-          },
+          users,
         },
       });
     } catch (err) {
@@ -156,24 +144,14 @@ router.put(
         },
         { new: true }
       );
-      const users = await User.findById(updatedPost.ModifiedBy);
-      const role = await Setting.findOne({
-        User: users._id,
-      });
+      const users = await User.findById(updatedPost?.ModifiedBy);
       return res.json({
         success: true,
         message: "Post Updated Successfully.",
         code: HttpStatus.OK,
         result: {
           updatedPost,
-          user: {
-            _id: users._id,
-            Email: users.Email,
-            UserName: users.UserName,
-            FirstName: users.FirstName,
-            LastName: users.LastName,
-            UserRole: role.UserRole,
-          },
+          users,
         },
       });
     } catch (err) {

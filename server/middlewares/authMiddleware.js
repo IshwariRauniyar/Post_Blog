@@ -62,11 +62,11 @@ const verifyRefreshToken = async (req, res, next) => {
 function access(data) {
   return async (req, res, next) => {
     const user = req.decoded;
-    const userRole = await Setting.findOne({ UniqueName: user.UserRole });
+    const userRole = await Setting.findOne({ UniqueName: user?.UserRole });
     if (!userRole.Value.includes(data)) {
       return res.json({
         success: false,
-        message: "Unauthorized! You don't have access to this route.",
+        message: "Unauthorized! You don't have access to this page.",
         code: 401,
       });
     }

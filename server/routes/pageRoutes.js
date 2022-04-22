@@ -2,13 +2,8 @@ var express = require("express");
 var router = express.Router();
 const Page = require("../models/page");
 const upload = require("../middlewares/uploads");
-const {
-  verifyRefreshToken,
-  verifyToken,
-  access,
-} = require("../middlewares/authMiddleware");
+const { verifyToken, access } = require("../middlewares/authMiddleware");
 const User = require("../models/user");
-const Setting = require("../models/setting");
 
 router.get("/", verifyToken, access("page"), async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
@@ -83,16 +78,12 @@ router.post(
         Image: req.file?.destination + "/" + req.file?.filename,
         CreatedBy: user._id,
       });
-      console.log("PageDts", PageData);
+      // console.log("PageDts", PageData);
       //   const users = await User.find({
       //     _id: { $in: PageData.CreatedBy },
       //   });
 
-      const users = await User.findById(PageData.CreatedBy);
-      //   console.log("dsjfjd", users);
-      const role = await Setting.findOne({
-        User: users._id,
-      });
+      const users = await User.findById(PageData?.CreatedBy);
       //   console.log("role", role);
       res.json({
         success: true,
@@ -100,14 +91,7 @@ router.post(
         code: 200,
         result: {
           PageData,
-          user: {
-            _id: users._id,
-            Email: users.Email,
-            UserName: users.UserName,
-            FirstName: users.FirstName,
-            LastName: users.LastName,
-            UserRole: role.UserRole,
-          },
+          users,
         },
       });
     } catch (error) {
@@ -153,24 +137,14 @@ router.put(
         { new: true }
       );
       //   console.log("updatedPage", updatedPage);
-      const users = await User.findById(updatedPage.ModifiedBy);
-      const role = await Setting.findOne({
-        User: users._id,
-      });
+      const users = await User.findById(updatedPage?.ModifiedBy);
       return res.json({
         success: true,
         message: "Page updated Successfully",
         code: 200,
         result: {
           updatedPage,
-          user: {
-            _id: users._id,
-            Email: users.Email,
-            UserName: users.UserName,
-            FirstName: users.FirstName,
-            LastName: users.LastName,
-            UserRole: role.UserRole,
-          },
+          users,
         },
       });
     } catch (error) {
