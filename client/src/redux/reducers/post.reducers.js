@@ -44,6 +44,8 @@ export default (
       };
     case Types.POST_RESET:
       return { ...state, posts: [], errors: {} };
+    case Types.POST_ERROR:
+      return { ...state, errors: action.payload };
     default:
       return state;
   }

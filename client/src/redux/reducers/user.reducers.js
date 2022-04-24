@@ -44,6 +44,8 @@ export default (
       };
     case Types.USER_RESET:
       return { ...state, users: [], errors: {} };
+    case Types.USER_ERROR:
+      return { ...state, errors: action.payload };
     default:
       return state;
   }

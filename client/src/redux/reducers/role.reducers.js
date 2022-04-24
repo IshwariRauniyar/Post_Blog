@@ -42,7 +42,8 @@ export default (
         ],
         errors: {},
       };
-
+    case Types.ROLE_ERROR:
+      return { ...state, errors: action.payload };
     default:
       return state;
   }
