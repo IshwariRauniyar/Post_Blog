@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-
+import { Navbar, Nav, Dropdown, Container, NavDropdown } from "react-bootstrap";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Link } from "react-router-dom";
 import { authLogout } from "../redux/actions/auth.actions";
 
@@ -29,16 +30,17 @@ export default function Header() {
     e.preventDefault();
     dispatch(authLogout());
   };
-
+  const user = JSON.parse(localStorage.getItem("user"));
   return (
-    <nav className="navbar navbar-expand-lg flex navbar-light bg-light">
-      <Link className="navbar-brand" to="/header">
-        TestCMS
-      </Link>
-      <button className="navbar-toggler" type="button" onClick={toggleMenu}>
-        <span className="navbar-toggler-icon" />
-      </button>
-      <div className={"collapse navbar-collapse " + show}>
+    <>
+      <nav className="navbar navbar-expand-lg flex navbar-light bg-light">
+        <Link className="navbar-brand" to="/header">
+          TestCMS
+        </Link>
+        {/* <button className="navbar-toggler" type="button" onClick={toggleMenu}>
+          <span className="navbar-toggler-icon" />
+        </button> */}
+        {/* <div className={"collapse navbar-collapse " + show}> */}
         <div className="navbar-nav flex justify-center">
           <Link
             className={state.pageLinkClass}
@@ -84,17 +86,64 @@ export default function Header() {
           >
             Role
           </Link>
-          <div className="navbar-nav ml-auto">
-            <button
-              className="btn btn-outline-danger"
-              type="submit"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          </div>
         </div>
-      </div>
-    </nav>
+        <div className="ml-auto">
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+              {user.UserName}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={handleLogout}>
+                <ExitToAppIcon />
+                Logout
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+        {/* </div> */}
+      </nav>
+
+      {/* <Navbar bg="light" expand="lg">
+        <Container>
+          <Navbar.Brand href="/header">TestCMS</Navbar.Brand>
+          <Nav>
+            <Nav.Link
+              className={state.pageLinkClass}
+              href="/page"
+              onClick={() =>
+                state.pageLinkClass === "nav-item nav-link"
+                  ? "nav-item nav-link active"
+                  : "nav-item nav-link"
+              }
+            >
+              Page
+            </Nav.Link>
+            <Nav.Link href="/post">Post</Nav.Link>
+            <Nav.Link
+              className={state.userLinkClass}
+              href="/user"
+              onClick={() =>
+                state.userLinkClass === "nav-item nav-link"
+                  ? "nav-item nav-link active"
+                  : "nav-item nav-link"
+              }
+            >
+              User
+            </Nav.Link>
+            <Nav.Link href="/role">Role</Nav.Link>
+          </Nav>
+          <div className="ml-auto">
+            <NavDropdown title={user?.UserName}>
+              <NavDropdown.Item
+                onClick={handleLogout}
+                className="mdi mdi-logout"
+              >
+                <ExitToAppIcon /> Logout
+              </NavDropdown.Item>
+            </NavDropdown>
+          </div>
+        </Container>
+      </Navbar> */}
+    </>
   );
 }
