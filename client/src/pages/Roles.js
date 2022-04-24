@@ -10,7 +10,6 @@ import Header from "../components/Navbar";
 function Role() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { roles: all_data, total, errors } = useSelector((state) => state.role);
-  // console.log("errors", errors);
   const headers = [
     {
       name: "Title",
@@ -50,64 +49,69 @@ function Role() {
   return (
     <>
       <Header />
+      {errors.code === 401 ? (
+        <div className="alert alert-danger" role="alert">
+          {errors.message}
+        </div>
+      ) : (
+        <Container fluid>
+          <Row>
+            <Col md="12">
+              <Card className="strpied-tabled-with-hover">
+                <Card.Header className="d-flex align-items-center justify-content-between">
+                  <Card.Title>Role List</Card.Title>
 
-      <Container fluid>
-        <Row>
-          <Col md="12">
-            <Card className="strpied-tabled-with-hover">
-              <Card.Header className="d-flex align-items-center justify-content-between">
-                <Card.Title>Role List</Card.Title>
-
-                <Button
-                  className="btn-fill pull-right"
-                  type="submit"
-                  variant="info"
-                  style={{ float: "right" }}
-                  onClick={() => handleCreateShow()}
-                >
-                  <i className="fas fa-plus"></i>
-                  Add New Role
-                </Button>
-              </Card.Header>
-              <Card.Body className="table-full-width table-responsive px-0">
-                <TableWithPagination
-                  title="Role"
-                  tableData={all_data}
-                  total={total}
-                  headers={headers}
-                  getAction={(custom_props) => getRole({ ...custom_props })}
-                  deleteAction={deleteRole}
-                  EditForm={(custom_props) => (
-                    <RoleEditForm {...custom_props} />
-                  )}
-                  actionButtons={["edit", "delete"]}
-                />
-              </Card.Body>
-              {/* Create Modal */}
-              <Modal
-                show={showCreateModal}
-                onHide={handleCreateClose}
-                backdrop="static"
-                keyboard={false}
-                dialogClassName="modal-lg"
-              >
-                <Modal.Header closeButton>
-                  <Modal.Title>Create Role</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  {/* Create Form */}
-                  <RoleCreateForm close={handleCreateClose} />
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleCreateClose}>
-                    Close
+                  <Button
+                    className="btn-fill pull-right"
+                    type="submit"
+                    variant="info"
+                    style={{ float: "right" }}
+                    onClick={() => handleCreateShow()}
+                  >
+                    <i className="fas fa-plus"></i>
+                    Add New Role
                   </Button>
-                </Modal.Footer>
-              </Modal>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+                </Card.Header>
+                <Card.Body className="table-full-width table-responsive px-0">
+                  <TableWithPagination
+                    title="Role"
+                    tableData={all_data}
+                    total={total}
+                    headers={headers}
+                    getAction={(custom_props) => getRole({ ...custom_props })}
+                    deleteAction={deleteRole}
+                    EditForm={(custom_props) => (
+                      <RoleEditForm {...custom_props} />
+                    )}
+                    actionButtons={["edit", "delete"]}
+                  />
+                </Card.Body>
+                {/* Create Modal */}
+                <Modal
+                  show={showCreateModal}
+                  onHide={handleCreateClose}
+                  backdrop="static"
+                  keyboard={false}
+                  dialogClassName="modal-lg"
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Create Role</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    {/* Create Form */}
+                    <RoleCreateForm close={handleCreateClose} />
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCreateClose}>
+                      Close
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      )}
     </>
   );
 }

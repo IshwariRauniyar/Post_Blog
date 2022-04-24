@@ -6,7 +6,7 @@ import TableWithPagination from "../components/DataTable/TableWithPagination/ind
 import Header from "../components/Navbar";
 
 function User() {
-  const { users: all_data, total } = useSelector((state) => state.user);
+  const { users: all_data, total, errors } = useSelector((state) => state.user);
 
   const headers = [
     {
@@ -47,28 +47,33 @@ function User() {
   return (
     <>
       <Header />
-
-      <Container fluid>
-        <Row>
-          <Col md="12">
-            <Card className="strpied-tabled-with-hover">
-              <Card.Header className="d-flex align-items-center justify-content-between">
-                <Card.Title>User List</Card.Title>
-              </Card.Header>
-              <Card.Body className="table-full-width table-responsive px-0">
-                <TableWithPagination
-                  title="Page"
-                  tableData={all_data}
-                  total={total}
-                  headers={headers}
-                  getAction={(custom_props) => getUser({ ...custom_props })}
-                  deleteAction={deleteUser}
-                />
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+      {errors.code === 401 ? (
+        <div className="alert alert-danger" role="alert">
+          {errors.message}
+        </div>
+      ) : (
+        <Container fluid>
+          <Row>
+            <Col md="12">
+              <Card className="strpied-tabled-with-hover">
+                <Card.Header className="d-flex align-items-center justify-content-between">
+                  <Card.Title>User List</Card.Title>
+                </Card.Header>
+                <Card.Body className="table-full-width table-responsive px-0">
+                  <TableWithPagination
+                    title="Page"
+                    tableData={all_data}
+                    total={total}
+                    headers={headers}
+                    getAction={(custom_props) => getUser({ ...custom_props })}
+                    deleteAction={deleteUser}
+                  />
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      )}
     </>
   );
 }

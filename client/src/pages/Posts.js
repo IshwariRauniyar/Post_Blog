@@ -8,8 +8,7 @@ import PostEditForm from "../components/Form/PostEditForm";
 import Header from "../components/Navbar";
 function Post() {
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const { posts: all_data, total } = useSelector((state) => state.post);
-
+  const { posts: all_data, total, errors } = useSelector((state) => state.post);
   const headers = [
     {
       name: "Title",
@@ -49,62 +48,68 @@ function Post() {
   return (
     <>
       <Header />
-      <Container fluid>
-        <Row>
-          <Col md="12">
-            <Card className="strpied-tabled-with-hover">
-              <Card.Header className="d-flex align-items-center justify-content-between">
-                <Card.Title>Post List</Card.Title>
-                <Button
-                  className="btn-fill pull-right"
-                  type="submit"
-                  variant="info"
-                  style={{ float: "right" }}
-                  onClick={() => handleCreateShow()}
-                >
-                  <i className="fas fa-plus"></i>
-                  Add New Post
-                </Button>
-              </Card.Header>
-              <Card.Body className="table-full-width table-responsive px-0">
-                <TableWithPagination
-                  title="Post"
-                  tableData={all_data}
-                  total={total}
-                  headers={headers}
-                  getAction={(custom_props) => getPost({ ...custom_props })}
-                  deleteAction={deletePost}
-                  EditForm={(custom_props) => (
-                    <PostEditForm {...custom_props} />
-                  )}
-                  actionButtons={["edit", "delete"]}
-                />
-              </Card.Body>
-              {/* Create Modal */}
-              <Modal
-                show={showCreateModal}
-                onHide={handleCreateClose}
-                backdrop="static"
-                keyboard={false}
-                dialogClassName="modal-lg"
-              >
-                <Modal.Header closeButton>
-                  <Modal.Title>Create Post</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  {/* Create Form */}
-                  <PostCreateForm close={handleCreateClose} />
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleCreateClose}>
-                    Close
+      {errors.code === 401 ? (
+        <div className="alert alert-danger" role="alert">
+          {errors.message}
+        </div>
+      ) : (
+        <Container fluid>
+          <Row>
+            <Col md="12">
+              <Card className="strpied-tabled-with-hover">
+                <Card.Header className="d-flex align-items-center justify-content-between">
+                  <Card.Title>Post List</Card.Title>
+                  <Button
+                    className="btn-fill pull-right"
+                    type="submit"
+                    variant="info"
+                    style={{ float: "right" }}
+                    onClick={() => handleCreateShow()}
+                  >
+                    <i className="fas fa-plus"></i>
+                    Add New Post
                   </Button>
-                </Modal.Footer>
-              </Modal>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+                </Card.Header>
+                <Card.Body className="table-full-width table-responsive px-0">
+                  <TableWithPagination
+                    title="Post"
+                    tableData={all_data}
+                    total={total}
+                    headers={headers}
+                    getAction={(custom_props) => getPost({ ...custom_props })}
+                    deleteAction={deletePost}
+                    EditForm={(custom_props) => (
+                      <PostEditForm {...custom_props} />
+                    )}
+                    actionButtons={["edit", "delete"]}
+                  />
+                </Card.Body>
+                {/* Create Modal */}
+                <Modal
+                  show={showCreateModal}
+                  onHide={handleCreateClose}
+                  backdrop="static"
+                  keyboard={false}
+                  dialogClassName="modal-lg"
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Create Post</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    {/* Create Form */}
+                    <PostCreateForm close={handleCreateClose} />
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCreateClose}>
+                      Close
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      )}
     </>
   );
 }
