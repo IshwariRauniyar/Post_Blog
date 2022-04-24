@@ -22,6 +22,10 @@ export const getUser =
             payload: data,
           });
         } else {
+          dispatch({
+            type: Constants.USER_ERROR,
+            payload: data,
+          });
           Toast.error(data.message);
         }
       }

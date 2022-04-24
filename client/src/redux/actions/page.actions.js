@@ -22,6 +22,10 @@ export const getPage =
             payload: data,
           });
         } else {
+          dispatch({
+            type: Constants.PAGE_ERROR,
+            payload: data,
+          });
           Toast.error(data.message);
         }
 

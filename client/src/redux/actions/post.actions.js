@@ -26,6 +26,10 @@ export const getPost =
             payload: data,
           });
         } else {
+          dispatch({
+            type: Constants.POST_ERROR,
+            payload: data,
+          });
           Toast.error(data.message);
         }
       }
