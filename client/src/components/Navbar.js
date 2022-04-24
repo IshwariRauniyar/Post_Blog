@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Navbar, Nav, Dropdown, Container, NavDropdown } from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Link } from "react-router-dom";
 import { authLogout } from "../redux/actions/auth.actions";
