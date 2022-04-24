@@ -28,20 +28,18 @@ router.get("/", verifyToken, access("user"), async (req, res, next) => {
     const total = await User.find(query).countDocuments();
     const totalPages = Math.ceil(total / limit);
     const currentPage = parseInt(offset) + 1;
-    res.json({
+    res.status(200).json({
       success: true,
       message: "All users are fetched.",
-      code: 200,
       users,
       total,
       totalPages,
       currentPage,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message,
-      code: 500,
     });
   }
 });

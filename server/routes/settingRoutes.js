@@ -27,20 +27,18 @@ router.get("/", verifyToken, access("role"), async (req, res) => {
     const total = await Setting.find(query).countDocuments();
     const totalPages = Math.ceil(total / limit);
     const currentPage = parseInt(offset) + 1;
-    res.json({
+    res.status(200).json({
       success: true,
       message: "All settings are fetched.",
-      code: 200,
       settings,
       total,
       totalPages,
       currentPage,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message,
-      code: 500,
     });
   }
 });
@@ -48,20 +46,18 @@ router.get("/", verifyToken, access("role"), async (req, res) => {
 router.get("/:id", verifyToken, access("role"), async (req, res) => {
   const SettingData = await Setting.findById(req.params.id);
   if (!SettingData) {
-    return res.json({
+    return res.status(404).json({
       success: false,
       message: "Setting not found.",
-      code: 404,
     });
   }
   Setting.findById(req.params.id, (err, setting) => {
     if (err) {
       res.send(err);
     }
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Setting fetched.",
-      code: 200,
       setting,
     });
   });
@@ -91,10 +87,9 @@ router.post("/", verifyToken, access("role"), async (req, res) => {
       IsActive: req.body.IsActive,
       Value: req.body.Value,
     });
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Setting created.",
-      code: 200,
       result: Settings,
     });
     // } else {
@@ -105,10 +100,9 @@ router.post("/", verifyToken, access("role"), async (req, res) => {
     //   });
     // }
   } catch (error) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message,
-      code: 500,
     });
   }
 });
@@ -121,10 +115,9 @@ router.put("/:id", verifyToken, access("role"), async (req, res) => {
     // console.log("check", check);
     const SettingData = await Setting.findById(req.params.id);
     if (!SettingData) {
-      return res.json({
+      return res.status(404).json({
         success: false,
         message: "Setting not found.",
-        code: 404,
       });
     }
 
@@ -138,17 +131,15 @@ router.put("/:id", verifyToken, access("role"), async (req, res) => {
       },
       { new: true }
     );
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Setting updated.",
-      code: 200,
       result: Settings,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message,
-      code: 500,
     });
   }
 });
@@ -157,24 +148,22 @@ router.delete("/:id", verifyToken, access("role"), async (req, res) => {
   try {
     const SettingData = await Setting.findById(req.params.id);
     if (!SettingData) {
-      return res.json({
+      return res.status(404).json({
         success: false,
         message: "Setting not found.",
-        code: 404,
       });
     }
     const Settings = await Setting.findByIdAndDelete(req.params.id);
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Setting deleted.",
       code: 200,
       result: Settings,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message,
-      code: 500,
     });
   }
 });

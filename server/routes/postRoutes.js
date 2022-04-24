@@ -30,20 +30,18 @@ router.get("/", verifyToken, access("post"), async (req, res) => {
     const totalPages = Math.ceil(total / limit);
     const currentPage = parseInt(offset) + 1;
     // Math.ceil(total % offset) > 0 ? Math.ceil(total % offset) : 1;
-    res.json({
+    res.status(200).json({
       success: true,
       message: "All posts are fetched.",
-      code: 200,
       posts,
       total,
       totalPages,
       currentPage,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message,
-      code: 500,
     });
   }
 });
@@ -54,10 +52,9 @@ router.get("/:id", verifyToken, access("post"), (req, res) => {
       res.send(err);
     }
     // res.json(post);
-    return res.json({
+    return res.status(200).json({
       success: true,
       message: "Post is fetched.",
-      code: 200,
       post,
       // ...(post && { ...post }),
     });
@@ -89,22 +86,19 @@ router.post(
         CreatedBy: user._id,
       });
       // PostData.save();
-      const users = await User.findById(PostData?.CreatedBy);
-      return res.json({
+      // const users = await User.findById(PostData?.CreatedBy);
+      return res.status(200).json({
         success: true,
         message: "Post Created Successfully.",
-        code: 200,
         result: {
           PostData,
-          users,
         },
       });
     } catch (err) {
       console.log(err);
-      return res.json({
+      return res.status(500).json({
         success: false,
         message: "Something went wrong while creating.",
-        code: 500,
         error: err,
       });
     }
@@ -121,10 +115,9 @@ router.put(
     try {
       const PostData = await Post.findById(req.params.id);
       if (!PostData) {
-        return res.json({
+        return res.status(404).json({
           success: false,
           message: "Post not found.",
-          code: 404,
         });
       }
       const updatedPost = await Post.findByIdAndUpdate(
@@ -144,21 +137,17 @@ router.put(
         },
         { new: true }
       );
-      const users = await User.findById(updatedPost?.ModifiedBy);
-      return res.json({
+      return res.status(200).json({
         success: true,
         message: "Post Updated Successfully.",
-        code: HttpStatus.OK,
         result: {
           updatedPost,
-          users,
         },
       });
     } catch (err) {
-      return res.json({
+      return res.status(500).json({
         success: false,
         message: "Something went wrong while updating.",
-        code: 500,
         error: err,
       });
     }
@@ -169,25 +158,20 @@ router.delete("/:id", verifyToken, access("post"), async (req, res) => {
   try {
     const PostData = await Post.findById(req.params.id);
     if (!PostData) {
-      return res.json({
+      return res.status(404).json({
         success: false,
         message: "Post not found.",
-        code: 404,
       });
     }
-    const deletedPost = await Post.findByIdAndDelete(req.params.id);
-    return res.json({
+    // const deletedPost = await Post.findByIdAndDelete(req.params.id);
+    return res.status(200).json({
       success: true,
       message: "Post Deleted Successfully.",
-      code: 200,
-      PostData: deletedPost,
     });
   } catch (err) {
-    console.log(err);
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Something went wrong while deleting.",
-      code: 500,
       error: err,
     });
   }

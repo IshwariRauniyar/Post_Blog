@@ -62,10 +62,9 @@ router.post("/login", async (req, res, next) => {
       Email: req.body.Email,
     });
     if (!Users) {
-      return res.json({
+      return res.status(404).json({
         success: false,
         message: "User with this email not found",
-        code: 404,
       });
     }
     // const isPasswordValid = await bcrypt.compare(
@@ -101,39 +100,40 @@ router.post("/login", async (req, res, next) => {
         }
       );
 
-      return res.json({
+      return res.status(200).json({
         success: true,
         message: "User Logged in Successfully.",
-        code: 200,
+        // code: 200,
         result: {
-          user: Users,
+          user: {
+            UserName: Users.UserName,
+            // Email: Users.Email,
+            UserRole: Users.UserRole,
+          },
           token: token,
           refreshToken: refreshToken,
         },
       });
     } else {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "Invalid Password.",
-        code: 401,
       });
     }
   } catch (e) {
     console.log(e);
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "something went wrong.",
-      code: 500,
       error: e,
     });
   }
 });
 
 router.get("/logout", async (req, res) => {
-  return res.json({
+  return res.status(200).json({
     success: true,
     message: "User Logged out Successfully.",
-    code: 200,
   });
 });
 
