@@ -3,23 +3,27 @@ const app = express();
 require("./db");
 const routes = require("./routes");
 const cors = require("cors");
+
+const PORT = process.env.HOST_PORT || 3000;
+const HOST = process.env.HOST_URL || "localhost";
+
+app.set("port", PORT);
+app.set("host", HOST);
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
+
 app.get("/", (req, res, next) => {
   res.send("Hello World!");
   console.log("Welcome to homepage");
   next();
 });
 
-app.use(
-  "/api",
-  (req, res, next) => {
+app.use("/api", (req, res, next) => {
     next();
-  },
-  routes
-);
+},routes);
 
-app.listen(8848, () => {
-  console.log("Server started on port 8848");
+app.listen(app.get("port"), app.get("host"), () => {
+  console.log(`Server is running at http://${app.get("host")}:${app.get("port")}`);
 });
