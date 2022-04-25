@@ -2,9 +2,8 @@ var express = require("express");
 var router = express.Router();
 const Page = require("../models/page");
 const upload = require("../middlewares/uploads");
-const { verifyToken, access } = require("../middlewares/authMiddleware");
 
-router.get("/", verifyToken, access("page"), async (req, res) => {
+router.get("/", async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
   const query = {};
   try {
@@ -43,7 +42,7 @@ router.get("/", verifyToken, access("page"), async (req, res) => {
   }
 });
 
-router.get("/:id", verifyToken, access("page"), async (req, res) => {
+router.get("/:id", async (req, res) => {
   Page.findById(req.params.id, (err, page) => {
     if (err) {
       res.send(err);
@@ -56,12 +55,7 @@ router.get("/:id", verifyToken, access("page"), async (req, res) => {
   });
 });
 
-router.post(
-  "/",
-  verifyToken,
-  access("page"),
-  upload.single("Image"),
-  async (req, res) => {
+router.post("/", upload.single("Image"),async (req, res) => {
     const user = req.decoded;
     try {
       const PageData = await Page.create({
@@ -90,12 +84,7 @@ router.post(
   }
 );
 
-router.put(
-  "/:id",
-  verifyToken,
-  access("page"),
-  upload.single("Image"),
-  async (req, res) => {
+router.put("/:id", upload.single("Image"), async (req, res) => {
     const user = req.decoded;
     // console.log("user", user);
     try {
@@ -138,7 +127,7 @@ router.put(
   }
 );
 
-router.delete("/:id", verifyToken, access("page"), async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const PageData = await Page.findById(req.params.id);
     if (!PageData) {

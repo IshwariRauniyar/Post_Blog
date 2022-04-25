@@ -2,9 +2,8 @@ var express = require("express");
 var router = express.Router();
 const Setting = require("../models/setting");
 const config = require("../config.json");
-const { verifyToken, access } = require("../middlewares/authMiddleware");
 
-router.get("/", verifyToken, access("role"), async (req, res) => {
+router.get("/", async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
   const query = {};
   try {
@@ -43,7 +42,7 @@ router.get("/", verifyToken, access("role"), async (req, res) => {
   }
 });
 
-router.get("/:id", verifyToken, access("role"), async (req, res) => {
+router.get("/:id", async (req, res) => {
   const SettingData = await Setting.findById(req.params.id);
   if (!SettingData) {
     return res.status(404).json({
@@ -63,7 +62,7 @@ router.get("/:id", verifyToken, access("role"), async (req, res) => {
   });
 });
 
-router.post("/", verifyToken, access("role"), async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     // const menu = config.Menus;
     // console.log("m", menu);
@@ -107,7 +106,7 @@ router.post("/", verifyToken, access("role"), async (req, res) => {
   }
 });
 
-router.put("/:id", verifyToken, access("role"), async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     // const menu = config.Menus;
     // const check = menu.includes(JSON.parse(req.body.Value));
@@ -144,7 +143,7 @@ router.put("/:id", verifyToken, access("role"), async (req, res) => {
   }
 });
 
-router.delete("/:id", verifyToken, access("role"), async (req, res) => {
+router.delete("/:id",  async (req, res) => {
   try {
     const SettingData = await Setting.findById(req.params.id);
     if (!SettingData) {

@@ -2,10 +2,8 @@ var express = require("express");
 var router = express.Router();
 const Post = require("../models/post");
 const upload = require("../middlewares/uploads");
-const { verifyToken, access } = require("../middlewares/authMiddleware");
-const User = require("../models/user");
 
-router.get("/", verifyToken, access("post"), async (req, res) => {
+router.get("/", async (req, res) => {
   const { limit = 10, offset = 0 } = req.query;
   const query = {};
   try {
@@ -46,7 +44,7 @@ router.get("/", verifyToken, access("post"), async (req, res) => {
   }
 });
 
-router.get("/:id", verifyToken, access("post"), (req, res) => {
+router.get("/:id", (req, res) => {
   Post.findById(req.params.id, (err, post) => {
     if (err) {
       res.send(err);
@@ -61,12 +59,7 @@ router.get("/:id", verifyToken, access("post"), (req, res) => {
   });
 });
 
-router.post(
-  "/",
-  verifyToken,
-  access("post"),
-  upload.single("Image"),
-  async (req, res) => {
+router.post("/", upload.single("Image"), async (req, res) => {
     // const obj = JSON.parse(JSON.stringify(req.body));
     // console.log("bodydata", obj);
     // console.log("img", req.file);
@@ -105,12 +98,7 @@ router.post(
   }
 );
 
-router.put(
-  "/:id",
-  verifyToken,
-  access("post"),
-  upload.single("Image"),
-  async (req, res) => {
+router.put("/:id", upload.single("Image"), async (req, res) => {
     const user = req.decoded;
     try {
       const PostData = await Post.findById(req.params.id);
@@ -154,7 +142,7 @@ router.put(
   }
 );
 
-router.delete("/:id", verifyToken, access("post"), async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const PostData = await Post.findById(req.params.id);
     if (!PostData) {
