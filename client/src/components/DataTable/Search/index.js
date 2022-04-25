@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const Search = ({ onSearch }) => {
   const [search, setSearch] = useState("");
-  const [isLoading, setLoading] = useState(false);
+  // const [isLoading, setLoading] = useState(false);
 
   const onInputChange = (value) => {
     // setLoading(true);

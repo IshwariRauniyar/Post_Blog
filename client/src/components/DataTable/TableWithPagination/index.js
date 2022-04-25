@@ -29,9 +29,7 @@ export default function TableWithPagination({
     return moment(CreatedOn).format("YYYY-MM-DD");
   }
 
-  {
-    /* mapping the value according to the property and return the data */
-  }
+  //mapping the value according to the property and return the data
   function nestedObj(array, object) {
     if (object && array?.length) {
       let data = object;
@@ -84,8 +82,8 @@ export default function TableWithPagination({
 
   const allData = useMemo(() => {
     let computedData = tableData?.length ? tableData : [];
-    const firstPageIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const lastPageIndex = firstPageIndex + ITEMS_PER_PAGE;
+    // const firstPageIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    // const lastPageIndex = firstPageIndex + ITEMS_PER_PAGE;
     return computedData;
   }, [tableData, skip]);
 

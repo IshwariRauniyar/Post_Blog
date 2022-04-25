@@ -1,4 +1,4 @@
-import { ContentState, convertToRaw, EditorState, Modifier } from "draft-js";
+import { ContentState, convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import React, { useEffect, useState } from "react";
@@ -20,7 +20,7 @@ const WYSIWYGEditor = ({ onChange, value }) => {
       const newEditorState = EditorState.createWithContent(contentState);
       setEditorState(newEditorState);
     }
-  }, [value]);
+  }, [value, updated]);
 
   const onEditorStateChange = (editorState) => {
     setUpdated(true);

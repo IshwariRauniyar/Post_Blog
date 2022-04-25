@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { updatePost } from "../../redux/actions/post.actions";
 import ReactQuill from "react-quill";
 import "../../../node_modules/react-quill/dist/quill.snow.css";
-import { Form, Row, Col, Image } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 
 const PostEditForm = ({ editState, close }) => {
@@ -11,7 +11,7 @@ const PostEditForm = ({ editState, close }) => {
   // const path = ImagePath.replace("\\", "/");
   // console.log("path", path);
   const dispatch = useDispatch();
-  const [paramid, setID] = useState(editState._id);
+  const [paramid] = useState(editState._id);
   const [title, setTitle] = useState(editState?.Title || "");
   const [slug, setSlug] = useState(editState?.Slug || "");
   const [seoTitle, setSeoTitle] = useState(editState?.SeoTitle || "");
@@ -22,7 +22,7 @@ const PostEditForm = ({ editState, close }) => {
   const [summary, setSummary] = useState(editState?.Summary || "");
   const [order, setOrder] = useState(editState?.Order || "");
   const [Image, setImage] = useState();
-  const [ImagePath, setImagePath] = useState(ImgPath || null);
+  const [ImagePath] = useState(ImgPath || null);
   const [IsActive, setIsActive] = useState(editState?.IsActive || Boolean);
 
   const onclose = close;
@@ -59,8 +59,8 @@ const PostEditForm = ({ editState, close }) => {
     const sl = text
       .toLowerCase()
       .replace(/\s+/g, "-") // Replace spaces with -
-      .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-      .replace(/\-\-+/g, "-") // Replace multiple - with single -
+      .replace(/[^\w-]+/g, "") // Remove all non-word chars
+      .replace(/--+/g, "-") // Replace multiple - with single -
       .replace(/^-+/, "") // Trim - from start of text
       .replace(/-+$/, ""); // Trim - from end of text
     setSlug(sl + "-" + uuidv4().substr(0, 8));
@@ -178,12 +178,14 @@ const PostEditForm = ({ editState, close }) => {
           <div className="py-2 shrink-0">
             {!!!Image ? (
               <img
+                alt=""
                 id="output"
                 className="object-cover w-25 h-25 "
                 src={`http://localhost:8848/${ImagePath}`}
               />
             ) : (
               <img
+                alt=""
                 id="output"
                 className="object-cover w-25 h-25 "
                 src={URL.createObjectURL(Image)}

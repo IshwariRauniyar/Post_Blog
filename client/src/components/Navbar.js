@@ -7,7 +7,7 @@ import { authLogout } from "../redux/actions/auth.actions";
 
 export default function Header() {
   const dispatch = useDispatch();
-  const [state, setState] = useState({
+  const [state] = useState({
     menu: false,
     isOpen: false,
     pageLinkClass: "nav-item nav-link",
@@ -16,15 +16,6 @@ export default function Header() {
     userLinkClass: "nav-item nav-link",
     menuClass: "",
   });
-
-  const toggleMenu = () => {
-    setState({
-      ...state,
-      menu: !state.menu,
-    });
-  };
-
-  const show = state.menu ? "show" : "";
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -89,7 +80,7 @@ export default function Header() {
         </div>
         <div className="ml-auto">
           <Dropdown>
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
+            <Dropdown.Toggle size="lg" variant="success" id="dropdown-basic">
               {user.UserName}
             </Dropdown.Toggle>
             <Dropdown.Menu>

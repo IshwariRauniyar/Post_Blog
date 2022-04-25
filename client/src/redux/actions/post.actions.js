@@ -20,7 +20,7 @@ export const getPost =
 
         // console.log(data);
 
-        if (data.success == true) {
+        if (data.success === true) {
           dispatch({
             type: Constants.POST_GET_ALL,
             payload: data,

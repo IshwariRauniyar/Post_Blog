@@ -48,8 +48,8 @@ const PostCreateForm = ({ close }) => {
     const sl = text
       .toLowerCase()
       .replace(/\s+/g, "-") // Replace spaces with -
-      .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-      .replace(/\-\-+/g, "-") // Replace multiple - with single -
+      .replace(/[^\w-]+/g, "") // Remove all non-word chars
+      .replace(/--+/g, "-") // Replace multiple - with single -
       .replace(/^-+/, "") // Trim - from start of text
       .replace(/-+$/, ""); // Trim - from end of text
     setSlug(sl + "-" + uuidv4().substr(0, 8));
@@ -167,6 +167,7 @@ const PostCreateForm = ({ close }) => {
           <label className="block mb-2 text-2xl font-medium">Image</label>
           <div className="py-2 shrink-0">
             <img
+              alt=""
               id="output"
               className=" w-25 h-25 "
               src={Image ? URL.createObjectURL(Image) : ""}

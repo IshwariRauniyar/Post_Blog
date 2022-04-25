@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 const PageEditForm = ({ editState, close }) => {
   const ImgPath = editState.Image;
   const dispatch = useDispatch();
-  const [paramid, setID] = useState(editState._id);
+  const [paramid] = useState(editState._id);
   const [title, setTitle] = useState(editState?.Title || "");
   const [slug, setSlug] = useState(editState?.Slug || "");
   const [seoTitle, setSeoTitle] = useState(editState?.SeoTitle || "");
@@ -18,7 +18,7 @@ const PageEditForm = ({ editState, close }) => {
   );
   const [description, setDescription] = useState(editState?.Description || "");
   const [Image, setImage] = useState();
-  const [ImagePath, setImagePath] = useState(ImgPath || null);
+  const [ImagePath] = useState(ImgPath || null);
   const [IsActive, setIsActive] = useState(editState?.IsActive || Boolean);
 
   const onclose = close;
@@ -52,11 +52,11 @@ const PageEditForm = ({ editState, close }) => {
   const slugify = (text) => {
     const sl = text
       .toLowerCase()
-      .replace(/\s+/g, "-") // Replace spaces with -
-      .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-      .replace(/\-\-+/g, "-") // Replace multiple - with single -
-      .replace(/^-+/, "") // Trim - from start of text
-      .replace(/-+$/, ""); // Trim - from end of text
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "")
+      .replace(/--+/g, "-")
+      .replace(/^-+/, "")
+      .replace(/-+$/, "");
     setSlug(sl + "-" + uuidv4().substr(0, 8));
   };
 
@@ -151,12 +151,14 @@ const PageEditForm = ({ editState, close }) => {
           <div className="py-2 shrink-0">
             {!!!Image ? (
               <img
+                alt=""
                 id="output"
                 className="object-cover w-25 h-25 "
                 src={`http://localhost:8848/${ImagePath}`}
               />
             ) : (
               <img
+                alt=""
                 id="output"
                 className="object-cover w-25 h-25 "
                 src={URL.createObjectURL(Image)}

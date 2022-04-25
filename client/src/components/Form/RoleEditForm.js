@@ -5,7 +5,7 @@ import { Form } from "react-bootstrap";
 
 const SettingEditForm = ({ editState, close }) => {
   const dispatch = useDispatch();
-  const [paramid, setID] = useState(editState._id);
+  const [paramid] = useState(editState._id);
   const [title, setTitle] = useState(editState.Title || "");
   const [uniqueName, setUniqueName] = useState(editState.UniqueName || "");
   const [menu, setMenu] = useState(JSON.parse(editState.Value || ""));
