@@ -1,21 +1,19 @@
 import Constants from "./types";
 import axiosInstance from "../../axios";
 import Toast from "../../components/Toast";
+import Cookies from "js-cookie";
 
 export const getPage =
   ({ offset = 0, limit = 10, search = "" }) =>
   async (dispatch) => {
     try {
-      if (localStorage.getItem("token")) {
-        const setHeaders = {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        };
-        const { data } = await axiosInstance.get(
-          `/page/?offset=${offset}&limit=${limit}&search=${search}`,
-          setHeaders
-        );
+      if(Cookies.get("token")){
+        // const setHeaders = {
+        //   headers: {
+        //     Authorization: `${Cookies.get("token")}`,
+        //   },
+        // };
+        const { data } = await axiosInstance.get( `/page/?offset=${offset}&limit=${limit}&search=${search}`);
         if (data.success === true) {
           dispatch({
             type: Constants.PAGE_GET_ALL,

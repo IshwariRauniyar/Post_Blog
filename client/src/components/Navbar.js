@@ -81,7 +81,7 @@ export default function Header() {
         <div className="ml-auto">
           <Dropdown>
             <Dropdown.Toggle size="lg" variant="success" id="dropdown-basic">
-              {user.UserName}
+              {user?.UserName}
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item onClick={handleLogout}>

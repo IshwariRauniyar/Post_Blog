@@ -10,6 +10,7 @@ import Post from "./pages/Posts";
 import Page from "./pages/Pages";
 import User from "./pages/Users";
 import Role from "./pages/Roles";
+import Cookies from "js-cookie";
 
 const App = () => {
   return (
@@ -19,7 +20,7 @@ const App = () => {
           <Route
             path="/header"
             element={
-              localStorage.getItem("token") ? (
+              Cookies.get("token") ? (
                 <Header />
               ) : (
                 <Navigate to={"/login"} />
@@ -29,7 +30,7 @@ const App = () => {
           <Route
             path="/"
             element={
-              localStorage.getItem("token") ? (
+              Cookies.get("token") ? (
                 <Navigate to={"/header"} />
               ) : (
                 <Login />
@@ -39,7 +40,7 @@ const App = () => {
           <Route
             path="/login"
             element={
-              localStorage.getItem("token") ? (
+              Cookies.get("token") ? (
                 <Navigate to={"/header"} />
               ) : (
                 <Login />
@@ -49,7 +50,7 @@ const App = () => {
           <Route
             path="/post"
             element={
-              localStorage.getItem("token") ? (
+              Cookies.get("token") ? (
                 <Post />
               ) : (
                 <Navigate to={"/login"} />
@@ -60,7 +61,7 @@ const App = () => {
             exact
             path="/page"
             element={
-              localStorage.getItem("token") ? (
+              Cookies.get("token") ? (
                 <Page />
               ) : (
                 <Navigate to={"/login"} />
@@ -71,7 +72,7 @@ const App = () => {
             exact
             path="/user"
             element={
-              localStorage.getItem("token") ? (
+              Cookies.get("token") ? (
                 <User />
               ) : (
                 <Navigate to={"/login"} />
@@ -82,7 +83,7 @@ const App = () => {
             exact
             path="/role"
             element={
-              localStorage.getItem("token") ? (
+              Cookies.get("token") ? (
                 <Role />
               ) : (
                 <Navigate to={"/login"} />

@@ -87,7 +87,8 @@ router.post("/login", async (req, res, next) => {
         }
       );
         // req.session.user = Users;
-        req.session.token = token;
+        // req.cookies.user = Users;
+
       const refreshToken = jwt.sign(
         {
           UserName: Users.UserName,
@@ -100,8 +101,8 @@ router.post("/login", async (req, res, next) => {
           expiresIn: authConfig.refreshExpiresIn,
         }
       );
-      req.session.refreshToken = refreshToken;
-      return res.status(200).json({
+      // req.session.refreshToken = refreshToken;
+      return res.cookie("token", token).status(200).json({
         success: true,
         message: "User Logged in Successfully.",
         // code: 200,

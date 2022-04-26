@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config");
 const User = require("../models/user");
 const Setting = require("../models/setting");
+// const cookies = require("cookie-parser");
 
 const { TokenExpiredError } = jwt;
 const catchError = (err, req, res, next) => {
@@ -21,7 +22,9 @@ const catchError = (err, req, res, next) => {
 
 const verifyToken = (req, res, next) => {
   // const token = req.headers.authorization?.split(" ")[1];
-  const token = req.session.token;
+  // const token = req.headers.authorization;
+  // const token = req.session.token;
+  const token = req.cookies.token;
   console.log("token", token);
   //   const token = req.headers["x-access-token"] || req.headers["authorization"]; // Express headers are auto converted to lowercase
   if (!token) {

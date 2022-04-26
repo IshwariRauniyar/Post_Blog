@@ -3,7 +3,7 @@ const app = express();
 require("./db");
 const routes = require("./routes");
 const cors = require("cors");
-const cookieSession = require("cookie-session");
+const cookieParser = require("cookie-parser");
 
 const PORT = process.env.HOST_PORT || 3000;
 const HOST = process.env.HOST_URL || "localhost";
@@ -14,11 +14,7 @@ app.set("host", HOST);
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
-app.use(cookieSession({
-    name: "session",
-    // keys: ["key1", "key2"],
-    secret: "secret"
-}));
+app.use(cookieParser());
 
 app.get("/", (req, res, next) => {
   res.send("Hello World!");

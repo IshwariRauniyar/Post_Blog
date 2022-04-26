@@ -1,21 +1,16 @@
 import Constants from "./types";
 import axiosInstance from "../../axios";
 import Toast from "../../components/Toast";
+import Cookies from "js-cookie";
 
 export const getPost =
   ({ offset = 0, limit = 10, search = "" }) =>
   async (dispatch) => {
     try {
-      if (localStorage.getItem("token")) {
-        const setHeaders = {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        };
+      if(Cookies.get("token")){
         // console.log("setHeaders", setHeaders);
         const { data } = await axiosInstance.get(
           `/post/?offset=${offset}&limit=${limit}&search=${search}`,
-          setHeaders
         );
 
         // console.log(data);
