@@ -86,7 +86,8 @@ router.post("/login", async (req, res, next) => {
           expiresIn: authConfig.expiresIn,
         }
       );
-
+        // req.session.user = Users;
+        req.session.token = token;
       const refreshToken = jwt.sign(
         {
           UserName: Users.UserName,
@@ -99,7 +100,7 @@ router.post("/login", async (req, res, next) => {
           expiresIn: authConfig.refreshExpiresIn,
         }
       );
-
+      req.session.refreshToken = refreshToken;
       return res.status(200).json({
         success: true,
         message: "User Logged in Successfully.",
@@ -130,11 +131,22 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.get("/logout", async (req, res) => {
-  return res.status(200).json({
-    success: true,
-    message: "User Logged out Successfully.",
-  });
+router.post("/logout", async (req, res, next) => {
+  try {
+    req.session=null;
+    return res.status(200).json({
+      success: true,
+      message: "User Logged out Successfully.",
+
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      success: false,
+      message: "something went wrong.",
+      error: e,
+    });
+  }
 });
 
 module.exports = router;

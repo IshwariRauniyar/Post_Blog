@@ -20,7 +20,9 @@ const catchError = (err, req, res, next) => {
 };
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  // const token = req.headers.authorization?.split(" ")[1];
+  const token = req.session.token;
+  console.log("token", token);
   //   const token = req.headers["x-access-token"] || req.headers["authorization"]; // Express headers are auto converted to lowercase
   if (!token) {
     return res.json({
@@ -34,14 +36,32 @@ const verifyToken = (req, res, next) => {
       return catchError(err, req, res, next);
     }
     req.decoded = decoded;
-    // console.log("decoded", req.decoded);
+    console.log("decoded", req.decoded);
     next();
   });
   return req.decoded;
 };
 
+const { RefreshTokenExpiredError } = jwt;
+const catchRefreshTokenError = (err, req, res, next) => {
+  if (err instanceof RefreshTokenExpiredError) {
+    return res.json({
+      success: false,
+      message: "Unauthorized! Refresh token expired",
+      code: 401,
+    });
+  }
+  return res.json({
+    success: false,
+    message: "Unauthorized! Refresh token not valid",
+    code: 401,
+  });
+};
+
 const verifyRefreshToken = async (req, res, next) => {
-  const refreshToken = req.headers["x-refresh-token"];
+  // const refreshToken = req.headers["x-refresh-token"];
+  const refreshToken = req.session.refreshToken;
+  console.log("refreshToken", refreshToken);
   if (!refreshToken) {
     return res.json({
       success: false,
@@ -51,7 +71,7 @@ const verifyRefreshToken = async (req, res, next) => {
   }
   jwt.verify(refreshToken, config.refreshSecret, (err, decoded) => {
     if (err) {
-      return catchError(err, req, res, next);
+      return catchRefreshTokenError(err, req, res, next);
     }
     req.decoded = decoded;
     next();
@@ -76,6 +96,7 @@ function access(data) {
 
 const authMiddleware = {
   catchError,
+  catchRefreshTokenError,
   verifyToken,
   verifyRefreshToken,
   access,
