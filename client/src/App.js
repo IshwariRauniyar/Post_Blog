@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/animate.min.css";
 import "./assets/css/demo.css";
@@ -10,17 +11,21 @@ import Post from "./pages/Posts";
 import Page from "./pages/Pages";
 import User from "./pages/Users";
 import Role from "./pages/Roles";
-import Cookies from "js-cookie";
+// import { PrivateRoute, PublicRoute } from "./PrivateRoute";
 
 const App = () => {
+  const auth = useSelector((state) => state.auth);
+  console.log("auth", auth);
+  console.log("authtoken", auth.token);
   return (
     <div>
       <BrowserRouter>
         <Routes>
           <Route
             path="/header"
+            // element={<PrivateRoute><Header /></PrivateRoute>}
             element={
-              Cookies.get("token") ? (
+              auth.token ? (
                 <Header />
               ) : (
                 <Navigate to={"/login"} />
@@ -29,8 +34,9 @@ const App = () => {
           />
           <Route
             path="/"
+            // element={<PublicRoute> <Login /></PublicRoute>}
             element={
-              Cookies.get("token") ? (
+              auth.token ? (
                 <Navigate to={"/header"} />
               ) : (
                 <Login />
@@ -39,8 +45,9 @@ const App = () => {
           />
           <Route
             path="/login"
+            // element={<PublicRoute> <Login /></PublicRoute>}
             element={
-              Cookies.get("token") ? (
+              auth.token ? (
                 <Navigate to={"/header"} />
               ) : (
                 <Login />
@@ -49,8 +56,9 @@ const App = () => {
           />
           <Route
             path="/post"
+            // element={<PrivateRoute> <Post /></PrivateRoute>}
             element={
-              Cookies.get("token") ? (
+              auth.token ? (
                 <Post />
               ) : (
                 <Navigate to={"/login"} />
@@ -60,8 +68,9 @@ const App = () => {
           <Route
             exact
             path="/page"
+            // element={<PrivateRoute> <Page /></PrivateRoute>}
             element={
-              Cookies.get("token") ? (
+              auth.token ? (
                 <Page />
               ) : (
                 <Navigate to={"/login"} />
@@ -71,8 +80,9 @@ const App = () => {
           <Route
             exact
             path="/user"
+            // element={<PrivateRoute> <User /></PrivateRoute>}
             element={
-              Cookies.get("token") ? (
+              auth.token ? (
                 <User />
               ) : (
                 <Navigate to={"/login"} />
@@ -82,8 +92,9 @@ const App = () => {
           <Route
             exact
             path="/role"
+            // element={<PrivateRoute> <Role /></PrivateRoute>}
             element={
-              Cookies.get("token") ? (
+              auth.token ? (
                 <Role />
               ) : (
                 <Navigate to={"/login"} />

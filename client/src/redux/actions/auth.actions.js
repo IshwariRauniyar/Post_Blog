@@ -1,28 +1,20 @@
 import Constants from "./types";
 import axiosInstance from "../../axios";
 import Toast from "../../components/Toast";
-import Cookies from "js-cookie";
 
 export const authLogin = (user) => async (dispatch) => {
   try {
     const { data } = await axiosInstance.post("/auth/login", user);
+    console.log(data);
     if (data.success) {
       const { token, user, refreshToken } = data.result;
-      // localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      // localStorage.setItem("refreshToken", refreshToken);
-      // sessionStorage.setItem("token", token);
-      // sessionStorage.setItem("user", JSON.stringify(user));
-      // sessionStorage.setItem("refreshToken", refreshToken);
-        Cookies.set("token", token);
-        // Cookies.set("user", JSON.stringify(user));
-        Cookies.set("refreshToken", refreshToken);
       dispatch({
         type: Constants.LOGIN_SUCCESS,
         payload: data.result,
       });
       Toast.success(data.message);
-      window.location.href = "/header";
+      // window.location.href = "/header";
     } else {
       Toast.error(data.message);
     }
@@ -51,17 +43,12 @@ export const authLogin = (user) => async (dispatch) => {
 export const authLogout = (user) => async (dispatch) => {
   try {
     const { data } = await axiosInstance.post("/auth/logout", user);
-    if (data.success == true) {
-      // localStorage.removeItem("token");
+    if (data.success === true) {
       localStorage.removeItem("user");
-      // localStorage.removeItem("refreshToken");
-      Cookies.remove("token");
-      // Cookies.remove("user");
-      Cookies.remove("refreshToken");
       dispatch({ type: Constants.LOGOUT_SUCCESS, payload: data });
       Toast.success(data.message);
       window.location.href = "/login";
-    } else {  
+    } else {
       Toast.error(data.message);
     }
   } catch (error) {

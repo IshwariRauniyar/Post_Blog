@@ -4,9 +4,8 @@ import Toast from "../../components/Toast";
 import Cookies from "js-cookie";
 export const getUser =
   ({ offset = 0, limit = 10, search = "" }) =>
-  async (dispatch) => {
-    try {
-      if(Cookies.get("token")){
+    async (dispatch) => {
+      try {
         const { data } = await axiosInstance.get(
           `/user/?offset=${offset}&limit=${limit}&search=${search}`
         );
@@ -22,11 +21,10 @@ export const getUser =
           });
           Toast.error(data.message);
         }
+      } catch (error) {
+        console.log(error?.response);
       }
-    } catch (error) {
-      console.log(error?.response);
-    }
-  };
+    };
 
 export const getSingleUser = (id) => async (dispatch) => {
   try {

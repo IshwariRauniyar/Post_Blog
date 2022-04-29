@@ -9,6 +9,7 @@ import Header from "../components/Navbar";
 function Post() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { posts: all_data, total, errors } = useSelector((state) => state.post);
+  console.log("posts", all_data);
   const headers = [
     {
       name: "Title",

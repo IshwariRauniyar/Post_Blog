@@ -5,10 +5,8 @@ import Cookies from "js-cookie";
 
 export const getPost =
   ({ offset = 0, limit = 10, search = "" }) =>
-  async (dispatch) => {
-    try {
-      if(Cookies.get("token")){
-        // console.log("setHeaders", setHeaders);
+    async (dispatch) => {
+      try {
         const { data } = await axiosInstance.get(
           `/post/?offset=${offset}&limit=${limit}&search=${search}`,
         );
@@ -27,21 +25,20 @@ export const getPost =
           });
           Toast.error(data.message);
         }
+      } catch (error) {
+        // if (error?.response?.data?.code == 401) {
+        //   Toast.error(error.response.data.message);
+        //   // setTimeout(() => {
+        //   //   localStorage.removeItem("token");
+        //   //   localStorage.removeItem("user");
+        //   //   window.location.href = "/login";
+        //   // }, 3000);
+        // } else {
+        //   Toast.error(error?.message);
+        // }
+        console.log(error?.response);
       }
-    } catch (error) {
-      // if (error?.response?.data?.code == 401) {
-      //   Toast.error(error.response.data.message);
-      //   // setTimeout(() => {
-      //   //   localStorage.removeItem("token");
-      //   //   localStorage.removeItem("user");
-      //   //   window.location.href = "/login";
-      //   // }, 3000);
-      // } else {
-      //   Toast.error(error?.message);
-      // }
-      console.log(error?.response);
-    }
-  };
+    };
 
 export const getSinglePost = (id) => async (dispatch) => {
   try {

@@ -4,9 +4,9 @@ import Toast from "../../components/Toast";
 import Cookies from "js-cookie";
 export const getRole =
   ({ offset = 0, limit = 10, search = "" }) =>
-  async (dispatch) => {
-    try {
-      if(Cookies.get("token")){
+    async (dispatch) => {
+      try {
+
         const { data } = await axiosInstance.get(
           `/setting/?offset=${offset}&limit=${limit}&search=${search}`,
         );
@@ -22,11 +22,10 @@ export const getRole =
           });
           Toast.error(data.message);
         }
+      } catch (error) {
+        console.log(error?.response);
       }
-    } catch (error) {
-      console.log(error?.response);
-    }
-  };
+    };
 
 export const getSingleRole = (id) => async (dispatch) => {
   try {
