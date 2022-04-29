@@ -56,6 +56,7 @@ const authConfig = require("../config/auth.config");
 //   }
 // });
 
+
 router.post("/login", async (req, res, next) => {
   try {
     const Users = await User.findOne({
@@ -86,8 +87,16 @@ router.post("/login", async (req, res, next) => {
           expiresIn: authConfig.expiresIn,
         }
       );
-        // req.session.user = Users;
-        // req.cookies.user = Users;
+
+      // res.setHeader("Set-Cookie", cookie.serialize("token", token, {
+      //   httpOnly: true,
+      //   // maxAge: 60 * 60 * 24 * 7,
+      //   path: "/",
+      // }));
+
+      res.cookie("token", token, {
+        httpOnly: true,
+      });
 
       const refreshToken = jwt.sign(
         {
@@ -101,11 +110,12 @@ router.post("/login", async (req, res, next) => {
           expiresIn: authConfig.refreshExpiresIn,
         }
       );
-      // req.session.refreshToken = refreshToken;
-      return res.cookie("token", token).status(200).json({
+      // return res.setHeader("Set-Cookie", [
+      //   `token=${token}; HttpOnly; Max-Age=${authConfig.expiresIn}`,
+      // ]).json({
+      return res.json({
         success: true,
         message: "User Logged in Successfully.",
-        // code: 200,
         result: {
           user: {
             UserName: Users.UserName,
@@ -134,11 +144,15 @@ router.post("/login", async (req, res, next) => {
 
 router.post("/logout", async (req, res, next) => {
   try {
-    req.session=null;
+    res.clearCookie("token");
+    // res.setHeader("Set-Cookie", cookie.serialize("token", "", {
+    //   httpOnly: true,
+    //   // maxAge: new Date(0),
+    //   path: "/",
+    // }));
     return res.status(200).json({
       success: true,
       message: "User Logged out Successfully.",
-
     });
   } catch (e) {
     console.log(e);

@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config");
 const User = require("../models/user");
 const Setting = require("../models/setting");
-// const cookies = require("cookie-parser");
 
 const { TokenExpiredError } = jwt;
 const catchError = (err, req, res, next) => {
@@ -21,12 +20,9 @@ const catchError = (err, req, res, next) => {
 };
 
 const verifyToken = (req, res, next) => {
-  // const token = req.headers.authorization?.split(" ")[1];
-  // const token = req.headers.authorization;
-  // const token = req.session.token;
-  const token = req.cookies.token;
+
+  const token = req.cookies.token
   console.log("token", token);
-  //   const token = req.headers["x-access-token"] || req.headers["authorization"]; // Express headers are auto converted to lowercase
   if (!token) {
     return res.json({
       success: false,
@@ -61,26 +57,26 @@ const catchRefreshTokenError = (err, req, res, next) => {
   });
 };
 
-const verifyRefreshToken = async (req, res, next) => {
-  // const refreshToken = req.headers["x-refresh-token"];
-  const refreshToken = req.session.refreshToken;
-  console.log("refreshToken", refreshToken);
-  if (!refreshToken) {
-    return res.json({
-      success: false,
-      message: "Unauthorized! Token not found",
-      code: 401,
-    });
-  }
-  jwt.verify(refreshToken, config.refreshSecret, (err, decoded) => {
-    if (err) {
-      return catchRefreshTokenError(err, req, res, next);
-    }
-    req.decoded = decoded;
-    next();
-  });
-  return req.decoded;
-};
+// const verifyRefreshToken = async (req, res, next) => {
+//   // const refreshToken = req.headers["x-refresh-token"];
+//   const refreshToken = req.session.refreshToken;
+//   console.log("refreshToken", refreshToken);
+//   if (!refreshToken) {
+//     return res.json({
+//       success: false,
+//       message: "Unauthorized! Token not found",
+//       code: 401,
+//     });
+//   }
+//   jwt.verify(refreshToken, config.refreshSecret, (err, decoded) => {
+//     if (err) {
+//       return catchRefreshTokenError(err, req, res, next);
+//     }
+//     req.decoded = decoded;
+//     next();
+//   });
+//   return req.decoded;
+// };
 
 function access(data) {
   return async (req, res, next) => {
@@ -101,7 +97,7 @@ const authMiddleware = {
   catchError,
   catchRefreshTokenError,
   verifyToken,
-  verifyRefreshToken,
+  // verifyRefreshToken,
   access,
 };
 
