@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/animate.min.css";
 import "./assets/css/demo.css";
@@ -14,9 +14,8 @@ import Role from "./pages/Roles";
 // import { PrivateRoute, PublicRoute } from "./PrivateRoute";
 
 const App = () => {
-  const auth = useSelector((state) => state.auth);
-  console.log("auth", auth);
-  console.log("authtoken", auth.token);
+  // const auth = useSelector((state) => state.auth);
+  // console.log("auth", auth);
   return (
     <div>
       <BrowserRouter>
@@ -25,7 +24,7 @@ const App = () => {
             path="/header"
             // element={<PrivateRoute><Header /></PrivateRoute>}
             element={
-              auth.token ? (
+              localStorage.user ? (
                 <Header />
               ) : (
                 <Navigate to={"/login"} />
@@ -36,7 +35,7 @@ const App = () => {
             path="/"
             // element={<PublicRoute> <Login /></PublicRoute>}
             element={
-              auth.token ? (
+              localStorage.user ? (
                 <Navigate to={"/header"} />
               ) : (
                 <Login />
@@ -47,7 +46,7 @@ const App = () => {
             path="/login"
             // element={<PublicRoute> <Login /></PublicRoute>}
             element={
-              auth.token ? (
+              localStorage.user ? (
                 <Navigate to={"/header"} />
               ) : (
                 <Login />
@@ -58,7 +57,7 @@ const App = () => {
             path="/post"
             // element={<PrivateRoute> <Post /></PrivateRoute>}
             element={
-              auth.token ? (
+              localStorage.user ? (
                 <Post />
               ) : (
                 <Navigate to={"/login"} />
@@ -70,7 +69,7 @@ const App = () => {
             path="/page"
             // element={<PrivateRoute> <Page /></PrivateRoute>}
             element={
-              auth.token ? (
+              localStorage.user ? (
                 <Page />
               ) : (
                 <Navigate to={"/login"} />
@@ -82,7 +81,7 @@ const App = () => {
             path="/user"
             // element={<PrivateRoute> <User /></PrivateRoute>}
             element={
-              auth.token ? (
+              localStorage.user ? (
                 <User />
               ) : (
                 <Navigate to={"/login"} />
@@ -94,7 +93,7 @@ const App = () => {
             path="/role"
             // element={<PrivateRoute> <Role /></PrivateRoute>}
             element={
-              auth.token ? (
+              localStorage.user ? (
                 <Role />
               ) : (
                 <Navigate to={"/login"} />
