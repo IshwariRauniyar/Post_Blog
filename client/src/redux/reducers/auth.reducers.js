@@ -15,7 +15,7 @@ const initialState = {
   errors: {},
 };
 
-export default (state = initialState, action) => {
+export default (state = initialState, action, isLoggedIn = false) => {
   switch (action.type) {
     case Types.LOGIN_REQUEST:
       return {
@@ -30,6 +30,7 @@ export default (state = initialState, action) => {
         token: action.payload.token,
         user: action.payload.user,
         isAuthenticated: true,
+        isLoggedIn: true,
         errors: {},
       };
     case Types.LOGIN_FAILURE:

@@ -21,8 +21,8 @@ const catchError = (err, req, res, next) => {
 
 const verifyToken = (req, res, next) => {
 
-  const token = req.cookies.token
-  console.log("token", token);
+  const token = req.cookies.SID
+  // console.log("token", token);
   if (!token) {
     return res.json({
       success: false,
@@ -35,7 +35,7 @@ const verifyToken = (req, res, next) => {
       return catchError(err, req, res, next);
     }
     req.decoded = decoded;
-    console.log("decoded", req.decoded);
+    // console.log("decoded", req.decoded);
     next();
   });
   return req.decoded;

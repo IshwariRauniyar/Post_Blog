@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const authConfig = require("../config/auth.config");
 
+
 // router.post("/register", async (req, res) => {
 //   try {
 //     const newPassword = await bcrypt.hash(req.body.Password, 10);
@@ -94,7 +95,7 @@ router.post("/login", async (req, res, next) => {
       //   path: "/",
       // }));
 
-      res.cookie("token", token, {
+      res.cookie("SID", token, {
         httpOnly: true,
       });
 
@@ -144,7 +145,7 @@ router.post("/login", async (req, res, next) => {
 
 router.post("/logout", async (req, res, next) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("SID");
     // res.setHeader("Set-Cookie", cookie.serialize("token", "", {
     //   httpOnly: true,
     //   // maxAge: new Date(0),

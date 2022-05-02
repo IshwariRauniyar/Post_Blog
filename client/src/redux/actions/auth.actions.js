@@ -5,16 +5,16 @@ import Toast from "../../components/Toast";
 export const authLogin = (user) => async (dispatch) => {
   try {
     const { data } = await axiosInstance.post("/auth/login", user);
-    console.log(data);
+    // console.log("data", data);
     if (data.success) {
-      const { token, user, refreshToken } = data.result;
+      const { user } = data.result;
       localStorage.setItem("user", JSON.stringify(user));
       dispatch({
         type: Constants.LOGIN_SUCCESS,
         payload: data.result,
       });
       Toast.success(data.message);
-      // window.location.href = "/header";
+      window.location.href = "/header";
     } else {
       Toast.error(data.message);
     }
