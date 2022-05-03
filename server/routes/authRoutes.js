@@ -3,6 +3,7 @@ var router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const Setting = require("../models/setting");
 const authConfig = require("../config/auth.config");
 
 
@@ -63,6 +64,9 @@ router.post("/login", async (req, res, next) => {
     const Users = await User.findOne({
       Email: req.body.Email,
     });
+    const Role = await Setting.findOne({
+      UniqueName: Users?.UserRole
+    });
     if (!Users) {
       return res.status(404).json({
         success: false,
@@ -122,6 +126,7 @@ router.post("/login", async (req, res, next) => {
             UserName: Users.UserName,
             // Email: Users.Email,
             UserRole: Users.UserRole,
+            role: Role.Value,
           },
           token: token,
           refreshToken: refreshToken,
