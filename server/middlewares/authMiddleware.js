@@ -35,7 +35,7 @@ const verifyToken = (req, res, next) => {
       return catchError(err, req, res, next);
     }
     req.decoded = decoded;
-    // console.log("decoded", req.decoded);
+    console.log("decoded", req.decoded);
     next();
   });
   return req.decoded;

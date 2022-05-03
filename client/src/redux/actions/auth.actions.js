@@ -9,6 +9,7 @@ export const authLogin = (user) => async (dispatch) => {
     if (data.success) {
       const { user } = data.result;
       localStorage.setItem("user", JSON.stringify(user));
+      // localStorage.setItem("key", user.UserName);
       dispatch({
         type: Constants.LOGIN_SUCCESS,
         payload: data.result,
