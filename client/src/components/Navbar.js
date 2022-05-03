@@ -7,21 +7,34 @@ import { authLogout } from "../redux/actions/auth.actions";
 
 export default function Header() {
   const dispatch = useDispatch();
-  const [state] = useState({
-    menu: false,
-    isOpen: false,
-    pageLinkClass: "nav-item nav-link",
-    aboutLinkClass: "nav-item nav-link",
-    postLinkClass: "nav-item nav-link",
-    userLinkClass: "nav-item nav-link",
-    menuClass: "",
-  });
+  // const [active, setActive] = useState('');
+  // const [state, setState] = useState({
+  //   menu: false,
+  //   isOpen: false,
+  //   pageLinkClass: "nav-item nav-link",
+  //   aboutLinkClass: "nav-item nav-link",
+  //   postLinkClass: "nav-item nav-link",
+  //   userLinkClass: "nav-item nav-link",
+  //   menuClass: "",
+  // });
+  // console.log("state", active);
 
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(authLogout());
   };
   const user = JSON.parse(localStorage.getItem("user"));
+  const role = user.role;
+  // const navLinkClass = (link) => {
+  //   console.log("link", link);
+  //   if (link === active) {
+  //     return "nav-item nav-link active";
+  //   } else {
+  //     return "nav-item nav-link";
+  //   }
+  // };
+
+
   return (
     <>
       <nav className="navbar navbar-expand-lg flex navbar-light bg-light">
@@ -34,46 +47,54 @@ export default function Header() {
         {/* <div className={"collapse navbar-collapse " + show}> */}
         <div className="navbar-nav flex justify-center">
           <Link
-            className={state.pageLinkClass}
+            className={'nav-item nav-link'}
             to="/page"
-            onClick={() =>
-              state.pageLinkClass === "nav-item nav-link"
-                ? "nav-item nav-link active"
-                : "nav-item nav-link"
-            }
+            hidden={role.includes("page") ? false : true}
           >
             Page <span className="sr-only">(current)</span>
           </Link>
           <Link
-            className={state.postLinkClass}
+            // className={navLinkClass("post")}
+            className={'nav-item nav-link'}
+            hidden={role.includes("post") ? false : true}
+            // className={`nav-item nav-link ${active === 'post' ? 'text-danger' : ''}`}
             to="/post"
-            onClick={() =>
-              state.postLinkClass === "nav-item nav-link"
-                ? "nav-item nav-link active"
-                : "nav-item nav-link"
-            }
+          // onClick={() => {
+          //   setActive("post");
+          // }}
+          // onClick={() =>
+          //   state.postLinkClass === "nav-item nav-link"
+          //     ? "nav-item nav-link active"
+          //     : "nav-item nav-link"
+          // }
           >
             Post
           </Link>
           <Link
-            className={state.userLinkClass}
+            className={"nav-item nav-link"}
+            // className={state.userLinkClass}
+            // className={`nav-item nav-link ${active === 'user' ? 'text-danger' : ''}`}
             to="/user"
-            onClick={() =>
-              state.userLinkClass === "nav-item nav-link"
-                ? "nav-item nav-link active"
-                : "nav-item nav-link"
-            }
+            hidden={role.includes("user") ? false : true}
+          // onClick={() =>
+          //   state.userLinkClass === "nav-item nav-link"
+          //     ? "nav-item nav-link active"
+          //     : "nav-item nav-link"
+          // }
           >
             User
           </Link>
           <Link
-            className={state.aboutLinkClass}
+            className={'nav-item nav-link'}
+            // className={state.aboutLinkClass}
+            // className={`nav-item nav-link ${active === 'role' ? 'text-danger' : ''}`}
             to="/role"
-            onClick={() =>
-              state.aboutLinkClass === "nav-item nav-link"
-                ? "nav-item nav-link active"
-                : "nav-item nav-link"
-            }
+            hidden={role.includes("role") ? false : true}
+          // onClick={() =>
+          //   state.aboutLinkClass === "nav-item nav-link"
+          //     ? "nav-item nav-link active"
+          //     : "nav-item nav-link"
+          // }
           >
             Role
           </Link>
