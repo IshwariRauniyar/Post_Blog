@@ -81,7 +81,7 @@
   width: fit-content !important;
 }
 
-.ql-container  {
-  min-width: 500px !important;
+.ql-editor  {
+  height: 338px ! important;
 }
 /* Custom styles ends*/
