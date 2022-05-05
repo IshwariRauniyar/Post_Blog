@@ -5,6 +5,7 @@ import ReactQuill from "react-quill";
 import "../../../node_modules/react-quill/dist/quill.snow.css";
 import { Form } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
+import GenerateSlug from "./GenerateSlug";
 
 const PostEditForm = ({ editState, close }) => {
   const ImgPath = editState.Image;
@@ -13,6 +14,7 @@ const PostEditForm = ({ editState, close }) => {
   const dispatch = useDispatch();
   const [paramid] = useState(editState._id);
   const [title, setTitle] = useState(editState?.Title || "");
+  const [newSlug, setNewSlug] = useState("");
   const [slug, setSlug] = useState(editState?.Slug || "");
   const [seoTitle, setSeoTitle] = useState(editState?.SeoTitle || "");
   const [seoDescription, setSeoDescription] = useState(
@@ -31,7 +33,7 @@ const PostEditForm = ({ editState, close }) => {
     e.preventDefault();
     const newPost = {
       Title: title,
-      Slug: slug,
+      Slug: newSlug || slug,
       SeoTitle: seoTitle,
       SeoDescription: seoDescription,
       Description: description,
@@ -84,13 +86,28 @@ const PostEditForm = ({ editState, close }) => {
         </div>
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium"> Slug</label>
-          <input
-            className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
-            type="text"
-            name="slug"
-            readOnly
-            value={slug}
+          <GenerateSlug
+            slugData={slug}
+            setNewSlug={setNewSlug}
+          // value={newSlug}
           />
+          {newSlug.length > 0 ? (
+            <input
+              className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
+              type="text"
+              name="slug"
+              readOnly
+              value={newSlug}
+            />
+          ) : (
+            <input
+              className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
+              type="text"
+              name="slug"
+              readOnly
+              value={slug}
+            />
+          )}
         </div>
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium"> Seo Title</label>
@@ -119,7 +136,7 @@ const PostEditForm = ({ editState, close }) => {
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium">Description</label>
           <ReactQuill
-            className="block w-full h-64 mb-7 pb-11 text-lg "
+            className="block w-full h-96 mb-7 pb-11 text-lg "
             placeholder="Write something..."
             value={description}
             onChange={onEditorChange}
@@ -180,14 +197,16 @@ const PostEditForm = ({ editState, close }) => {
               <img
                 alt=""
                 id="output"
-                className="object-cover w-25 h-25 "
-                src={`http://localhost:8848/${ImagePath}`}
+                height={150}
+                width={150}
+                src={`http://localhost:8848/${ImagePath}` || "https://via.placeholder.com/150"}
               />
             ) : (
               <img
                 alt=""
                 id="output"
-                className="object-cover w-25 h-25 "
+                height={150}
+                width={150}
                 src={URL.createObjectURL(Image)}
               />
             )}
