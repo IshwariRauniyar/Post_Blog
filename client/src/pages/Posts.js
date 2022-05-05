@@ -6,9 +6,11 @@ import TableWithPagination from "../components/DataTable/TableWithPagination/ind
 import PostCreateForm from "../components/Form/PostCreateForm";
 import PostEditForm from "../components/Form/PostEditForm";
 import Header from "../components/Navbar";
+import { useNavigate } from 'react-router-dom';
 function Post() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { posts: all_data, total, errors } = useSelector((state) => state.post);
+  let navigate = useNavigate();
   const headers = [
     {
       name: "Title",
@@ -81,7 +83,10 @@ function Post() {
                     EditForm={(custom_props) => (
                       <PostEditForm {...custom_props} />
                     )}
-                    actionButtons={["edit", "delete"]}
+                    actionButtons={["view", "edit", "delete"]}
+                    onView={(id) => {
+                      navigate(`/post-view/${id}`);
+                    }}
                   />
                 </Card.Body>
                 {/* Create Modal */}

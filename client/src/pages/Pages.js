@@ -6,11 +6,12 @@ import TableWithPagination from "../components/DataTable/TableWithPagination/ind
 import PageCreateForm from "../components/Form/PageCreateForm";
 import PageEditForm from "../components/Form/PageEditForm";
 import Header from "../components/Navbar";
+import { useNavigate } from 'react-router-dom';
 
 function Page() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { pages: all_data, total, errors } = useSelector((state) => state.page);
-
+  let navigate = useNavigate();
   const headers = [
     {
       name: "Title",
@@ -77,7 +78,10 @@ function Page() {
                     EditForm={(custom_props) => (
                       <PageEditForm {...custom_props} />
                     )}
-                    actionButtons={["edit", "delete"]}
+                    actionButtons={["view", "edit", "delete"]}
+                    onView={(id) => {
+                      navigate(`/page-view/${id}`);
+                    }}
                   />
                 </Card.Body>
                 {/* Create Modal */}
