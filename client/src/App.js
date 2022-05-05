@@ -11,6 +11,8 @@ import Post from "./pages/Posts";
 import Page from "./pages/Pages";
 import User from "./pages/Users";
 import Role from "./pages/Roles";
+import PostView from "./pages/PostView";
+import PageView from "./pages/PageView";
 // import { PrivateRoute, PublicRoute } from "./PrivateRoute";
 
 const App = () => {
@@ -100,6 +102,8 @@ const App = () => {
               )
             }
           />
+          <Route exact path="/page-view/:id" element={<PageView />} />
+          <Route path="/post-view/:id" element={<PostView />} />
           <Route path="*" element={<>404 NOT FOUND</>} />
         </Routes>
       </BrowserRouter>
