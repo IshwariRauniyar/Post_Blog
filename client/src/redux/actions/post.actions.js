@@ -37,6 +37,7 @@ export const getPost =
     };
 
 export const getSinglePost = (id) => async (dispatch) => {
+  console.log("iddd", id);
   try {
     const { data } = await axiosInstance.get(`/post/${id}`);
     dispatch({ type: Constants.POST_GET_SINGLE, payload: data.post });

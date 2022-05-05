@@ -80,7 +80,7 @@ export const updateUser = (id, updatedUser) => async (dispatch) => {
       );
       if (data.success === true) {
         dispatch({
-          type: Constants.USER_UPDATE,
+          type: Constants.USER_EDIT,
           payload: data.result,
         });
         Toast.success("User updated successfully");

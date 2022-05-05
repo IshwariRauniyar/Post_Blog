@@ -41,6 +41,10 @@ const Types = {
   ROLE_EDIT: "ROLE_EDIT",
   ROLE_DELETE: "ROLE_DELETE",
   ROLE_ERROR: "ROLE_ERROR",
+
+  //Image
+  IMAGE_UPLOAD: "IMAGE_UPLOAD",
+  IMAGE_UPLOAD_FAIL: "IMAGE_UPLOAD_FAIL",
 };
 
 export default Types;

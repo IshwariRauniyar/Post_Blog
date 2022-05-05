@@ -27,7 +27,7 @@ export const getPage =
 export const getSinglePage = (id) => async (dispatch) => {
   try {
     const { data } = await axiosInstance.get(`/page/${id}`);
-    dispatch({ type: Constants.PAGE_GET_SINGLE, payload: data.post });
+    dispatch({ type: Constants.PAGE_GET_SINGLE, payload: data.page });
   } catch (error) {
     Toast.error("Error fetching Page");
     console.log(error);
