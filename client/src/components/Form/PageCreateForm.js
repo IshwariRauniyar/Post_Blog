@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { createPage } from "../../redux/actions/page.actions";
 import ReactQuill from "react-quill";
 import "../../../node_modules/react-quill/dist/quill.snow.css";
 import { Form } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
+// import { imageUpload } from "../../redux/actions/file.actions";
+import axiosInstance from "../../axios";
+import GenerateSlug from "./GenerateSlug";
 
 const PageCreateForm = ({ close }) => {
+  var quillObj;
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
+  const [newSlug, setNewSlug] = useState("");
   const [slug, setSlug] = useState("");
   const [seoTitle, setSeoTitle] = useState("");
   const [seoDescription, setSeoDescription] = useState("");
@@ -20,14 +25,15 @@ const PageCreateForm = ({ close }) => {
     e.preventDefault();
     const newPage = {
       Title: title,
-      Slug: slug,
+      Slug: newSlug || slug,
       SeoTitle: seoTitle,
       SeoDescription: seoDescription,
       Description: description,
       IsActive: IsActive,
       Image,
     };
-    dispatch(createPage(newPage));
+    console.log("newPage", newPage.Description);
+    // dispatch(createPage(newPage));
     onclose();
   };
   const onEditorChange = (description) => {
@@ -51,6 +57,71 @@ const PageCreateForm = ({ close }) => {
     setSlug(sl + "-" + uuidv4().substr(0, 8));
   };
 
+  // const Editor = () => {
+  //   editorRef = useRef(null);
+  //   modules = useMemo(
+  //     () => ({
+  //       toolbar: {
+  //         container: [
+  //           [{ header: [1, 2, false] }],
+  //           ["bold", "italic", "underline", "strike", "blockquote"],
+  //           [
+  //             { list: "ordered" },
+  //             { list: "bullet" },
+  //             { indent: "-1" },
+  //             { indent: "+1" },
+  //           ],
+  //           ["link"],
+  //           ["clean"],
+  //           ["image"],
+  //         ],
+  //         handlers: {
+  //           image: imageHandler,
+  //         },
+  //       }
+  //     }),
+  //     []
+  //   );
+  //   formats = [
+  //     "header",
+  //     "bold",
+  //     "italic",
+  //     "underline",
+  //     "strike",
+  //     "blockquote",
+  //     "list",
+  //     "bullet",
+  //     "indent",
+  //     "link",
+  //     "image",
+  //   ];
+  //   const imageHandler = (image, callback) => {
+  //     const file = image.file;
+  //     const formData = new FormData();
+  //     formData.append("image", file);
+  //     axiosInstance
+  //       .post("/api/file/upload", formData)
+  //       .then((res) => {
+  //         const imageUrl = res.data.url;
+  //         callback(imageUrl);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   };
+  // };
+
+
+  function base64Convert(file) {
+    console.log("file", file);
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      // reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
   return (
     <>
       <Form onSubmit={handleSubmit}>
@@ -70,13 +141,28 @@ const PageCreateForm = ({ close }) => {
         </div>
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium"> Slug</label>
-          <input
-            className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
-            type="text"
-            name="slug"
-            readOnly
-            value={slug}
+          <GenerateSlug
+            slugData={slug}
+            setNewSlug={setNewSlug}
+          // value={newSlug}
           />
+          {newSlug.length > 0 ? (
+            <input
+              className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
+              type="text"
+              name="slug"
+              readOnly
+              value={newSlug}
+            />
+          ) : (
+            <input
+              className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
+              type="text"
+              name="slug"
+              readOnly
+              value={slug}
+            />
+          )}
         </div>
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium"> Seo Title</label>
@@ -104,49 +190,33 @@ const PageCreateForm = ({ close }) => {
 
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium">Description</label>
-          <ReactQuill
-            className="block w-full h-64 mb-7 pb-11 text-lg "
-            placeholder="Write something..."
+          {/* <ReactQuill
+            ref={editorRef}
+            modules={modules}
+            formats={formats}
             value={description}
             onChange={onEditorChange}
-            modules={{
-              toolbar: [
-                [{ header: [1, 2, false] }],
-                ["bold", "italic", "underline", "strike", "blockquote"],
-                [
-                  { list: "ordered" },
-                  { list: "bullet" },
-                  { indent: "-1" },
-                  { indent: "+1" },
-                ],
-                ["link", "image"],
-                ["clean"],
-              ],
-            }}
-            formats={[
-              "header",
-              "bold",
-              "italic",
-              "underline",
-              "strike",
-              "blockquote",
-              "list",
-              "bullet",
-              "indent",
-              "link",
-              "image",
-            ]}
-          />
+          /> */}
+
         </div>
         <div className="mb-6 ">
           <label className="block mb-2 text-2xl font-medium">Image</label>
           <div className="py-2 shrink-0">
-            <img
-              alt=""
-              id="output"
-              className=" w-25 h-25 "
-              src={Image ? URL.createObjectURL(Image) : ""}
-            />
+            {Image ? (
+              <img
+                src={URL.createObjectURL(Image)}
+                alt="image"
+                height={150}
+                width={150}
+              />
+            ) : (
+              <img
+                src="https://via.placeholder.com/150"
+                alt="image"
+                height={150}
+                width={150}
+              />
+            )}
           </div>
           <label className="block pt-2">
             <span className="sr-only">Browse photo </span>

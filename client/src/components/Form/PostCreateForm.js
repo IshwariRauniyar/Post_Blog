@@ -1,14 +1,19 @@
 import React, { useState } from "react";
+import { Quill } from "react-quill";
 import { useDispatch } from "react-redux";
 import { createPost } from "../../redux/actions/post.actions";
 import ReactQuill from "react-quill";
 import "../../../node_modules/react-quill/dist/quill.snow.css";
 import { Form } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
+import GenerateSlug from "./GenerateSlug";
+import axiosInstance from "../../axios";
+
 
 const PostCreateForm = ({ close }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
+  const [newSlug, setNewSlug] = useState("");
   const [slug, setSlug] = useState("");
   const [seoTitle, setSeoTitle] = useState("");
   const [seoDescription, setSeoDescription] = useState("");
@@ -22,7 +27,7 @@ const PostCreateForm = ({ close }) => {
     e.preventDefault();
     const newPost = {
       Title: title,
-      Slug: slug,
+      Slug: newSlug || slug,
       SeoTitle: seoTitle,
       SeoDescription: seoDescription,
       Description: description,
@@ -30,8 +35,10 @@ const PostCreateForm = ({ close }) => {
       Order: order,
       IsActive: IsActive,
       Image,
+
     };
-    dispatch(createPost(newPost));
+    console.log('newPost', newPost)
+    // dispatch(createPost(newPost));
     onclose();
   };
   const onEditorChange = (description) => {
@@ -55,6 +62,107 @@ const PostCreateForm = ({ close }) => {
     setSlug(sl + "-" + uuidv4().substr(0, 8));
   };
 
+  // var quillObj;
+
+  // handlers: {
+  //   image: function () {
+  //     const input = document.createElement("input");
+  //     input.setAttribute("type", "file");
+  //     input.setAttribute("accept", "image/*");
+  //     input.click();
+  //     input.onchange = (e) => {
+  //       const file = e.target.files[0];
+  //       const reader = new FileReader();
+  //       reader.onload = (e) => {
+  //         const image = new Image();
+  //         image.src = e.target.result;
+  //         image.onload = () => {
+  //           const quill = this.quill;
+  //           const canvas = document.createElement("canvas");
+  //           const ctx = canvas.getContext("2d");
+  //           canvas.width = image.width;
+  //           canvas.height = image.height;
+  //           ctx.drawImage(image, 0, 0);
+  //           const dataURL = canvas.toDataURL("image/png");
+  //           const range = quill.getSelection();
+  //           quill.insertEmbed(range.index, "image", dataURL);
+  //           quill.setSelection(range.index + 1);
+  //         };
+  //       }
+  //       reader.readAsDataURL(file);
+  //     }
+  //   }
+  // }
+
+  // async function imageHandler() {
+  //   const input = document.createElement("input");
+  //   input.setAttribute("type", "file");
+  //   input.setAttribute("accept", "image/*");
+  //   input.click();
+  //   input.onchange = (e) => {
+  //     var file = e.target.files[0];
+  //     console.log('file', file)
+  //     var formData = new FormData();
+  //     formData.append("file", file);
+  //     var fileName = file.name;
+  //     var fileType = file.type;
+  //     var fileSize = file.size;
+  //     var filePath = file.path;
+  //     const res = uploadFiles(file, fileName, quillObj);
+  //     console.log('res', res)
+  //   }
+  // }
+  // const uploadFiles = async (file, fileName, quillObj) => {
+  //   console.log('fileeee', file)
+  //   try {
+  //     const data = await axiosInstance.post("/file/upload", file);
+  //     console.log('data', data)
+  //     const range = quillObj.getEditorSelection();
+  //     quillObj.getEditor().insertEmbed(range.index, "image", data.data.url);
+  //     // quillObj.setSelection(range.index + 1);
+  //   } catch (error) {
+  //     console.log('error', error)
+  //   }
+  // }
+
+  // const toolbarContainer = [
+  //   [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+  //   [{ 'font': [] }],
+  //   [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+  //   ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+  //   [{ 'align': [] }],
+  //   [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
+  //   [{ 'direction': 'rtl' }],                         // text direction
+  //   [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+  //   ['blockquote', 'code-block'],
+
+  //   [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+  //   [{ 'color': [] }, { 'background': [] }],
+  //   ['emoji', 'image', 'video', 'link'],
+
+  //   ['clean']
+  // ]
+
+  var quillObj;
+  const imageHandler = () => {
+    const input = document.createElement('input')
+    input.setAttribute('type', 'file')
+    input.setAttribute('accept', 'image/*')
+    input.click()
+    input.onchange = async () => {
+      const file = input.files[0]
+      const formData = new FormData()
+      formData.append('quill-image', file)
+      const res = await axiosInstance.post('/file/upload', formData)
+      const range = this.quillObj.getSelection()
+      const link = res.data[0].url
+
+      // this part the image is inserted
+      // by 'image' option below, you just have to put src(link) of img here. 
+      this.quillEditor.insertEmbed(range.index, 'image', link)
+    }
+  }
+
   return (
     <>
       <Form onSubmit={handleSubmit}>
@@ -74,13 +182,28 @@ const PostCreateForm = ({ close }) => {
         </div>
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium"> Slug</label>
-          <input
-            className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
-            type="text"
-            name="slug"
-            readOnly
-            value={slug}
+          <GenerateSlug
+            slugData={slug}
+            setNewSlug={setNewSlug}
+          // value={newSlug}
           />
+          {newSlug.length > 0 ? (
+            <input
+              className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
+              type="text"
+              name="slug"
+              readOnly
+              value={newSlug}
+            />
+          ) : (
+            <input
+              className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
+              type="text"
+              name="slug"
+              readOnly
+              value={slug}
+            />
+          )}
         </div>
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium"> Seo Title</label>
@@ -108,8 +231,8 @@ const PostCreateForm = ({ close }) => {
 
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium">Description</label>
-          <ReactQuill
-            className="block w-full h-64 mb-7 pb-11 text-lg "
+          {/* <ReactQuill
+            className="block w-full h-96 mb-7 pb-11 text-lg "
             placeholder="Write something..."
             value={description}
             onChange={onEditorChange}
@@ -123,10 +246,12 @@ const PostCreateForm = ({ close }) => {
                   { indent: "-1" },
                   { indent: "+1" },
                 ],
-                ["link", "image"],
+                ["link"],
+                [{ image: imageHandler }],
                 ["clean"],
-              ],
+              ]
             }}
+
             formats={[
               "header",
               "bold",
@@ -140,7 +265,44 @@ const PostCreateForm = ({ close }) => {
               "link",
               "image",
             ]}
+          /> */}
+
+          <ReactQuill ref={(el) => (quillObj = el)}
+            value={description}
+            modules={{
+              toolbar: {
+                container: [
+                  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                  ['bold', 'italic', 'underline'],
+                  [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                  [{ 'align': [] }],
+                  ['link', 'image'],
+                  ['clean'],
+                  [{ 'color': [] }]
+                ],
+                handlers: {
+                  image: imageHandler
+                }
+              },
+            }}
+            onChange={onEditorChange}
           />
+
+          {/* <ReactQuill
+            ref={(el) => (quillObj = el)}
+            placeholder=" fill in the activity details ~"
+            theme="snow"
+            value={description}
+            onChange={onEditorChange}
+            modules={{
+              toolbar: {
+                container: toolbarContainer,
+                handlers: {
+                  image: imageHandler
+                }
+              },
+            }}
+          /> */}
         </div>
 
         <div className="mb-6">
@@ -166,12 +328,21 @@ const PostCreateForm = ({ close }) => {
         <div className="mb-6 ">
           <label className="block mb-2 text-2xl font-medium">Image</label>
           <div className="py-2 shrink-0">
-            <img
-              alt=""
-              id="output"
-              className=" w-25 h-25 "
-              src={Image ? URL.createObjectURL(Image) : ""}
-            />
+            {Image ? (
+              <img
+                src={URL.createObjectURL(Image)}
+                alt="image"
+                height={150}
+                width={150}
+              />
+            ) : (
+              <img
+                src="https://via.placeholder.com/150"
+                alt="image"
+                height={150}
+                width={150}
+              />
+            )}
           </div>
           <label className="block pt-2">
             <span className="sr-only">Browse photo </span>
