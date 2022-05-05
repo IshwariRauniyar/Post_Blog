@@ -24,6 +24,9 @@ const storage = multer.diskStorage({
     if (file.mimetype === "image/jpeg") {
       filetype = "jpeg";
     }
+    if (file.mimetype === "image;base64") {
+      filetype = "base64";
+    }
     cb(null, `${uuidv4()}.${filetype}`);
   },
 });
@@ -33,7 +36,8 @@ module.exports = multer({
     if (
       file.mimetype === "image/png" ||
       file.mimetype === "image/jpg" ||
-      file.mimetype === "image/jpeg"
+      file.mimetype === "image/jpeg" ||
+      file.mimetype === "image;base64"
     ) {
       cb(null, true);
     } else {
