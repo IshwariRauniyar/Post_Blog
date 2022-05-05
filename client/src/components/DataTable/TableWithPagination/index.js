@@ -13,6 +13,7 @@ export default function TableWithPagination({
   headers,
   EditForm,
   title,
+  onView,
   actionButtons,
 }) {
   const [editData, setEditData] = useState();
@@ -23,6 +24,7 @@ export default function TableWithPagination({
   // const [limit, setLimit] = useState(10);
   const [skip, setSkip] = useState(0);
   const [search, setSearch] = useState("");
+  const [showViewModal, setShowViewModal] = useState(false);
 
   const dispatch = useDispatch();
   function dateToString(CreatedOn) {
@@ -61,6 +63,10 @@ export default function TableWithPagination({
     setShowEditModal(true);
     const viewData = tableData.filter((data) => data?._id === id);
     setEditData(viewData[0]);
+  };
+  const handleViewClose = () => setShowViewModal(false);
+  const handleViewShow = (_id) => {
+    onView(_id);
   };
 
   function deleteSingle(id) {
@@ -106,11 +112,11 @@ export default function TableWithPagination({
         id="example"
         className="table-hover table-striped"
         responsive="md"
-        // striped
-        // bordered
-        // hover
-        // id="example"
-        // className="table-hover table-striped"
+      // striped
+      // bordered
+      // hover
+      // id="example"
+      // className="table-hover table-striped"
       >
         <TableHeader headers={headers} />
 
@@ -131,6 +137,18 @@ export default function TableWithPagination({
                     {actionButtons &&
                       actionButtons.map((val, i) => {
                         switch (val) {
+                          case "view":
+                            return (
+                              <Button
+                                className="btn-simple btn-link p-1"
+                                type="button"
+                                variant="outline-secondary"
+                                onClick={() => handleViewShow(data._id)}
+                                key={i}
+                              >
+                                <i className="fas fa-eye"></i>
+                              </Button>
+                            );
                           case "edit":
                             return (
                               <Button
@@ -226,6 +244,28 @@ export default function TableWithPagination({
             Close
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      {/* View Modal */}
+      <Modal show={showViewModal} onHide={handleViewClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{title} Profile</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {/* View Form */}
+          {/* <CreateForm createState={viewUser} close={handleViewClose} /> */}
+        </Modal.Body>
+        {/* <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => handleEditShow(view[0]._id)}
+          >
+            Update
+          </Button>
+          <Button variant="secondary" onClick={handleViewClose}>
+            Close
+          </Button>
+        </Modal.Footer> */}
       </Modal>
     </>
   );
