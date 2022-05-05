@@ -7,6 +7,7 @@ import RoleCreateForm from "../components/Form/RoleCreateForm";
 import RoleEditForm from "../components/Form/RoleEditForm";
 import Header from "../components/Navbar";
 
+
 function Role() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { roles: all_data, total, errors } = useSelector((state) => state.role);
