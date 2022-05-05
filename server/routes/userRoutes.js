@@ -83,19 +83,20 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-  const { FirstName, LastName, Email, Password, UserName, UserRole } = req.body;
+  const { FirstName, LastName, Email, UserName, UserRole } = req.body;
   try {
     const user = await User.findById(req.params.id);
     if (user) {
-      const newPassword = await bcrypt.hash(Password, 10);
+      // const newPassword = await bcrypt.hash(Password, 10);
       const UpdatedUser = await User.findByIdAndUpdate(req.params.id, {
         FirstName,
         LastName,
         Email,
-        Password: newPassword,
+        // Password: newPassword,
         UserName,
         UserRole,
-      });
+      },
+        { new: true });
       return res.status(200).json({
         success: true,
         message: "User is updated.",
