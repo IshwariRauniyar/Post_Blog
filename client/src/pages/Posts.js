@@ -84,8 +84,8 @@ function Post() {
                       <PostEditForm {...custom_props} />
                     )}
                     actionButtons={["view", "edit", "delete"]}
-                    onView={(id) => {
-                      navigate(`/post-view/${id}`);
+                    onView={(Slug) => {
+                      navigate(`/post-view/${Slug}`);
                     }}
                   />
                 </Card.Body>

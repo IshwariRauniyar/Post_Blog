@@ -79,8 +79,11 @@ function Page() {
                       <PageEditForm {...custom_props} />
                     )}
                     actionButtons={["view", "edit", "delete"]}
-                    onView={(id) => {
-                      navigate(`/page-view/${id}`);
+                    // onView={(Slug) => {
+                    //   navigate(`/page-view/${Slug}`);
+                    // }}
+                    onView={(Slug) => {
+                      navigate(`/page-view/${Slug}`)
                     }}
                   />
                 </Card.Body>
