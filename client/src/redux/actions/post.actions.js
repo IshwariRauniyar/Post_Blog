@@ -36,10 +36,10 @@ export const getPost =
       }
     };
 
-export const getSinglePost = (id) => async (dispatch) => {
-  console.log("iddd", id);
+export const getSinglePost = (Slug) => async (dispatch) => {
+  console.log("Slugdd", Slug);
   try {
-    const { data } = await axiosInstance.get(`/post/${id}`);
+    const { data } = await axiosInstance.get(`/post/${Slug}`);
     dispatch({ type: Constants.POST_GET_SINGLE, payload: data.post });
   } catch (error) {
     Toast.error("Error fetching Post");

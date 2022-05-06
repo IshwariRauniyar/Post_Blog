@@ -71,12 +71,12 @@ export const createUser = (newUser) => async (dispatch) => {
   }
 };
 
-export const updateUser = (id, updatedUser) => async (dispatch) => {
+export const updateUser = (id, newUser) => async (dispatch) => {
   try {
-    if (updatedUser) {
+    if (newUser) {
       const { data } = await axiosInstance.put(
         `/user/${id}`,
-        updatedUser
+        newUser
       );
       if (data.success === true) {
         dispatch({
