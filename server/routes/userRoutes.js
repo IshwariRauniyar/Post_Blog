@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const User = require("../models/user");
-const bcrypt = require("bcryptjs");
+// const bcrypt = require("bcryptjs");
 
 router.get("/", async (req, res, next) => {
   const { limit = 10, offset = 0 } = req.query;
@@ -58,16 +58,25 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { FirstName, LastName, Email, Password, UserName, UserRole } = req.body;
+  // const { FirstName, LastName, Email, UserName, UserRole } = req.body;
   try {
-    const newPassword = await bcrypt.hash(Password, 10);
+    // const newPassword = await bcrypt.hash(req.body.Password, 10);
+    const Users = await User.findOne({
+      Email: req.body.Email,
+    });
+    if (Users?.Email === req.body.Email) {
+      res.json({
+        success: false,
+        message: "Email already exists",
+      });
+    }
     const user = await User.create({
-      FirstName,
-      LastName,
-      Email,
-      Password: newPassword,
-      UserName,
-      UserRole,
+      FirstName: req.body.FirstName,
+      LastName: req.body.LastName,
+      Email: req.body.Email,
+      Password: req.body.Password,
+      UserName: req.body.UserName,
+      UserRole: req.body.UserRole,
     });
     return res.status(200).json({
       success: true,
