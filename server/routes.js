@@ -11,6 +11,6 @@ routes.use("/post", verifyToken, access("post"), postRoutes);
 routes.use("/page", verifyToken, access("page"), pageRoutes);
 routes.use("/file", uploadRoutes);
 routes.use("/auth", authRoutes);
-routes.use("/setting", verifyToken, access("role"), settingRoutes);
+routes.use("/setting", settingRoutes);
 routes.use("/user", verifyToken, access("user"), userRoutes);
 module.exports = routes;
