@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getSinglePost } from "../redux/actions/post.actions";
 import { useParams } from "react-router-dom";
@@ -6,12 +6,12 @@ import Footer from "../components/Footer";
 
 export default function PostView() {
     const dispatch = useDispatch();
-    const { id } = useParams();
+    const { Slug } = useParams();
     const { posts } = useSelector((state) => state.post);
-    const viewPost = posts.find((post) => post._id === id);
+    const viewPost = posts.find((post) => post.Slug === Slug);
     useEffect(() => {
-        dispatch(getSinglePost(id));
-    }, [id]);
+        dispatch(getSinglePost(Slug));
+    }, [Slug]);
 
     return (
         <>
@@ -28,21 +28,21 @@ export default function PostView() {
                         {viewPost?.Title}
                     </h1>
                     <div className="flex-wrap items-center justify-between my-2 md:flex">
-                        {viewPost.SeoTitle ? (
+                        {viewPost?.SeoTitle ? (
                             <h2 className="text-2xl font-bold font-poppins">
                                 {viewPost?.SeoTitle}
                             </h2>
                         ) : null}
                     </div>
-                    {viewPost.Image ? (
+                    {viewPost?.Image ? (
                         <img
-                            src={`http://localhost:8848/${viewPost.Image}`}
+                            src={`http://localhost:8848/${viewPost?.Image}`}
                             alt=""
                             className="object-cover w-96 md:w-96 lg:w-full h-42 mt-7"
                         />
                     ) : null}
                     <div className="pt-5 pb-5 font-poppins">
-                        {viewPost.Description ? (
+                        {viewPost?.Description ? (
                             <div className="mb-6">
                                 <label className="block mb-2 text-2xl font-medium">
                                     Description
@@ -54,7 +54,7 @@ export default function PostView() {
                                 />
                             </div>
                         ) : null}
-                        {viewPost.SeoDescription ? (
+                        {viewPost?.SeoDescription ? (
                             <div className="mb-6">
                                 <label className="block mb-2 text-2xl font-medium">
                                     Seo Description
@@ -67,7 +67,7 @@ export default function PostView() {
                             {viewPost?.Slug}
                         </blockquote>
 
-                        {viewPost.Summary ? (
+                        {viewPost?.Summary ? (
                             <div className="mb-6">
                                 <label className="block mb-2 text-2xl font-medium">
                                     Summary

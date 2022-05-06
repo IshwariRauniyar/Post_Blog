@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getSinglePage } from "../redux/actions/page.actions";
 import { useParams } from "react-router-dom";
@@ -6,13 +6,13 @@ import Footer from "../components/Footer";
 
 export default function PageView() {
     const dispatch = useDispatch();
-    const { id } = useParams();
+    const { Slug } = useParams();
     const { pages } = useSelector((state) => state.page);
-    const viewPage = pages.find((page) => page._id === id);
-    console.log("viewPage", viewPage);
+    const viewPage = pages.find((page) => page.Slug === Slug);
+    // console.log("viewPage", viewPage);
     useEffect(() => {
-        dispatch(getSinglePage(id));
-    }, [id]);
+        dispatch(getSinglePage(Slug));
+    }, [Slug]);
 
     return (
         <>
@@ -29,21 +29,21 @@ export default function PageView() {
                         {viewPage?.Title}
                     </h1>
                     <div className="flex-wrap items-center justify-between my-2 md:flex">
-                        {viewPage.SeoTitle ? (
+                        {viewPage?.SeoTitle ? (
                             <h2 className="text-2xl font-bold font-poppins">
                                 {viewPage?.SeoTitle}
                             </h2>
                         ) : null}
                     </div>
-                    {viewPage.Image ? (
+                    {viewPage?.Image ? (
                         <img
-                            src={`http://localhost:8848/${viewPage.Image}`}
+                            src={`http://localhost:8848/${viewPage?.Image}`}
                             alt=""
                             className="object-cover w-96 md:w-96 lg:w-full h-42 mt-7"
                         />
                     ) : null}
                     <div className="pt-5 pb-5 font-poppins">
-                        {viewPage.Description ? (
+                        {viewPage?.Description ? (
                             <div className="mb-6">
                                 <label className="block mb-2 text-2xl font-medium">
                                     Description
@@ -58,7 +58,7 @@ export default function PageView() {
                         <blockquote className="pl-8 my-8 italic bg-gray-100 border-l-4 border-red-500 py-7 md:pl-7">
                             {viewPage?.Slug}
                         </blockquote>
-                        {viewPage.SeoDescription ? (
+                        {viewPage?.SeoDescription ? (
                             <div className="mb-6">
                                 <label className="block mb-2 text-2xl font-medium">
                                     Seo Description
