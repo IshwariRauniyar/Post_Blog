@@ -3,7 +3,6 @@ import { TableHeader, Pagination, Search } from "..";
 import { Button, Table, Modal } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import moment from "moment";
-
 export default function TableWithPagination({
   hideSearch = false,
   total,
@@ -65,9 +64,13 @@ export default function TableWithPagination({
     setEditData(viewData[0]);
   };
   const handleViewClose = () => setShowViewModal(false);
-  const handleViewShow = (_id) => {
-    onView(_id);
-  };
+  // const handleViewShow = (Slug) => {
+  //   onView(Slug);
+  // };
+  const handleViewShow = (Slug) => {
+    setShowViewModal(true);
+    onView(Slug);
+  }
 
   function deleteSingle(id) {
     deleteAction && dispatch(deleteAction(id));
@@ -143,7 +146,7 @@ export default function TableWithPagination({
                                 className="btn-simple btn-link p-1"
                                 type="button"
                                 variant="outline-secondary"
-                                onClick={() => handleViewShow(data._id)}
+                                onClick={() => handleViewShow(data.Slug)}
                                 key={i}
                               >
                                 <i className="fas fa-eye"></i>
