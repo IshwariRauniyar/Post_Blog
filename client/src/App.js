@@ -102,8 +102,8 @@ const App = () => {
               )
             }
           />
-          <Route exact path="/page-view/:id" element={<PageView />} />
-          <Route path="/post-view/:id" element={<PostView />} />
+          <Route exact path="/page-view/:Slug" element={<PageView />} />
+          <Route path="/post-view/:Slug" element={<PostView />} />
           <Route path="*" element={<>404 NOT FOUND</>} />
         </Routes>
       </BrowserRouter>
