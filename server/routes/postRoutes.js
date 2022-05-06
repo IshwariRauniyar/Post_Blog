@@ -44,19 +44,20 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", (req, res) => {
-  Post.findById(req.params.id, (err, post) => {
-    if (err) {
-      res.send(err);
-    }
-    // res.json(post);
-    return res.status(200).json({
-      success: true,
-      message: "Post is fetched.",
-      post,
-      // ...(post && { ...post }),
+router.get("/:Slug", async (req, res) => {
+  const post = await Post.findOne({ Slug: req.params.Slug });
+  if (!post) {
+    return res.status(404).json({
+      success: false,
+      message: "Post not found.",
     });
-  });
+  }
+  res.status(200).json({
+    success: true,
+    message: "Post fetched.",
+    post,
+  }
+  );
 });
 
 router.post("/", upload.single("Image"), async (req, res) => {

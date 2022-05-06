@@ -42,23 +42,65 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
-  Page.findById(req.params.id, (err, page) => {
-    if (err) {
-      res.send(err);
-    }
-    res.status(200).json({
-      success: true,
-      message: "Page fetched.",
-      page,
+router.get("/:Slug", async (req, res) => {
+  const page = await Page.findOne({ Slug: req.params.Slug });
+  if (!page) {
+    return res.status(404).json({
+      success: false,
+      message: "Page not found.",
     });
-  });
+  }
+  res.status(200).json({
+    success: true,
+    message: "Page fetched.",
+    page,
+  }
+  );
 });
 
-router.post("/", upload.single("Image"),async (req, res) => {
-    const user = req.decoded;
-    try {
-      const PageData = await Page.create({
+router.post("/", upload.single("Image"), async (req, res) => {
+  const user = req.decoded;
+  try {
+    const PageData = await Page.create({
+      Title: req.body.Title,
+      Slug: req.body.Slug,
+      SeoTitle: req.body.SeoTitle,
+      SeoDescription: req.body.SeoDescription,
+      Description: req.body.Description,
+      IsActive: req.body.IsActive,
+      Image: req.file?.destination + "/" + req.file?.filename,
+      CreatedBy: user._id,
+    });
+    res.status(200).json({
+      success: true,
+      message: "Page created Successfully",
+      result: {
+        PageData,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+);
+
+router.put("/:id", upload.single("Image"), async (req, res) => {
+  const user = req.decoded;
+  // console.log("user", user);
+  try {
+    const PageData = await Page.findById(req.params.id);
+    if (!PageData) {
+      return res.status(404).json({
+        success: false,
+        message: "Page not found.",
+      });
+    }
+    const updatedPage = await Page.findByIdAndUpdate(
+      req.params.id,
+      {
         Title: req.body.Title,
         Slug: req.body.Slug,
         SeoTitle: req.body.SeoTitle,
@@ -66,65 +108,26 @@ router.post("/", upload.single("Image"),async (req, res) => {
         Description: req.body.Description,
         IsActive: req.body.IsActive,
         Image: req.file?.destination + "/" + req.file?.filename,
-        CreatedBy: user._id,
-      });
-      res.status(200).json({
-        success: true,
-        message: "Page created Successfully",
-        result: {
-          PageData,
-        },
-      });
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        message: error.message,
-      });
-    }
+        ModifiedBy: user?._id,
+      },
+      { new: true }
+    );
+    //   console.log("updatedPage", updatedPage);
+    // const users = await User.findById(updatedPage?.ModifiedBy);
+    return res.status(200).json({
+      success: true,
+      message: "Page updated Successfully",
+      result: {
+        updatedPage,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
-);
-
-router.put("/:id", upload.single("Image"), async (req, res) => {
-    const user = req.decoded;
-    // console.log("user", user);
-    try {
-      const PageData = await Page.findById(req.params.id);
-      if (!PageData) {
-        return res.status(404).json({
-          success: false,
-          message: "Page not found.",
-        });
-      }
-      const updatedPage = await Page.findByIdAndUpdate(
-        req.params.id,
-        {
-          Title: req.body.Title,
-          Slug: req.body.Slug,
-          SeoTitle: req.body.SeoTitle,
-          SeoDescription: req.body.SeoDescription,
-          Description: req.body.Description,
-          IsActive: req.body.IsActive,
-          Image: req.file?.destination + "/" + req.file?.filename,
-          ModifiedBy: user?._id,
-        },
-        { new: true }
-      );
-      //   console.log("updatedPage", updatedPage);
-      // const users = await User.findById(updatedPage?.ModifiedBy);
-      return res.status(200).json({
-        success: true,
-        message: "Page updated Successfully",
-        result: {
-          updatedPage,
-        },
-      });
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        message: error.message,
-      });
-    }
-  }
+}
 );
 
 router.delete("/:id", async (req, res) => {
