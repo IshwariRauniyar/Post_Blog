@@ -73,11 +73,8 @@ router.post("/login", async (req, res, next) => {
         message: "User with this email not found",
       });
     }
-    // const isPasswordValid = await bcrypt.compare(
-    //   req.body.Password,
-    //   Users.Password
-    // );
-    const isPasswordValid = req.body.Password === Users.Password;
+    const isPasswordValid = await bcrypt.compare(req.body.Password, Users.Password);
+    // const isPasswordValid = req.body.Password === Users.Password;
 
     if (isPasswordValid) {
       const token = jwt.sign(
@@ -115,9 +112,6 @@ router.post("/login", async (req, res, next) => {
           expiresIn: authConfig.refreshExpiresIn,
         }
       );
-      // return res.setHeader("Set-Cookie", [
-      //   `token=${token}; HttpOnly; Max-Age=${authConfig.expiresIn}`,
-      // ]).json({
       return res.json({
         success: true,
         message: "User Logged in Successfully.",
