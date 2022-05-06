@@ -5,13 +5,12 @@ import ReactQuill from "react-quill";
 import "../../../node_modules/react-quill/dist/quill.snow.css";
 import { Form } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
-// import { imageUpload } from "../../redux/actions/file.actions";
 import axiosInstance from "../../axios";
 import GenerateSlug from "./GenerateSlug";
 
 const PageCreateForm = ({ close }) => {
-  var quillObj;
   const dispatch = useDispatch();
+  const quillRef = useRef();
   const [title, setTitle] = useState("");
   const [newSlug, setNewSlug] = useState("");
   const [slug, setSlug] = useState("");
@@ -32,8 +31,8 @@ const PageCreateForm = ({ close }) => {
       IsActive: IsActive,
       Image,
     };
-    console.log("newPage", newPage.Description);
-    // dispatch(createPage(newPage));
+    // console.log("newPage", newPage.Description);
+    dispatch(createPage(newPage));
     onclose();
   };
   const onEditorChange = (description) => {
@@ -57,70 +56,61 @@ const PageCreateForm = ({ close }) => {
     setSlug(sl + "-" + uuidv4().substr(0, 8));
   };
 
-  // const Editor = () => {
-  //   editorRef = useRef(null);
-  //   modules = useMemo(
-  //     () => ({
-  //       toolbar: {
-  //         container: [
-  //           [{ header: [1, 2, false] }],
-  //           ["bold", "italic", "underline", "strike", "blockquote"],
-  //           [
-  //             { list: "ordered" },
-  //             { list: "bullet" },
-  //             { indent: "-1" },
-  //             { indent: "+1" },
-  //           ],
-  //           ["link"],
-  //           ["clean"],
-  //           ["image"],
-  //         ],
-  //         handlers: {
-  //           image: imageHandler,
-  //         },
-  //       }
-  //     }),
-  //     []
-  //   );
-  //   formats = [
-  //     "header",
-  //     "bold",
-  //     "italic",
-  //     "underline",
-  //     "strike",
-  //     "blockquote",
-  //     "list",
-  //     "bullet",
-  //     "indent",
-  //     "link",
-  //     "image",
-  //   ];
-  //   const imageHandler = (image, callback) => {
-  //     const file = image.file;
-  //     const formData = new FormData();
-  //     formData.append("image", file);
-  //     axiosInstance
-  //       .post("/api/file/upload", formData)
-  //       .then((res) => {
-  //         const imageUrl = res.data.url;
-  //         callback(imageUrl);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   };
-  // };
-
-
-  function base64Convert(file) {
-    console.log("file", file);
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      // reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
+  const imageHandler = (e) => {
+    const editor = quillRef.current.getEditor();
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      console.log("file", file);
+      const formData = new FormData();
+      formData.append("file", file);
+      if (file && file.size < 1048576) { // 1MB
+        axiosInstance.post("/file/upload", formData).then((res) => {
+          const imageUrl = res.data;
+          console.log("imageUrl", imageUrl);
+          if (imageUrl) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var readAsDataURL = e.target.result;
+              editor.insertEmbed(editor.getSelection().index, "image", readAsDataURL);
+              editor.setSelection(editor.getSelection().index + 1);
+            }
+            reader.readAsDataURL(file);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      } else {
+        alert("File size must be less than 1MB");
+      }
+    }
   }
+
+  const modules = useMemo(
+    () => (
+      {
+        toolbar: {
+          container: [
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'align': [] }],
+            ['link', 'image'],
+            ['clean'],
+            [{ 'color': [] }]
+          ],
+          handlers: {
+            image: imageHandler
+          }
+        },
+      }
+    ),
+    []
+  );
+
 
   return (
     <>
@@ -190,14 +180,14 @@ const PageCreateForm = ({ close }) => {
 
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium">Description</label>
-          {/* <ReactQuill
-            ref={editorRef}
-            modules={modules}
-            formats={formats}
+          <ReactQuill
+            className="block w-full h-96 mb-7 pb-11 text-lg "
+            placeholder="Write something..."
+            ref={quillRef}
             value={description}
+            modules={modules}
             onChange={onEditorChange}
-          /> */}
-
+          />
         </div>
         <div className="mb-6 ">
           <label className="block mb-2 text-2xl font-medium">Image</label>
@@ -205,14 +195,14 @@ const PageCreateForm = ({ close }) => {
             {Image ? (
               <img
                 src={URL.createObjectURL(Image)}
-                alt="image"
+                alt=""
                 height={150}
                 width={150}
               />
             ) : (
               <img
                 src="https://via.placeholder.com/150"
-                alt="image"
+                alt=""
                 height={150}
                 width={150}
               />

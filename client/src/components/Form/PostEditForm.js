@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { updatePost } from "../../redux/actions/post.actions";
 import ReactQuill from "react-quill";
@@ -6,12 +6,12 @@ import "../../../node_modules/react-quill/dist/quill.snow.css";
 import { Form } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 import GenerateSlug from "./GenerateSlug";
+import axiosInstance from "../../axios";
 
 const PostEditForm = ({ editState, close }) => {
   const ImgPath = editState.Image;
-  // const path = ImagePath.replace("\\", "/");
-  // console.log("path", path);
   const dispatch = useDispatch();
+  const quillRef = useRef();
   const [paramid] = useState(editState._id);
   const [title, setTitle] = useState(editState?.Title || "");
   const [newSlug, setNewSlug] = useState("");
@@ -42,7 +42,6 @@ const PostEditForm = ({ editState, close }) => {
       IsActive: IsActive,
       Image,
     };
-
     dispatch(updatePost(paramid, newPost));
     onclose();
   };
@@ -67,6 +66,61 @@ const PostEditForm = ({ editState, close }) => {
       .replace(/-+$/, ""); // Trim - from end of text
     setSlug(sl + "-" + uuidv4().substr(0, 8));
   };
+  const imageHandler = (e) => {
+    const editor = quillRef.current.getEditor();
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      console.log("file", file);
+      const formData = new FormData();
+      formData.append("file", file);
+      if (file && file.size < 1048576) {
+        axiosInstance.post("/file/upload", formData).then((res) => {
+          const imageUrl = res.data;
+          console.log("imageUrl", imageUrl);
+          if (imageUrl) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var readAsDataURL = e.target.result;
+              editor.insertEmbed(editor.getSelection().index, "image", readAsDataURL);
+              editor.setSelection(editor.getSelection().index + 1);
+            }
+            reader.readAsDataURL(file);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      } else {
+        alert("File size must be less than 1MB");
+      }
+    }
+  }
+
+  const modules = useMemo(
+    () => (
+      {
+        toolbar: {
+          container: [
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'align': [] }],
+            ['link', 'image'],
+            ['clean'],
+            [{ 'color': [] }]
+          ],
+          handlers: {
+            image: imageHandler
+          }
+        },
+      }
+    ),
+    []
+  );
+
 
   return (
     <>
@@ -138,35 +192,10 @@ const PostEditForm = ({ editState, close }) => {
           <ReactQuill
             className="block w-full h-96 mb-7 pb-11 text-lg "
             placeholder="Write something..."
+            ref={quillRef}
             value={description}
+            modules={modules}
             onChange={onEditorChange}
-            modules={{
-              toolbar: [
-                [{ header: [1, 2, false] }],
-                ["bold", "italic", "underline", "strike", "blockquote"],
-                [
-                  { list: "ordered" },
-                  { list: "bullet" },
-                  { indent: "-1" },
-                  { indent: "+1" },
-                ],
-                ["link", "image"],
-                ["clean"],
-              ],
-            }}
-            formats={[
-              "header",
-              "bold",
-              "italic",
-              "underline",
-              "strike",
-              "blockquote",
-              "list",
-              "bullet",
-              "indent",
-              "link",
-              "image",
-            ]}
           />
         </div>
 
