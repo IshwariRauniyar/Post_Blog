@@ -139,28 +139,13 @@ const PostCreateForm = ({ close }) => {
         </div>
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium"> Slug</label>
-          <GenerateSlug
-            slugData={slug}
-            setNewSlug={setNewSlug}
-          // value={newSlug}
+          <input
+            className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
+            type="text"
+            name="slug"
+            readOnly
+            value={slug}
           />
-          {newSlug.length > 0 ? (
-            <input
-              className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
-              type="text"
-              name="slug"
-              readOnly
-              value={newSlug}
-            />
-          ) : (
-            <input
-              className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
-              type="text"
-              name="slug"
-              readOnly
-              value={slug}
-            />
-          )}
         </div>
         <div className="mb-6">
           <label className="block mb-2 text-2xl font-medium"> Seo Title</label>

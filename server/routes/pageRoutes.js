@@ -114,7 +114,7 @@ router.put("/:id", upload.single("Image"), async (req, res) => {
     );
     //   console.log("updatedPage", updatedPage);
     // const users = await User.findById(updatedPage?.ModifiedBy);
-    return res.status(200).json({
+    return res.json({
       success: true,
       message: "Page updated Successfully",
       result: {
@@ -139,7 +139,8 @@ router.delete("/:id", async (req, res) => {
         message: "Page not found.",
       });
     }
-    res.status(200).json({
+    await Page.findByIdAndDelete(req.params.id);
+    return res.status(200).json({
       success: true,
       message: "Page deleted Successfully",
     });

@@ -30,7 +30,10 @@ const GenerateSlug = ({
                 Change Slug
             </Button>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} backdrop="static"
+                keyboard={false}
+
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>Generate Slug</Modal.Title>
                 </Modal.Header>

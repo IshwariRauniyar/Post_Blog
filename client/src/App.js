@@ -18,6 +18,7 @@ import PageView from "./pages/PageView";
 const App = () => {
   // const auth = useSelector((state) => state.auth);
   // console.log("auth", auth);
+  const user = localStorage.getItem("keyName");
   return (
     <div>
       <BrowserRouter>
@@ -26,7 +27,7 @@ const App = () => {
             path="/header"
             // element={<PrivateRoute><Header /></PrivateRoute>}
             element={
-              localStorage.user ? (
+              user ? (
                 <Header />
               ) : (
                 <Navigate to={"/login"} />
@@ -37,7 +38,7 @@ const App = () => {
             path="/"
             // element={<PublicRoute> <Login /></PublicRoute>}
             element={
-              localStorage.user ? (
+              user ? (
                 <Navigate to={"/header"} />
               ) : (
                 <Login />
@@ -48,7 +49,7 @@ const App = () => {
             path="/login"
             // element={<PublicRoute> <Login /></PublicRoute>}
             element={
-              localStorage.user ? (
+              user ? (
                 <Navigate to={"/header"} />
               ) : (
                 <Login />
@@ -59,7 +60,7 @@ const App = () => {
             path="/post"
             // element={<PrivateRoute> <Post /></PrivateRoute>}
             element={
-              localStorage.user ? (
+              user ? (
                 <Post />
               ) : (
                 <Navigate to={"/login"} />
@@ -71,7 +72,7 @@ const App = () => {
             path="/page"
             // element={<PrivateRoute> <Page /></PrivateRoute>}
             element={
-              localStorage.user ? (
+              user ? (
                 <Page />
               ) : (
                 <Navigate to={"/login"} />
@@ -83,7 +84,7 @@ const App = () => {
             path="/user"
             // element={<PrivateRoute> <User /></PrivateRoute>}
             element={
-              localStorage.user ? (
+              user ? (
                 <User />
               ) : (
                 <Navigate to={"/login"} />
@@ -95,7 +96,7 @@ const App = () => {
             path="/role"
             // element={<PrivateRoute> <Role /></PrivateRoute>}
             element={
-              localStorage.user ? (
+              user ? (
                 <Role />
               ) : (
                 <Navigate to={"/login"} />

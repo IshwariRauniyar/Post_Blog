@@ -83,6 +83,8 @@ export const updateUser = (id, newUser) => async (dispatch) => {
           type: Constants.USER_EDIT,
           payload: data.result,
         });
+        // console.log(data.result);
+        // localStorage.setItem("keyName", data.result.UserName);
         Toast.success("User updated successfully");
       } else {
         Toast.error(data.message);

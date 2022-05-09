@@ -23,8 +23,8 @@ export default function Header() {
     e.preventDefault();
     dispatch(authLogout());
   };
-  const user = JSON.parse(localStorage.getItem("user"));
-  const role = user.role;
+  const user = localStorage.getItem("keyName");
+  const role = JSON.parse(localStorage.getItem("keyVal"));
   // const navLinkClass = (link) => {
   //   console.log("link", link);
   //   if (link === active) {
@@ -102,7 +102,7 @@ export default function Header() {
         <div className="ml-auto">
           <Dropdown>
             <Dropdown.Toggle size="lg" variant="success" id="dropdown-basic">
-              {user?.UserName}
+              {user}
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item onClick={handleLogout}>
