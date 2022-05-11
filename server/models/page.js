@@ -9,10 +9,6 @@ const PageSchema = new Schema(
     SeoDescription: {
       type: String,
     },
-    // PostType: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "Setting",
-    // },
     PostType: {
       type: String,
       required: true,

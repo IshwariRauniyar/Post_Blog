@@ -8,9 +8,7 @@ const GenerateSlug = ({
 }) => {
     const [show, setShow] = useState(false);
     const [transformSlug, setTransformSlug] = useState("");
-    const handleClose = () => {
-        setShow(false);
-    }
+    const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const handleSlug = (text) => {
@@ -23,6 +21,8 @@ const GenerateSlug = ({
         setShow(false);
         setNewSlug(transformSlug);
     }
+
+
 
     return (
         <>

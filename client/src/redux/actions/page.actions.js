@@ -100,6 +100,8 @@ export const updatePage = (id, updatePage) => async (dispatch) => {
       });
     }
     Toast.success("Page updated successfully");
+
+
   } catch (error) {
     Toast.error("Error updating Page");
     console.log(error);

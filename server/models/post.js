@@ -8,7 +8,6 @@ const PostSchema = new Schema(
   {
     Title: { type: String, required: true },
     Slug: { type: String, unique: true },
-    // Slug: { type: String, slug: "Title", lowercase: true, unique: true },
     SeoTitle: { type: String, required: true },
     SeoDescription: {
       type: String,
@@ -16,19 +15,7 @@ const PostSchema = new Schema(
     PostType: {
       type: String,
       required: true,
-      enum: [
-        "post",
-        "page",
-        "product",
-        "category",
-        "tag",
-        "blog",
-        "author",
-        "archive",
-        "search",
-        "home",
-        "other",
-      ],
+      enum: ["post"],
       default: "post",
     },
     Image: { type: String },
@@ -44,13 +31,6 @@ const PostSchema = new Schema(
   },
   { collection: "Post" }
 );
-
-// PostSchema.pre("save", function (next) {
-//   this.Slug = this.Title.split(" ")
-//     .join("-")
-//     .replace(/[^a-zA-Z0-9]+/g, "");
-//   next();
-// });
 
 const Post = mongoose.model("Post", PostSchema);
 

@@ -37,7 +37,6 @@ export const getPost =
     };
 
 export const getSinglePost = (Slug) => async (dispatch) => {
-  console.log("Slugdd", Slug);
   try {
     const { data } = await axiosInstance.get(`/post/${Slug}`);
     dispatch({ type: Constants.POST_GET_SINGLE, payload: data.post });
