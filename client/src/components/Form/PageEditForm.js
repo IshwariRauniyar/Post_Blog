@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updatePage } from "../../redux/actions/page.actions";
 import ReactQuill from "react-quill";
 import "../../../node_modules/react-quill/dist/quill.snow.css";
@@ -27,6 +27,8 @@ const PageEditForm = ({ editState, close }) => {
   const [IsActive, setIsActive] = useState(editState?.IsActive || Boolean);
 
   const onclose = close;
+  const { pages } = useSelector(state => state.page);
+  const slugs = pages.map(page => page.Slug);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,7 +41,6 @@ const PageEditForm = ({ editState, close }) => {
       IsActive: IsActive,
       Image,
     };
-    // console.log("newPage", newPage);
     dispatch(updatePage(paramid, newPage));
     onclose();
   };
@@ -158,6 +159,15 @@ const PageEditForm = ({ editState, close }) => {
               readOnly
               value={slug}
             />
+          )}
+          {slugs.includes(newSlug) ? (
+            <div className="mb-2 text-red-500">
+              Slug already exists.Please enter another slug!!!
+            </div>
+          ) : (
+            <div className="mb-2 text-green-500">
+              Slug available
+            </div>
           )}
         </div>
         <div className="mb-6">

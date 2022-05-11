@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updatePost } from "../../redux/actions/post.actions";
 import ReactQuill from "react-quill";
 import "../../../node_modules/react-quill/dist/quill.snow.css";
@@ -28,6 +28,9 @@ const PostEditForm = ({ editState, close }) => {
   const [IsActive, setIsActive] = useState(editState?.IsActive || Boolean);
 
   const onclose = close;
+  const { posts } = useSelector(state => state.post);
+  const slugs = posts.map(post => post.Slug);
+  console.log(slugs);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -161,6 +164,15 @@ const PostEditForm = ({ editState, close }) => {
               readOnly
               value={slug}
             />
+          )}
+          {slugs.includes(newSlug) ? (
+            <div className="mb-2 text-red-500">
+              Slug already exists.Please enter another slug!!!
+            </div>
+          ) : (
+            <div className="mb-2 text-green-500">
+              Slug available
+            </div>
           )}
         </div>
         <div className="mb-6">
