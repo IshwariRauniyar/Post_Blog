@@ -109,6 +109,13 @@ router.put("/:id", upload.single("Image"), async (req, res) => {
         message: "Post not found.",
       });
     }
+    const PostSlug = await Post.findOne({ Slug: req.body.Slug });
+    if (PostSlug === req.body.Slug) {
+      return res.json({
+        success: false,
+        message: "Slug already exists.",
+      });
+    }
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.id,
       {
