@@ -96,8 +96,8 @@ const UserCreateForm = ({ close }) => {
                     <Form.Group controlId="exampleForm.ControlSelect1">
                         <Form.Control as="select" value={userRole} required onChange={(e) => { setUserRole(e.target.value) }}>
                             <option value="">Select User Role</option>
-                            {roles.map((role) => (
-                                <option key={role.id} value={role.id}>
+                            {roles.map((role, i) => (
+                                <option key={`item-${i}`} value={role.id}>
                                     {role.Title}
                                 </option>
                             ))}

@@ -6,12 +6,12 @@ import "../../../node_modules/react-quill/dist/quill.snow.css";
 import { Form } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 import axiosInstance from "../../axios";
+import Toast from "../../components/Toast";
 
 const PageCreateForm = ({ close }) => {
   const dispatch = useDispatch();
   const quillRef = useRef();
   const [title, setTitle] = useState("");
-  const [newSlug, setNewSlug] = useState("");
   const [slug, setSlug] = useState("");
   const [seoTitle, setSeoTitle] = useState("");
   const [seoDescription, setSeoDescription] = useState("");
@@ -23,14 +23,13 @@ const PageCreateForm = ({ close }) => {
     e.preventDefault();
     const newPage = {
       Title: title,
-      Slug: newSlug || slug,
+      Slug: slug,
       SeoTitle: seoTitle,
       SeoDescription: seoDescription,
       Description: description,
       IsActive: IsActive,
       Image,
     };
-    // console.log("newPage", newPage.Description);
     dispatch(createPage(newPage));
     onclose();
   };
@@ -38,7 +37,14 @@ const PageCreateForm = ({ close }) => {
     setDescription(description);
   };
   const handleChange = (e) => {
-    setImage(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file && file.size < 1048576) {
+      setImage(file);
+    } else {
+      e.target.value = null;
+      setImage(null);
+      Toast.warn("Image size should be less than 1MB");
+    }
   };
   const handleChangeSwitch = (IsActive) => {
     setIsActive(!IsActive);
@@ -63,13 +69,11 @@ const PageCreateForm = ({ close }) => {
     input.click();
     input.onchange = (e) => {
       const file = e.target.files[0];
-      console.log("file", file);
       const formData = new FormData();
       formData.append("file", file);
-      if (file && file.size < 1048576) { // 1MB
+      if (file && file.size < 1048576) {
         axiosInstance.post("/file/upload", formData).then((res) => {
           const imageUrl = res.data;
-          console.log("imageUrl", imageUrl);
           if (imageUrl) {
             var reader = new FileReader();
             reader.onload = function (e) {
@@ -83,7 +87,7 @@ const PageCreateForm = ({ close }) => {
           console.log(err);
         })
       } else {
-        alert("File size must be less than 1MB");
+        Toast.warn("File size must be less than 1MB");
       }
     }
   }
@@ -183,14 +187,15 @@ const PageCreateForm = ({ close }) => {
                 height={150}
                 width={150}
               />
-            ) : (
-              <img
-                src="https://via.placeholder.com/150"
-                alt=""
-                height={150}
-                width={150}
-              />
-            )}
+            ) :
+              (
+                <img
+                  src="https://via.placeholder.com/150"
+                  alt=""
+                  height={150}
+                  width={150}
+                />
+              )}
           </div>
           <label className="block pt-2">
             <span className="sr-only">Browse photo </span>

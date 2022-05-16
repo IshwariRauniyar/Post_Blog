@@ -12,7 +12,6 @@ const UserEditForm = ({ editState, close }) => {
     const [lastName, setLastName] = useState(editState.LastName || "");
     const [userName, setUserName] = useState(editState.UserName || "");
     const [email, setEmail] = useState(editState.Email || "");
-    // const [password, setPassword] = useState(editState.Password || "");
     const [userRole, setUserRole] = useState(editState.UserRole || "");
     const onclose = close;
     const handleSubmit = (e) => {
@@ -22,7 +21,6 @@ const UserEditForm = ({ editState, close }) => {
             LastName: lastName,
             UserName: userName,
             Email: email,
-            // Password: password,
             UserRole: userRole,
         };
         dispatch(updateUser(paramid, newUser));
@@ -80,25 +78,13 @@ const UserEditForm = ({ editState, close }) => {
                         placeholder="Enter your valid email address"
                     />
                 </div>
-                {/* <div className="mb-6">
-                    <label className="block mb-2 text-2xl font-medium"> Password</label>
-                    <input
-                        className="block w-full px-4 py-3 mb-2 text-lg placeholder-gray-500 bg-white border rounded"
-                        type="password"
-                        minLength={6}
-                        required
-                        value={password}
-                        onChange={(e) => { setPassword(e.target.value) }}
-                        placeholder="Enter password"
-                    />
-                </div> */}
                 <div className="mb-6">
                     <label className="block mb-2 text-2xl font-medium"> User Role</label>
                     <Form.Group controlId="exampleForm.ControlSelect1">
                         <Form.Control as="select" value={userRole} required onChange={(e) => { setUserRole(e.target.value) }}>
                             <option value="">Select User Role</option>
-                            {roles.map((role) => (
-                                <option key={role.id} value={role.id}>
+                            {roles.map((role, i) => (
+                                <option key={`item-${i}`} value={role.id}>
                                     {role.Title}
                                 </option>
                             ))}

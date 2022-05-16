@@ -7,7 +7,7 @@ import { Form } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 import GenerateSlug from "./GenerateSlug";
 import axiosInstance from "../../axios";
-
+import Toast from "../../components/Toast";
 
 const PageEditForm = ({ editState, close }) => {
   const ImgPath = editState.Image;
@@ -49,7 +49,14 @@ const PageEditForm = ({ editState, close }) => {
   };
 
   const handleChange = (e) => {
-    setImage(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file && file.size < 1048576) {
+      setImage(file);
+    } else {
+      e.target.value = null;
+      setImage(null);
+      Toast.warn("Image size should be less than 1MB");
+    }
   };
   const handleChangeSwitch = (IsActive) => {
     setIsActive(!IsActive);
@@ -73,13 +80,11 @@ const PageEditForm = ({ editState, close }) => {
     input.click();
     input.onchange = (e) => {
       const file = e.target.files[0];
-      console.log("file", file);
       const formData = new FormData();
       formData.append("file", file);
       if (file && file.size < 1048576) {
         axiosInstance.post("/file/upload", formData).then((res) => {
           const imageUrl = res.data;
-          console.log("imageUrl", imageUrl);
           if (imageUrl) {
             var reader = new FileReader();
             reader.onload = function (e) {
@@ -93,7 +98,7 @@ const PageEditForm = ({ editState, close }) => {
           console.log(err);
         })
       } else {
-        alert("File size must be less than 1MB");
+        Toast.warn("File size must be less than 1MB");
       }
     }
   }

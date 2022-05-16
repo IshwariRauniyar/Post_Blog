@@ -65,22 +65,6 @@ router.get("/:id", verifyToken, access("role"), async (req, res) => {
 
 router.post("/", verifyToken, access("role"), async (req, res) => {
   try {
-    // const menu = config.Menus;
-    // console.log("m", menu);
-    // const newValue = JSON.stringify(menu);
-    // console.log("newValue", newValue);
-    // const val = JSON.parse(newValue);
-    // console.log("val", val);
-    // const data = JSON.stringify(req.body.Value);
-    // console.log(JSON.parse(data));
-    // const check = newValue.forEach((element) => {
-    //   if (element === JSON.parse(data)) {
-    //     console.log("true");
-    //   }
-    // });
-    // console.log("check", check);
-
-    // if (check === true) {
     const Settings = await Setting.create({
       Title: req.body.Title,
       UniqueName: req.body.UniqueName,
@@ -92,13 +76,6 @@ router.post("/", verifyToken, access("role"), async (req, res) => {
       message: "Setting created.",
       result: Settings,
     });
-    // } else {
-    //   res.json({
-    //     success: false,
-    //     message: "Value is not valid.",
-    //     code: 500,
-    //   });
-    // }
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -109,10 +86,6 @@ router.post("/", verifyToken, access("role"), async (req, res) => {
 
 router.put("/:id", verifyToken, access("role"), async (req, res) => {
   try {
-    // const menu = config.Menus;
-    // const check = menu.includes(JSON.parse(req.body.Value));
-
-    // console.log("check", check);
     const SettingData = await Setting.findById(req.params.id);
     if (!SettingData) {
       return res.status(404).json({
