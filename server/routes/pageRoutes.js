@@ -89,7 +89,6 @@ router.post("/", upload.single("Image"), async (req, res) => {
 
 router.put("/:id", upload.single("Image"), async (req, res) => {
   const user = req.decoded;
-  // console.log("user", user);
   try {
     const PageData = await Page.findById(req.params.id);
     if (!PageData) {
@@ -112,8 +111,6 @@ router.put("/:id", upload.single("Image"), async (req, res) => {
       },
       { new: true }
     );
-    //   console.log("updatedPage", updatedPage);
-    // const users = await User.findById(updatedPage?.ModifiedBy);
     return res.json({
       success: true,
       message: "Page updated Successfully",

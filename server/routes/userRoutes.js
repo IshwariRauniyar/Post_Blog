@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
 const User = require("../models/user");
-// const bcrypt = require("bcryptjs");
 
 router.get("/", async (req, res, next) => {
   const { limit = 10, offset = 0 } = req.query;
@@ -58,9 +57,8 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  // const { FirstName, LastName, Email, UserName, UserRole } = req.body;
+  const { FirstName, LastName, Email, Password, UserName, UserRole } = req.body;
   try {
-    // const newPassword = await bcrypt.hash(req.body.Password, 10);
     const Users = await User.findOne({
       Email: req.body.Email,
     });
@@ -70,14 +68,7 @@ router.post("/", async (req, res) => {
         message: "Email already exists",
       });
     }
-    const user = await User.create({
-      FirstName: req.body.FirstName,
-      LastName: req.body.LastName,
-      Email: req.body.Email,
-      Password: req.body.Password,
-      UserName: req.body.UserName,
-      UserRole: req.body.UserRole,
-    });
+    const user = await User.create({ FirstName, LastName, Email, Password, UserName, UserRole });
     return res.status(200).json({
       success: true,
       message: "User is created.",
@@ -96,14 +87,8 @@ router.put("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (user) {
-      // const newPassword = await bcrypt.hash(Password, 10);
       const UpdatedUser = await User.findByIdAndUpdate(req.params.id, {
-        FirstName,
-        LastName,
-        Email,
-        // Password: newPassword,
-        UserName,
-        UserRole,
+        FirstName, LastName, Email, UserName, UserRole,
       },
         { new: true });
       return res.status(200).json({

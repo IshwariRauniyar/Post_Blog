@@ -27,7 +27,6 @@ router.get("/", async (req, res) => {
     const total = await Post.find(query).countDocuments();
     const totalPages = Math.ceil(total / limit);
     const currentPage = parseInt(offset) + 1;
-    // Math.ceil(total % offset) > 0 ? Math.ceil(total % offset) : 1;
     res.status(200).json({
       success: true,
       message: "All posts are fetched.",
@@ -61,9 +60,6 @@ router.get("/:Slug", async (req, res) => {
 });
 
 router.post("/", upload.single("Image"), async (req, res) => {
-  // const obj = JSON.parse(JSON.stringify(req.body));
-  // console.log("bodydata", obj);
-  // console.log("img", req.file);
   const user = req.decoded;
   try {
     const PostData = await Post.create({
@@ -79,8 +75,6 @@ router.post("/", upload.single("Image"), async (req, res) => {
       Summary: req.body.Summary,
       CreatedBy: user._id,
     });
-    // PostData.save();
-    // const users = await User.findById(PostData?.CreatedBy);
     return res.status(200).json({
       success: true,
       message: "Post Created Successfully.",

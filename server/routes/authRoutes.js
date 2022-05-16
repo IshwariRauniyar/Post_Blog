@@ -6,59 +6,6 @@ const User = require("../models/user");
 const Setting = require("../models/setting");
 const authConfig = require("../config/auth.config");
 
-
-// router.post("/register", async (req, res) => {
-//   try {
-//     const newPassword = await bcrypt.hash(req.body.Password, 10);
-//     const Users = await User.findOne({
-//       Email: req.body.Email,
-//     });
-//     if (Users?.Email === req.body.Email) {
-//       res.json({
-//         success: false,
-//         message: "Email already exists",
-//       });
-//     }
-//     const Data = await User.create({
-//       FirstName: req.body.FirstName,
-//       LastName: req.body.LastName,
-//       Email: req.body.Email,
-//       Password: newPassword,
-//     });
-//     if (req.body.UserRole) {
-//       const Settings = await Setting.create({
-//         UserRole: req.body.UserRole,
-//         User: Data._id,
-//       });
-//     } else {
-//       const Settings = await Setting.create({
-//         UserRole: "user",
-//         User: Data._id,
-//       });
-//     }
-//     const UserRole = await Setting.findOne({
-//       User: Data._id,
-//     });
-//     console.log("UserRole", UserRole);
-//     return res.json({
-//       success: true,
-//       message: "User Registered Successfully.",
-//       code: HttpStatus.OK,
-//       result: { user: Data, role: UserRole.UserRole },
-//       // ...(Data && { ...Data }),
-//     });
-//   } catch (e) {
-//     console.log(e);
-//     return res.json({
-//       success: false,
-//       message: "something went wrong.",
-//       code: HttpStatus.BAD_REQUEST,
-//       error: e,
-//     });
-//   }
-// });
-
-
 router.post("/login", async (req, res, next) => {
   try {
     const Users = await User.findOne({
@@ -74,7 +21,6 @@ router.post("/login", async (req, res, next) => {
       });
     }
     const isPasswordValid = await bcrypt.compare(req.body.Password, Users.Password);
-    // const isPasswordValid = req.body.Password === Users.Password;
 
     if (isPasswordValid) {
       const token = jwt.sign(
@@ -89,12 +35,6 @@ router.post("/login", async (req, res, next) => {
           expiresIn: authConfig.expiresIn,
         }
       );
-
-      // res.setHeader("Set-Cookie", cookie.serialize("token", token, {
-      //   httpOnly: true,
-      //   // maxAge: 60 * 60 * 24 * 7,
-      //   path: "/",
-      // }));
 
       res.cookie("SID", token, {
         httpOnly: true,
@@ -145,11 +85,6 @@ router.post("/login", async (req, res, next) => {
 router.post("/logout", async (req, res, next) => {
   try {
     res.clearCookie("SID");
-    // res.setHeader("Set-Cookie", cookie.serialize("token", "", {
-    //   httpOnly: true,
-    //   // maxAge: new Date(0),
-    //   path: "/",
-    // }));
     return res.status(200).json({
       success: true,
       message: "User Logged out Successfully.",
